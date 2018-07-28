@@ -16,7 +16,7 @@ import { EffectsModule } from '@ngrx/effects';
     BrowserModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     !environment.production ? StoreDevtoolsModule.instrument({
-      name: "NgRx Connect 4 Store DevTools",
+      name: 'NgRx Connect 4 Store DevTools',
       maxAge: 25 //  Retains last 25 states
     }) : [],
   ],

@@ -3,9 +3,9 @@ import { Player, Outcome } from '../models/connect.enum';
 import { ConnectActionTypes, ConnectActions } from './connect.actions';
 
 export interface ConnectState {
-  grid: number[],
-  currentPlayer: Player,
-  outcome: Outcome
+  grid: number[];
+  currentPlayer: Player;
+  outcome: Outcome;
 }
 
 export const initialState: ConnectState = {
