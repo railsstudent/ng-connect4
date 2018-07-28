@@ -64,80 +64,41 @@ export class GridUtil {
       }
     }
 
-    // check horizontal
+    // check horizontal, left diagonally and right diagonally
     let pieces = 0;
-    for (let x = 3; x >= 0; x--) {
-        pieces = 0;
-        for (let delta = -3; delta <= 0; delta++) {
-            if (delta !== -x) {
-                const colIdx = column + delta + x;
-                const rowIdx = this._height[column] + 0 * (delta + x);
-                if (colIdx >= 0 && colIdx < COLUMNS) {
-                  let idx = this.convertRowColToIdx(rowIdx, colIdx);
-                    if (this.grid[idx] === player) {
-                      pieces += 1;
-                      console.log (`Yes: x: ${x}, delte: ${delta}, colIdx: ${colIdx}, potentialRowIdx: ${rowIdx}, player: ${player}, actual: ${this.grid[idx]}`);
-                    } else {
-                      console.log (`Nope: x: ${x}, delte: ${delta}, colIdx: ${colIdx}, potentialRowIdx: ${rowIdx}, player: ${player}, actual: ${this.grid[idx]}`);
-                      break;
-                    }    
-                }            
-            }
-        }
-        console.log('-----------------------------------------------');
-        if (pieces === 3) {
-          console.log (`win horinzontally combo: x ${-x}, height[column]: ${this._height[column]}, column: ${column}`);
-          return true;
-        }
-    }
-
-    // check left diagonal
-    for (let x = 3; x >= 0; x--) {
-        pieces = 0;
-        for (let delta = -3; delta <= 0; delta++) {
-            if (delta !== -x) {
-                const colIdx = column + delta + x;
-                const rowIdx = this._height[column] - (delta + x);                    
-                if (colIdx >= 0 && colIdx < COLUMNS && rowIdx >= 0 && rowIdx < ROWS) {
-                  const idx = this.convertRowColToIdx(rowIdx, colIdx);
-                  if (this.grid[idx] === player) {
-                    pieces += 1;
-                    console.log (`Yes: x: ${x}, delte: ${delta}, rowIdx: ${rowIdx}, colIdx: ${colIdx}, player: ${player}, actual: ${this.grid[idx]}`);
-                  } else {
-                    console.log (`Nope: x: ${x}, delte: ${delta}, rowIdx: ${rowIdx}, colIdx: ${colIdx},player: ${player}, actual: ${this.grid[idx]}`);
-                    break;
-                  }
-                }            
-            }
-        }
-        if (pieces === 3) {
-            console.log (`win left diagonally combo: x ${-x}, height[column]: ${this._height[column]}, column: ${column}`);
-            return true;
-        }
-    }
-
-    // check right diagonal
-    for (let x = 3; x >= 0; x--) {
-      pieces = 0;
-      for (let delta = -3; delta <= 0; delta++) {
-          if (delta !== -x) {
-              const colIdx = column + delta + x;
-              const rowIdx = this.height[column] + (delta + x);                   
-              if (colIdx >= 0 && colIdx < COLUMNS && rowIdx >= 0 && rowIdx < ROWS) {
-                  const idx = this.convertRowColToIdx(rowIdx, colIdx);
-                  if (this.grid[idx] === player) {
-                    pieces += 1;
-                    console.log (`Yes: x: ${x}, delte: ${delta}, rowIdx: ${rowIdx}, colIdx: ${colIdx}, player: ${player}, actual: ${this.grid[idx]}`);
-                  } else {
-                    console.log (`Nope: x: ${x}, delte: ${delta}, rowIdx: ${rowIdx}, colIdx: ${colIdx},player: ${player}, actual: ${this.grid[idx]}`);
-                    break;
-                  }    
-              }        
+    // 0 is horizontal checking, -1 is left-diagonally checking, 1 is right-diagonally
+    for (let direction = -1; direction <= 1; direction++) {
+      for (let x = 3; x >= 0; x--) {
+          pieces = 0;
+          for (let delta = -3; delta <= 0; delta++) {
+              if (delta !== -x) {
+                  const colIdx = column + delta + x;
+                  const rowIdx = this._height[column] + direction * (delta + x);
+                  if (colIdx >= 0 && colIdx < COLUMNS) {
+                    let idx = this.convertRowColToIdx(rowIdx, colIdx);
+                      if (this.grid[idx] === player) {
+                        pieces += 1;
+                        console.log (`Yes: x: ${x}, delte: ${delta}, colIdx: ${colIdx}, potentialRowIdx: ${rowIdx}, player: ${player}, actual: ${this.grid[idx]}`);
+                      } else {
+                        console.log (`Nope: x: ${x}, delte: ${delta}, colIdx: ${colIdx}, potentialRowIdx: ${rowIdx}, player: ${player}, actual: ${this.grid[idx]}`);
+                        break;
+                      }    
+                  }            
+              }
           }
-      }
-      if (pieces === 3) {
-        console.log (`win right diagonally combo: x ${-x}, height[column]: ${this._height[column]}, column: ${column}`);
-        return true;
+          console.log('-----------------------------------------------');
+          if (pieces === 3) {
+            let str = '';
+            if (direction === 0) {
+              str = 'horizontal';
+            } else if (direction === -1) {
+              str = 'left diagonally';
+            } else if (direction === 1) {
+              str = 'right diagonally'; 
+            }
+            console.log (`win ${str} combo: x ${-x}, height[column]: ${this._height[column]}, column: ${column}`);
+            return true;
+          }
       }
     }
     return false;
