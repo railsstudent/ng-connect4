@@ -59,7 +59,6 @@ export class GridUtil {
       const idx2 = this.convertRowColToIdx(this.height[column] - 2, column);
       const idx3 =this.convertRowColToIdx(this.height[column] - 3, column);
       if (this.grid[idx1] === player && this.grid[idx2] === player && this.grid[idx3] === player) {
-        console.log(`Win vertically. height[column]: ${this._height[column]}, column: ${column}`);
         return true;
       }
     }
@@ -78,25 +77,13 @@ export class GridUtil {
                     let idx = this.convertRowColToIdx(rowIdx, colIdx);
                       if (this.grid[idx] === player) {
                         pieces += 1;
-                        console.log (`Yes: x: ${x}, delte: ${delta}, colIdx: ${colIdx}, potentialRowIdx: ${rowIdx}, player: ${player}, actual: ${this.grid[idx]}`);
                       } else {
-                        console.log (`Nope: x: ${x}, delte: ${delta}, colIdx: ${colIdx}, potentialRowIdx: ${rowIdx}, player: ${player}, actual: ${this.grid[idx]}`);
                         break;
                       }    
                   }            
               }
           }
-          console.log('-----------------------------------------------');
           if (pieces === 3) {
-            let str = '';
-            if (direction === 0) {
-              str = 'horizontal';
-            } else if (direction === -1) {
-              str = 'left diagonally';
-            } else if (direction === 1) {
-              str = 'right diagonally'; 
-            }
-            console.log (`win ${str} combo: x ${-x}, height[column]: ${this._height[column]}, column: ${column}`);
             return true;
           }
       }
