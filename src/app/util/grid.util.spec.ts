@@ -272,4 +272,42 @@ describe('GridUtil', () => {
       expect(gridUtil.isWinningMove(3, Player.PLAYER2)).toBe(true);
     });
   });
+
+  describe('isWinningMove return true if 4 pieces are connected left diagonally', () => {
+    beforeEach(() => {
+      grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL); 
+      }
+      gridUtil.setGrid(grid);
+    });
+
+    it('return true and the winning piece is the second one of the connected 4', () => { 
+      [0,1,2,9,14,15,17,29].forEach((i) => grid[i] = Player.PLAYER1);
+      [3,7,8,10,21,22,28].forEach((i) => grid[i] = Player.PLAYER2);
+      gridUtil.setGrid(grid);
+      expect(gridUtil.isWinningMove(2, Player.PLAYER2)).toBe(true);
+    });
+
+    it('return true if it is horizontally connected and the winning piece is the third one of the connected 4', () => {
+      [1,2,9,11,15,17, 29].forEach((i) => grid[i] = Player.PLAYER1);
+      [3,4,5,8,10,16,22].forEach((i) => grid[i] = Player.PLAYER2);
+      gridUtil.setGrid(grid);
+      expect(gridUtil.isWinningMove(2, Player.PLAYER1)).toBe(true);
+    });
+
+    it('return true if it is horizontally connected and the winning piece is the last one of the connected 4', () => {
+      [0,1,3,4,8,14,17,23,29].forEach((i) => grid[i] = Player.PLAYER1);
+      [2,7,9,10,15,16,21,22,28].forEach((i) => grid[i] = Player.PLAYER2);
+      gridUtil.setGrid(grid);
+      expect(gridUtil.isWinningMove(0, Player.PLAYER1)).toBe(true);
+    });
+
+    it('return true if it is horizontally connected and the winning piece is the first one of the connected 4', () => {
+      [2,4,8,9,10,22,24,30,36].forEach((i) => grid[i] = Player.PLAYER1);
+      [1,3,5,11,15,16,17,23,29].forEach((i) => grid[i] = Player.PLAYER2);
+      gridUtil.setGrid(grid);
+      expect(gridUtil.isWinningMove(4, Player.PLAYER1)).toBe(true);
+    });
+  });
 });
