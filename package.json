@@ -7,7 +7,14 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "private": true,
   "dependencies": {
@@ -20,8 +27,6 @@
     "@angular/platform-browser": "6.1.0",
     "@angular/platform-browser-dynamic": "6.1.0",
     "@angular/router": "6.1.0",
-    "@ngrx/effects": "^6.0.1",
-    "@ngrx/entity": "^6.0.1",
     "@ngrx/store": "^6.0.1",
     "@ngrx/store-devtools": "^6.0.1",
     "core-js": "2.5.4",
@@ -31,13 +36,14 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.6.0",
     "@angular/cli": "~6.0.0",
-    "@angular/compiler-cli": "^6.0.0",
-    "@angular/language-service": "^6.0.0",
+    "@angular/compiler-cli": "^6.1.0",
+    "@angular/language-service": "^6.1.0",
     "@ngrx/schematics": "^6.0.1",
     "@types/jasmine": "~2.8.6",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
     "codelyzer": "~4.2.1",
+    "husky": "^1.0.0-rc.13",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~1.7.1",
@@ -45,9 +51,11 @@
     "karma-coverage-istanbul-reporter": "~1.4.2",
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "lint-staged": "^7.2.0",
+    "prettier": "^1.13.7",
     "protractor": "~5.3.0",
     "ts-node": "~5.0.1",
-    "tslint": "~5.9.1",
+    "tslint": "^5.11.0",
     "typescript": "~2.7.2"
   }
 }
