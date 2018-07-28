@@ -1,7 +1,8 @@
 # NgConnect4
 
-Reference: 
-C++ source code of MiniMax Solver: https://github.com/PascalPons/connect4/blob/part3/solver.cpp.  
+Reference:
+* [Wikipedia of MiniMax](https://en.wikipedia.org/wiki/Minimax)
+* https://github.com/sachinparyani/Minimax-Connect-4/blob/master/connect4AI.java.
 Understand the logic and write my own implementation in ES6.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.0.
