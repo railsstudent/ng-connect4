@@ -74,12 +74,12 @@ export class GridUtil {
                   const colIdx = column + delta + x;
                   const rowIdx = this._height[column] + direction * (delta + x);
                   if (colIdx >= 0 && colIdx < COLUMNS) {
-                    let idx = this.convertRowColToIdx(rowIdx, colIdx);
-                      if (this.grid[idx] === player) {
-                        pieces += 1;
-                      } else {
-                        break;
-                      }    
+                    const idx = this.convertRowColToIdx(rowIdx, colIdx);
+                    if (this.grid[idx] === player) {
+                      pieces += 1;
+                    } else {
+                      break;
+                    }    
                   }            
               }
           }

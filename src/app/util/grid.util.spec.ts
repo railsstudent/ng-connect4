@@ -4,16 +4,18 @@ import { GridUtil } from './grid.util';
 import { ROWS, COLUMNS, FREE_CELL, Player } from '../models/index';
 
 describe('GridUtil', () => {
-  let gridUtil = new GridUtil();  
+  const gridUtil = new GridUtil();
   let grid = [];
-  beforeAll(() => {
-    for (let i = 0; i < ROWS * COLUMNS; i++) {
-      grid.push(FREE_CELL); 
-    }
-    gridUtil.setGrid(grid);
-  });
 
   describe('canPlay returns true for all columns in a new grid', () => {
+    beforeAll(() => {
+      grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
+      gridUtil.setGrid(grid);
+    });
+
     it('all columns can play when grid is empty', () => {
       for (let i = 0; i < COLUMNS; i++) {
         expect(gridUtil.canPlay(i)).toBe(true);
@@ -32,11 +34,10 @@ describe('GridUtil', () => {
   });
 
   describe('canPlay returns true if the column has vacant cell', () => {
-    beforeEach(() => {
-      let cloneGrid = JSON.parse(JSON.stringify(grid));
-      [0,5,8,10,19,22,24,33,36].forEach((i) => cloneGrid[i] = Player.PLAYER2);
-      [1,3,4,12,15,17,26,29].forEach((i) => cloneGrid[i] = Player.PLAYER1);
-      gridUtil.setGrid(cloneGrid);
+    beforeAll(() => {
+      [0,5,8,10,19,22,24,33,36].forEach((i) => grid[i] = Player.PLAYER2);
+      [1,3,4,12,15,17,26,29].forEach((i) => grid[i] = Player.PLAYER1);
+      gridUtil.setGrid(grid);
     });
 
     it('columns can play', () => {
@@ -69,8 +70,9 @@ describe('GridUtil', () => {
 
   describe('play updates column height and grid cell with player\'s piece', () => {
     beforeEach(() => {
+      grid = [];
       for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL); 
+        grid.push(FREE_CELL);
       }
       gridUtil.setGrid(grid);
     });
@@ -108,7 +110,7 @@ describe('GridUtil', () => {
 
       gridUtil.play(3, Player.PLAYER1);
       gridUtil.play(4, Player.PLAYER2);
-      gridUtil.play(3, Player.PLAYER1);      
+      gridUtil.play(3, Player.PLAYER1);
       gridUtil.play(4, Player.PLAYER2);
       gridUtil.play(4, Player.PLAYER1);
       gridUtil.play(1, Player.PLAYER2);
@@ -128,8 +130,9 @@ describe('GridUtil', () => {
 
   describe('play updates column height and grid cell with player\'s piece', () => {
     beforeEach(() => {
+      grid = [];
       for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL); 
+        grid.push(FREE_CELL);
       }
       gridUtil.setGrid(grid);
     });
@@ -167,7 +170,7 @@ describe('GridUtil', () => {
 
       gridUtil.play(3, Player.PLAYER1);
       gridUtil.play(4, Player.PLAYER2);
-      gridUtil.play(3, Player.PLAYER1);      
+      gridUtil.play(3, Player.PLAYER1);
       gridUtil.play(4, Player.PLAYER2);
       gridUtil.play(4, Player.PLAYER1);
       gridUtil.play(1, Player.PLAYER2);
@@ -189,7 +192,7 @@ describe('GridUtil', () => {
     beforeEach(() => {
       grid = [];
       for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL); 
+        grid.push(FREE_CELL);
       }
       gridUtil.setGrid(grid);
     });
@@ -232,12 +235,12 @@ describe('GridUtil', () => {
     beforeEach(() => {
       grid = [];
       for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL); 
+        grid.push(FREE_CELL);
       }
       gridUtil.setGrid(grid);
     });
 
-    it('return true if it is horizontally connected and the winning piece is the second one of the connected 4', () => { 
+    it('return true if it is horizontally connected and the winning piece is the second one of the connected 4', () => {
       [0,2,4,5,11].forEach((i) => grid[i] = Player.PLAYER1);
       [1,3,7,8,10].forEach((i) => grid[i] = Player.PLAYER2);
       gridUtil.setGrid(grid);
@@ -277,12 +280,12 @@ describe('GridUtil', () => {
     beforeEach(() => {
       grid = [];
       for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL); 
+        grid.push(FREE_CELL);
       }
       gridUtil.setGrid(grid);
     });
 
-    it('return true and the winning piece is the second one of the connected 4', () => { 
+    it('return true and the winning piece is the second one of the connected 4', () => {
       [0,1,2,9,14,15,17,29].forEach((i) => grid[i] = Player.PLAYER1);
       [3,7,8,10,21,22,28].forEach((i) => grid[i] = Player.PLAYER2);
       gridUtil.setGrid(grid);
@@ -315,12 +318,12 @@ describe('GridUtil', () => {
     beforeEach(() => {
       grid = [];
       for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL); 
+        grid.push(FREE_CELL);
       }
       gridUtil.setGrid(grid);
     });
 
-    it('return true and the winning piece is the second one of the connected 4', () => { 
+    it('return true and the winning piece is the second one of the connected 4', () => {
       [2,6,9,11,12,16,17,26,33].forEach((i) => grid[i] = Player.PLAYER1);
       [1,3,4,5,8,10,18,19,23].forEach((i) => grid[i] = Player.PLAYER2);
       gridUtil.setGrid(grid);
@@ -353,7 +356,7 @@ describe('GridUtil', () => {
     beforeEach(() => {
       grid = [];
       for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL); 
+        grid.push(FREE_CELL);
       }
       gridUtil.setGrid(grid);
     });
