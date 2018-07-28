@@ -39,7 +39,7 @@ export class GridUtil {
     }
     return -1;
   }
-  
+
   canPlay(column) {
     if (column < 0 || column >= COLUMNS) {
       return false;
@@ -57,7 +57,7 @@ export class GridUtil {
     if (this.height[column] >= 3) {
       const idx1 = this.convertRowColToIdx(this.height[column] - 1, column);
       const idx2 = this.convertRowColToIdx(this.height[column] - 2, column);
-      const idx3 =this.convertRowColToIdx(this.height[column] - 3, column);
+      const idx3 = this.convertRowColToIdx(this.height[column] - 3, column);
       if (this.grid[idx1] === player && this.grid[idx2] === player && this.grid[idx3] === player) {
         return true;
       }
@@ -79,8 +79,8 @@ export class GridUtil {
                       pieces += 1;
                     } else {
                       break;
-                    }    
-                  }            
+                    }
+                  }
               }
           }
           if (pieces === 3) {
@@ -107,7 +107,7 @@ export class GridUtil {
     }
     return heightCopy;
   }
-  
+
   get numMoves() {
     return this.grid.filter((c) => c !== FREE_CELL).length;
   }
