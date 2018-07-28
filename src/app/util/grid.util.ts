@@ -30,7 +30,7 @@ export class GridUtil {
     }
   }
 
-  convertRowColToIdx(row, col) {
+  private convertRowColToIdx(row, col) {
     if (row >= 0 && row < ROWS && col >= 0 && col < COLUMNS) {
       return row * COLUMNS + col;
     }

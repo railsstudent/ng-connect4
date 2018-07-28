@@ -1,5 +1,15 @@
+export interface Pos {
+  row: number;
+  col: number;
+}
+
+export interface MoveState {
+  grid: string[],
+  player: string,
+  oppositePlayer, string
+}
+
 export interface GameSolver {
-  setGrid(grid: string[]);
-  bestScore(): number;
-  bestMove(): [number, number];
+  bestScore(moveState: MoveState): number;
+  bestMove(move: MoveState): Pos;
 }
