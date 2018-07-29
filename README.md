@@ -2,8 +2,7 @@
 
 Reference:
 * [Wikipedia of MiniMax](https://en.wikipedia.org/wiki/Minimax)
-* https://github.com/sachinparyani/Minimax-Connect-4/blob/master/connect4AI.java.
-Understand the logic and write my own implementation in ES6.
+* Evaluation function copied from this SO post. https://softwareengineering.stackexchange.com/questions/263514/why-does-this-evaluation-function-work-in-a-connect-four-game-in-java
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.0.
 

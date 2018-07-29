@@ -1,7 +1,8 @@
 import { FREE_CELL, ROWS, COLUMNS } from "../models/";
+import { Pos } from "../solvers/game-solver";
 
 export class GridUtil {
-  private grid: string[];
+  private _grid: string[];
   private _height: number[] = [];
 
   constructor() {
@@ -16,14 +17,14 @@ export class GridUtil {
       return { row, col };
     };
 
-    this.grid = [];
+    this._grid = [];
     this._height = [];
     for (let i = 0; i < COLUMNS; i++) {
       this._height.push(0);
     }
     for (let i = 0; i < grid.length; i++) {
       const { row, col } = convertIdxToRowCol(i);
-      this.grid.push(grid[i]);
+      this._grid.push(grid[i]);
       if (grid[i] !== FREE_CELL) {
         this._height[col]++;
       }
@@ -46,7 +47,6 @@ export class GridUtil {
 
   isWinningMove(column, player) {
     if (!this.canPlay(column)) {
-      console.error(`Cannot put a piece on ${column}`);
       return false;
     }
 
@@ -56,9 +56,9 @@ export class GridUtil {
       const idx2 = this.convertRowColToIdx(this.height[column] - 2, column);
       const idx3 = this.convertRowColToIdx(this.height[column] - 3, column);
       if (
-        this.grid[idx1] === player &&
-        this.grid[idx2] === player &&
-        this.grid[idx3] === player
+        this._grid[idx1] === player &&
+        this._grid[idx2] === player &&
+        this._grid[idx3] === player
       ) {
         return true;
       }
@@ -74,9 +74,18 @@ export class GridUtil {
           if (delta !== -x) {
             const colIdx = column + delta + x;
             const rowIdx = this._height[column] + direction * (delta + x);
-            if (colIdx >= 0 && colIdx < COLUMNS) {
+            if (
+              colIdx >= 0 &&
+              colIdx < COLUMNS &&
+              rowIdx >= 0 &&
+              rowIdx < ROWS
+            ) {
               const idx = this.convertRowColToIdx(rowIdx, colIdx);
-              if (this.grid[idx] === player) {
+              if (
+                idx >= 0 &&
+                idx < ROWS * COLUMNS &&
+                this._grid[idx] === player
+              ) {
                 pieces += 1;
               } else {
                 break;
@@ -97,8 +106,10 @@ export class GridUtil {
       return;
     }
     const idx = this.convertRowColToIdx(this.height[column], column);
-    this.grid[idx] = player;
+    this._grid[idx] = player;
     this._height[column]++;
+
+    return JSON.parse(JSON.stringify(this._grid));
   }
 
   get height() {
@@ -110,6 +121,20 @@ export class GridUtil {
   }
 
   get numMoves() {
-    return this.grid.filter(c => c !== FREE_CELL).length;
+    return this._grid.filter(c => c !== FREE_CELL).length;
+  }
+
+  lastMove(col): Pos {
+    if (col < 0 || col >= COLUMNS) {
+      return null;
+    }
+    return {
+      row: this._height[col] - 1,
+      col
+    };
+  }
+
+  get gridCopy() {
+    return JSON.parse(JSON.stringify(this._grid));
   }
 }
