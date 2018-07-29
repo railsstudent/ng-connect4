@@ -123,13 +123,13 @@ export class MinimaxSolver implements GameSolver {
 
   bestScore({ grid, player, oppositePlayer }): number {
     let bestScore = -ROWS * COLUMNS;
-    this.gridUtil.setGrid(grid);
     for (let col = 0; col < COLUMNS; col++) {
       if (this.gridUtil.canPlay(col)) {
-        // const newGrid = this.gridUtil.play(col, player);
+        const newGrid = JSON.parse(JSON.stringify(grid));
+        this.gridUtil.setGrid(newGrid);
         const currentMove = { row: this.gridUtil.height[col], col };
         const score = this.minimax(
-          grid,
+          this.gridUtil.gridCopy,
           currentMove,
           oppositePlayer,
           player,
@@ -148,8 +148,9 @@ export class MinimaxSolver implements GameSolver {
   bestMove({ grid, player, oppositePlayer }): Pos {
     let bestMove: Pos = null;
     let bestScore = -ROWS * COLUMNS;
-    this.gridUtil.setGrid(grid);
     for (let col = 0; col < COLUMNS; col++) {
+      const newGrid = JSON.parse(JSON.stringify(grid));
+      this.gridUtil.setGrid(newGrid);
       if (this.gridUtil.canPlay(col)) {
         const currentMove = { row: this.gridUtil.height[col], col };
         const score = this.minimax(
