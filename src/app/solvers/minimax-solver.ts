@@ -1,6 +1,6 @@
 import { GameSolver, Pos, MoveState } from "./game-solver";
 import { GridUtil } from "../util/grid.util";
-import { ROWS, COLUMNS } from "../models";
+import { ROWS, COLUMNS, Player } from "../models";
 
 export interface BestMoveInfo {
   score: number;
@@ -19,14 +19,8 @@ const evaluationTable = [
 
 export class MinimaxSolver implements GameSolver {
   private gridUtil; // = new GridUtil();
-
-  gridCopy() {
-    return this.gridUtil.grid;
-  }
-
-  setGridUtil(gridUtil: GridUtil) {
-    this.gridUtil = gridUtil;
-  }
+  private maximizePlayer;
+  private minimizePlayer;
 
   heuristicEvaluation(player: string, { col }: Pos) {
     let score = 0;
@@ -43,8 +37,6 @@ export class MinimaxSolver implements GameSolver {
   minimax(
     grid: string[],
     currentMove: Pos,
-    player: string,
-    otherPlayer: string,
     depth: number,
     maximizingPlayer: boolean
   ): number {
@@ -55,6 +47,8 @@ export class MinimaxSolver implements GameSolver {
     if (this.gridUtil.numMoves === ROWS * COLUMNS) {
       return 0;
     }
+
+    const player = maximizingPlayer ? this.maximizePlayer : this.minimizePlayer;
 
     // terminate state of the game tree: reach depth or player wins the game
     if (depth === 0 || this.gridUtil.isWinningMove(currentMove.col, player)) {
@@ -79,8 +73,6 @@ export class MinimaxSolver implements GameSolver {
           const minScore = this.minimax(
             this.gridUtil.gridCopy,
             { row: this.gridUtil.height[col], col },
-            otherPlayer,
-            player,
             depth - 1,
             false
           );
@@ -101,8 +93,6 @@ export class MinimaxSolver implements GameSolver {
           const maxScore = this.minimax(
             this.gridUtil.gridCopy,
             { row: this.gridUtil.height[col], col },
-            otherPlayer,
-            player,
             depth - 1,
             true
           );
@@ -121,7 +111,7 @@ export class MinimaxSolver implements GameSolver {
     return bestScore;
   }
 
-  bestScore({ grid, player, oppositePlayer }): number {
+  bestScore({ grid }): number {
     let bestScore = -ROWS * COLUMNS;
     for (let col = 0; col < COLUMNS; col++) {
       if (this.gridUtil.canPlay(col)) {
@@ -131,8 +121,6 @@ export class MinimaxSolver implements GameSolver {
         const score = this.minimax(
           this.gridUtil.gridCopy,
           currentMove,
-          oppositePlayer,
-          player,
           DEPTH,
           true
         );
@@ -145,7 +133,7 @@ export class MinimaxSolver implements GameSolver {
     return bestScore;
   }
 
-  bestMove({ grid, player, oppositePlayer }): Pos {
+  bestMove({ grid }): Pos {
     let bestMove: Pos = null;
     let bestScore = -ROWS * COLUMNS;
     for (let col = 0; col < COLUMNS; col++) {
@@ -156,8 +144,6 @@ export class MinimaxSolver implements GameSolver {
         const score = this.minimax(
           this.gridUtil.gridCopy,
           currentMove,
-          oppositePlayer,
-          player,
           DEPTH,
           true
         );
@@ -172,5 +158,20 @@ export class MinimaxSolver implements GameSolver {
       `----- MinimaxSolver bestMove: [${bestMove.row}, ${bestMove.col}] ----`
     );
     return bestMove;
+  }
+
+  gridCopy() {
+    return this.gridUtil.grid;
+  }
+
+  setGridUtil(gridUtil: GridUtil) {
+    this.gridUtil = gridUtil;
+  }
+
+  setMaximizePlayer(player: Player) {
+    this.maximizePlayer = player;
+  }
+  setMinimizePlayer(player: Player) {
+    this.minimizePlayer = player;
   }
 }

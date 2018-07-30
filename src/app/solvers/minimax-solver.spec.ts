@@ -1,10 +1,15 @@
-import { MinimaxSolver, BestMoveInfo } from "./minimax-solver";
+import { MinimaxSolver } from "./minimax-solver";
 import { FREE_CELL, ROWS, COLUMNS, Player } from "../models";
 import { GridUtil } from "../util/grid.util";
 
 describe("MinimaxSolver", () => {
   const solver = new MinimaxSolver();
   let grid: string[] = [];
+
+  beforeAll(() => {
+    solver.setMaximizePlayer(Player.COMPUTER);
+    solver.setMinimizePlayer(Player.PLAYER1);
+  });
 
   describe("Calculate heuristic evaluation", () => {
     beforeEach(() => {
@@ -122,8 +127,6 @@ describe("MinimaxSolver", () => {
       const score = solver.minimax(
         gridUtil.gridCopy,
         { row: 6, col: 0 },
-        Player.COMPUTER,
-        Player.PLAYER1,
         1,
         true
       );
@@ -139,8 +142,6 @@ describe("MinimaxSolver", () => {
       const score = solver.minimax(
         gridUtil.gridCopy,
         { row: 3, col: 1 },
-        Player.COMPUTER,
-        Player.PLAYER1,
         1,
         true
       );
@@ -155,8 +156,6 @@ describe("MinimaxSolver", () => {
       const score = solver.minimax(
         gridUtil.gridCopy,
         { row: 0, col: 0 },
-        Player.COMPUTER,
-        Player.PLAYER1,
         1,
         true
       );
@@ -171,8 +170,6 @@ describe("MinimaxSolver", () => {
       const score = solver.minimax(
         gridUtil.gridCopy,
         { row: 0, col: 0 },
-        Player.COMPUTER,
-        Player.PLAYER1,
         2,
         true
       );
@@ -188,8 +185,6 @@ describe("MinimaxSolver", () => {
     const score = solver.minimax(
       gridUtil.gridCopy,
       { row: 0, col: 1 },
-      Player.COMPUTER,
-      Player.PLAYER1,
       2,
       true
     );
@@ -204,8 +199,6 @@ describe("MinimaxSolver", () => {
     const score = solver.minimax(
       gridUtil.gridCopy,
       { row: 0, col: 2 },
-      Player.COMPUTER,
-      Player.PLAYER1,
       2,
       true
     );
@@ -220,8 +213,6 @@ describe("MinimaxSolver", () => {
     const score = solver.minimax(
       gridUtil.gridCopy,
       { row: 0, col: 3 },
-      Player.COMPUTER,
-      Player.PLAYER1,
       2,
       true
     );
@@ -236,8 +227,6 @@ describe("MinimaxSolver", () => {
     const score = solver.minimax(
       gridUtil.gridCopy,
       { row: 0, col: 4 },
-      Player.COMPUTER,
-      Player.PLAYER1,
       2,
       true
     );
@@ -252,8 +241,6 @@ describe("MinimaxSolver", () => {
     const score = solver.minimax(
       gridUtil.gridCopy,
       { row: 0, col: 5 },
-      Player.COMPUTER,
-      Player.PLAYER1,
       2,
       true
     );
@@ -268,8 +255,6 @@ describe("MinimaxSolver", () => {
     const score = solver.minimax(
       gridUtil.gridCopy,
       { row: 0, col: 6 },
-      Player.COMPUTER,
-      Player.PLAYER1,
       2,
       true
     );
@@ -290,9 +275,7 @@ describe("MinimaxSolver", () => {
       gridUtil.setGrid(grid);
       solver.setGridUtil(gridUtil);
       const score = solver.bestScore({
-        grid,
-        player: Player.COMPUTER,
-        oppositePlayer: Player.PLAYER1
+        grid
       });
       expect(score).toBe(4);
     });
@@ -303,9 +286,7 @@ describe("MinimaxSolver", () => {
       gridUtil.setGrid(grid);
       solver.setGridUtil(gridUtil);
       const { row, col } = solver.bestMove({
-        grid,
-        player: Player.COMPUTER,
-        oppositePlayer: Player.PLAYER1
+        grid
       });
       expect(row).toBe(0);
       expect(col).toBe(0);

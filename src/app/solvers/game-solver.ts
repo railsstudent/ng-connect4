@@ -1,4 +1,5 @@
 import { GridUtil } from "../util/grid.util";
+import { Player } from "../models";
 
 export interface Pos {
   row: number;
@@ -7,8 +8,6 @@ export interface Pos {
 
 export interface MoveState {
   grid: string[];
-  player: string;
-  oppositePlayer: string;
 }
 
 export interface GameSolver {
@@ -16,4 +15,6 @@ export interface GameSolver {
   bestMove(move: MoveState): Pos;
   setGridUtil(gridUtil: GridUtil);
   gridCopy();
+  setMaximizePlayer(player: Player);
+  setMinimizePlayer(player: Player);
 }

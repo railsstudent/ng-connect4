@@ -1,5 +1,4 @@
 import { FREE_CELL, ROWS, COLUMNS } from "../models/";
-import { Pos } from "../solvers/game-solver";
 
 export class GridUtil {
   private _grid: string[];
@@ -122,16 +121,6 @@ export class GridUtil {
 
   get numMoves() {
     return this._grid.filter(c => c !== FREE_CELL).length;
-  }
-
-  lastMove(col): Pos {
-    if (col < 0 || col >= COLUMNS) {
-      return null;
-    }
-    return {
-      row: this._height[col] - 1,
-      col
-    };
   }
 
   get gridCopy() {

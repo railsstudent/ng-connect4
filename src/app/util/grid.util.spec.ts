@@ -440,38 +440,4 @@ describe("GridUtil", () => {
       expect(gridUtil.isWinningMove(0, Player.PLAYER2)).toBe(false);
     });
   });
-
-  describe("lastMove returns last move of game", () => {
-    beforeEach(() => {
-      grid = [];
-      for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL);
-      }
-      gridUtil.setGrid(grid);
-    });
-
-    it("return null if column is negative", () => {
-      grid[0] = Player.PLAYER1;
-      gridUtil.setGrid(grid);
-      const lm = gridUtil.lastMove(-1);
-      expect(lm).toBeNull();
-    });
-
-    it("return null if column is greater than total number of columns", () => {
-      grid[0] = Player.PLAYER1;
-      gridUtil.setGrid(grid);
-      const lm = gridUtil.lastMove(COLUMNS);
-      expect(lm).toBeNull();
-    });
-
-    it("return last move based on column", () => {
-      grid[0] = Player.PLAYER1;
-      grid[2] = Player.PLAYER2;
-      grid[9] = Player.PLAYER1;
-      gridUtil.setGrid(grid);
-      const lm = gridUtil.lastMove(2);
-      expect(lm.row).toBe(1);
-      expect(lm.col).toBe(2);
-    });
-  });
 });
