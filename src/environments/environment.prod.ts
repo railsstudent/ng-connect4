@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  solver: "minimax"
+  solver: "minimax",
+  depth: 5
 };

@@ -155,60 +155,60 @@ describe("MinimaxSolver", () => {
       const score = solver.minimax({ row: 0, col: 0 }, 2, true);
       expect(score).toBe(4);
     });
-  });
 
-  it("minimax returns score after depth = 2 is reached and move is (0,1)", () => {
-    grid[2] = Player.PLAYER1;
-    const gridUtil = new GridUtil();
-    gridUtil.setGrid(grid);
-    solver.setGridUtil(gridUtil);
-    const score = solver.minimax({ row: 0, col: 1 }, 2, true);
-    expect(score).toBe(3);
-  });
+    it("minimax returns score after depth = 2 is reached and move is (0,1)", () => {
+      grid[2] = Player.PLAYER1;
+      const gridUtil = new GridUtil();
+      gridUtil.setGrid(grid);
+      solver.setGridUtil(gridUtil);
+      const score = solver.minimax({ row: 0, col: 1 }, 2, true);
+      expect(score).toBe(3);
+    });
 
-  it("minimax returns score after depth = 2 is reached and move is (0,2)", () => {
-    grid[2] = Player.PLAYER1;
-    const gridUtil = new GridUtil();
-    gridUtil.setGrid(grid);
-    solver.setGridUtil(gridUtil);
-    const score = solver.minimax({ row: 0, col: 2 }, 2, true);
-    expect(score).toBe(3);
-  });
+    it("minimax returns score after depth = 2 is reached and move is (0,2)", () => {
+      grid[2] = Player.PLAYER1;
+      const gridUtil = new GridUtil();
+      gridUtil.setGrid(grid);
+      solver.setGridUtil(gridUtil);
+      const score = solver.minimax({ row: 0, col: 2 }, 2, true);
+      expect(score).toBe(3);
+    });
 
-  it("minimax returns score after depth = 2 is reached and move is (0,3)", () => {
-    grid[2] = Player.PLAYER1;
-    const gridUtil = new GridUtil();
-    gridUtil.setGrid(grid);
-    solver.setGridUtil(gridUtil);
-    const score = solver.minimax({ row: 0, col: 3 }, 2, true);
-    expect(score).toBe(3);
-  });
+    it("minimax returns score after depth = 2 is reached and move is (0,3)", () => {
+      grid[2] = Player.PLAYER1;
+      const gridUtil = new GridUtil();
+      gridUtil.setGrid(grid);
+      solver.setGridUtil(gridUtil);
+      const score = solver.minimax({ row: 0, col: 3 }, 2, true);
+      expect(score).toBe(3);
+    });
 
-  it("minimax returns score after depth = 2 is reached and move is (0,4)", () => {
-    grid[2] = Player.PLAYER1;
-    const gridUtil = new GridUtil();
-    gridUtil.setGrid(grid);
-    solver.setGridUtil(gridUtil);
-    const score = solver.minimax({ row: 0, col: 4 }, 2, true);
-    expect(score).toBe(3);
-  });
+    it("minimax returns score after depth = 2 is reached and move is (0,4)", () => {
+      grid[2] = Player.PLAYER1;
+      const gridUtil = new GridUtil();
+      gridUtil.setGrid(grid);
+      solver.setGridUtil(gridUtil);
+      const score = solver.minimax({ row: 0, col: 4 }, 2, true);
+      expect(score).toBe(3);
+    });
 
-  it("minimax returns score after depth = 2 is reached and move is (0,5)", () => {
-    grid[2] = Player.PLAYER1;
-    const gridUtil = new GridUtil();
-    gridUtil.setGrid(grid);
-    solver.setGridUtil(gridUtil);
-    const score = solver.minimax({ row: 0, col: 5 }, 2, true);
-    expect(score).toBe(3);
-  });
+    it("minimax returns score after depth = 2 is reached and move is (0,5)", () => {
+      grid[2] = Player.PLAYER1;
+      const gridUtil = new GridUtil();
+      gridUtil.setGrid(grid);
+      solver.setGridUtil(gridUtil);
+      const score = solver.minimax({ row: 0, col: 5 }, 2, true);
+      expect(score).toBe(3);
+    });
 
-  it("minimax returns score after depth = 2 is reached and move is (0,6)", () => {
-    grid[2] = Player.PLAYER1;
-    const gridUtil = new GridUtil();
-    gridUtil.setGrid(grid);
-    solver.setGridUtil(gridUtil);
-    const score = solver.minimax({ row: 0, col: 6 }, 2, true);
-    expect(score).toBe(4);
+    it("minimax returns score after depth = 2 is reached and move is (0,6)", () => {
+      grid[2] = Player.PLAYER1;
+      const gridUtil = new GridUtil();
+      gridUtil.setGrid(grid);
+      solver.setGridUtil(gridUtil);
+      const score = solver.minimax({ row: 0, col: 6 }, 2, true);
+      expect(score).toBe(4);
+    });
   });
 
   describe("bestScore returns the best score minmax", () => {

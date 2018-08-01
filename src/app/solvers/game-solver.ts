@@ -14,7 +14,6 @@ export interface GameSolver {
   bestScore(moveState: MoveState): number;
   bestMove(move: MoveState): Pos;
   setGridUtil(gridUtil: GridUtil);
-  gridCopy();
   setMaximizePlayer(player: Player);
   setMinimizePlayer(player: Player);
 }

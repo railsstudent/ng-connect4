@@ -1,13 +1,14 @@
 import { GameSolver, Pos, MoveState } from "./game-solver";
 import { GridUtil } from "../util/grid.util";
 import { ROWS, COLUMNS, Player } from "../models";
+import { environment } from "../../environments/environment";
 
 export interface BestMoveInfo {
   score: number;
   pos: Pos;
 }
 
-const DEPTH = 2;
+const DEPTH = environment.depth;
 const evaluationTable = [
   [3, 4, 5, 7, 5, 4, 3],
   [4, 6, 8, 10, 8, 6, 4],
@@ -16,6 +17,8 @@ const evaluationTable = [
   [4, 6, 8, 10, 8, 6, 4],
   [3, 4, 5, 7, 5, 4, 3]
 ];
+
+console.log("depth", DEPTH);
 
 export class MinimaxSolver implements GameSolver {
   private gridUtil; // = new GridUtil();
@@ -35,7 +38,6 @@ export class MinimaxSolver implements GameSolver {
 
   // Generate a game tree and find the best score of the current move
   minimax(currentMove: Pos, depth: number, maximizingPlayer: boolean): number {
-    // TODO: Why do i make a copy here?
     const newGrid = this.gridUtil.gridCopy;
     this.gridUtil.setGrid(newGrid);
 
@@ -142,10 +144,6 @@ export class MinimaxSolver implements GameSolver {
       `----- MinimaxSolver bestMove: [${bestMove.row}, ${bestMove.col}] ----`
     );
     return bestMove;
-  }
-
-  gridCopy() {
-    return this.gridUtil.grid;
   }
 
   setGridUtil(gridUtil: GridUtil) {
