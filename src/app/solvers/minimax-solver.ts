@@ -1,12 +1,7 @@
-import { GameSolver, Pos, MoveState } from "./game-solver";
+import { GameSolver, Pos } from "./game-solver";
 import { GridUtil } from "../util/grid.util";
 import { ROWS, COLUMNS, Player } from "../models";
 import { environment } from "../../environments/environment";
-
-export interface BestMoveInfo {
-  score: number;
-  pos: Pos;
-}
 
 const DEPTH = environment.depth;
 const evaluationTable = [
@@ -21,7 +16,7 @@ const evaluationTable = [
 console.log("depth", DEPTH);
 
 export class MinimaxSolver implements GameSolver {
-  private gridUtil; // = new GridUtil();
+  private gridUtil;
   private maximizePlayer;
   private minimizePlayer;
 
