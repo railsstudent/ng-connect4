@@ -1,8 +1,8 @@
 # NgConnect4
 
-Reference: 
-C++ source code of MiniMax Solver: https://github.com/PascalPons/connect4/blob/part3/solver.cpp.  
-Understand the logic and write my own implementation in ES6.
+Reference:
+* [Wikipedia of MiniMax](https://en.wikipedia.org/wiki/Minimax)
+* Evaluation function copied from this SO post. https://softwareengineering.stackexchange.com/questions/263514/why-does-this-evaluation-function-work-in-a-connect-four-game-in-java
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.0.
 
