@@ -123,7 +123,7 @@ export class GridUtil {
     return this._grid.filter(c => c !== FREE_CELL).length;
   }
 
-  get gridCopy() {
+  get newGrid() {
     return JSON.parse(JSON.stringify(this._grid));
   }
 }

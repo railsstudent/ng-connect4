@@ -33,7 +33,7 @@ export class MinimaxSolver implements GameSolver {
 
   // Generate a game tree and find the best score of the current move
   minimax(currentMove: Pos, depth: number, maximizingPlayer: boolean): number {
-    const newGrid = this.gridUtil.gridCopy;
+    const newGrid = this.gridUtil.newGrid;
     this.gridUtil.setGrid(newGrid);
 
     // terminate state of the game tree: a draw
@@ -52,7 +52,7 @@ export class MinimaxSolver implements GameSolver {
     if (this.gridUtil.canPlay(currentMove.col)) {
       this.gridUtil.play(currentMove.col, player);
     }
-    const nextStateGrid = this.gridUtil.gridCopy;
+    const nextStateGrid = this.gridUtil.newGrid;
 
     // find the min value of all the max values of opposition
     let bestScore: number;

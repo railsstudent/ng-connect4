@@ -12,7 +12,7 @@ export interface MoveState {
 
 export interface GameSolver {
   bestScore(moveState: MoveState): number;
-  bestMove(move: MoveState): Pos;
+  bestMove(moveState: MoveState): Pos;
   setGridUtil(gridUtil: GridUtil);
   setMaximizePlayer(player: Player);
   setMinimizePlayer(player: Player);
