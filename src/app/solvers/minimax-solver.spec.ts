@@ -3,7 +3,7 @@ import { MinimaxSolver } from "./minimax-solver";
 import { FREE_CELL, ROWS, COLUMNS, Player } from "../models";
 import { GridUtil } from "../util/grid.util";
 
-fdescribe("MinimaxSolver", () => {
+describe("MinimaxSolver", () => {
   const solver = new MinimaxSolver();
   let grid: string[] = [];
 

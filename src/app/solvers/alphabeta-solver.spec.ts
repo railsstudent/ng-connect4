@@ -10,7 +10,7 @@ beforeAll(() => {
   solver.setMinimizePlayer(Player.PLAYER1);
 });
 
-fdescribe("AlphabetaSolver", () => {
+describe("AlphabetaSolver", () => {
   describe("alphabeta returns best score in maximization", () => {
     beforeEach(() => {
       grid = [];
