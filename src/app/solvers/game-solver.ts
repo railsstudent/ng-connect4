@@ -11,6 +11,9 @@ export interface MoveState {
   grid: string[];
 }
 
+export const MINI_MAX = "minimax";
+export const ALPHA_BETA = "alphabeta";
+
 export const DEPTH = environment.depth;
 const evaluationTable = [
   [3, 4, 5, 7, 5, 4, 3],
