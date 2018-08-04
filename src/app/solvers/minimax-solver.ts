@@ -1,6 +1,6 @@
 import { GameSolver, Pos } from "./game-solver";
 import { GridUtil } from "../util/grid.util";
-import { ROWS, COLUMNS, Player } from "../models";
+import { ROWS, COLUMNS, Player, MIN_INF, MAX_INF } from "../models";
 import { environment } from "../../environments/environment";
 
 const DEPTH = environment.depth;
@@ -13,12 +13,12 @@ const evaluationTable = [
   [3, 4, 5, 7, 5, 4, 3]
 ];
 
-console.log("depth", DEPTH);
+// console.log("depth", DEPTH);
 
 export class MinimaxSolver implements GameSolver {
-  private gridUtil;
-  private maximizePlayer;
-  private minimizePlayer;
+  private gridUtil: GridUtil;
+  private maximizePlayer: Player;
+  private minimizePlayer: Player;
 
   heuristicEvaluation(player: string, { col }: Pos) {
     let score = 0;
@@ -37,7 +37,7 @@ export class MinimaxSolver implements GameSolver {
     this.gridUtil.setGrid(newGrid);
 
     // terminate state of the game tree: a draw
-    if (this.gridUtil.numMoves === ROWS * COLUMNS) {
+    if (this.gridUtil.isDraw()) {
       return 0;
     }
 
@@ -57,7 +57,7 @@ export class MinimaxSolver implements GameSolver {
     // find the min value of all the max values of opposition
     let bestScore: number;
     if (maximizingPlayer === true) {
-      bestScore = -ROWS * COLUMNS;
+      bestScore = MIN_INF;
       for (let col = 0; col < COLUMNS; col++) {
         const maxmizeGrid = JSON.parse(JSON.stringify(nextStateGrid));
         this.gridUtil.setGrid(maxmizeGrid);
@@ -69,14 +69,12 @@ export class MinimaxSolver implements GameSolver {
             false
           );
           console.log("minimized next move", minScore);
-          if (minScore > bestScore) {
-            bestScore = minScore;
-          }
+          bestScore = Math.max(minScore, bestScore);
         }
       }
     } else {
       // minimizing player
-      bestScore = ROWS * COLUMNS;
+      bestScore = MAX_INF;
       for (let col = 0; col < COLUMNS; col++) {
         const minimizeGrid = JSON.parse(JSON.stringify(nextStateGrid));
         this.gridUtil.setGrid(minimizeGrid);
@@ -88,9 +86,7 @@ export class MinimaxSolver implements GameSolver {
             true
           );
           console.log("maximized next move", maxScore);
-          if (maxScore < bestScore) {
-            bestScore = maxScore;
-          }
+          bestScore = Math.min(bestScore, maxScore);
         }
       }
     }

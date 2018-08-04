@@ -9,6 +9,7 @@ export class GridUtil {
       this._height.push(0);
     }
   }
+
   setGrid(grid: string[]) {
     const convertIdxToRowCol = idx => {
       const col = idx % COLUMNS;
@@ -37,14 +38,14 @@ export class GridUtil {
     return -1;
   }
 
-  canPlay(column) {
+  canPlay(column): boolean {
     if (column < 0 || column >= COLUMNS) {
       return false;
     }
     return this._height[column] < ROWS;
   }
 
-  isWinningMove(column, player) {
+  isWinningMove(column, player): boolean {
     if (!this.canPlay(column)) {
       return false;
     }
@@ -107,11 +108,9 @@ export class GridUtil {
     const idx = this.convertRowColToIdx(this.height[column], column);
     this._grid[idx] = player;
     this._height[column]++;
-
-    return JSON.parse(JSON.stringify(this._grid));
   }
 
-  get height() {
+  get height(): number[] {
     const heightCopy = [];
     for (let i = 0; i < COLUMNS; i++) {
       heightCopy.push(this._height[i]);
@@ -119,11 +118,15 @@ export class GridUtil {
     return heightCopy;
   }
 
-  get numMoves() {
+  get numMoves(): number {
     return this._grid.filter(c => c !== FREE_CELL).length;
   }
 
-  get newGrid() {
+  get newGrid(): string[] {
     return JSON.parse(JSON.stringify(this._grid));
+  }
+
+  isDraw() {
+    return this.numMoves === ROWS * COLUMNS;
   }
 }
