@@ -1,35 +1,11 @@
-import { GameSolver, Pos } from "./game-solver";
+import { GameSolver, Pos, DEPTH, heuristicEvaluation } from "./game-solver";
 import { GridUtil } from "../util/grid.util";
-import { ROWS, COLUMNS, Player, MIN_INF, MAX_INF } from "../models";
-import { environment } from "../../environments/environment";
-
-const DEPTH = environment.depth;
-const evaluationTable = [
-  [3, 4, 5, 7, 5, 4, 3],
-  [4, 6, 8, 10, 8, 6, 4],
-  [5, 8, 11, 13, 11, 8, 5],
-  [5, 8, 11, 13, 11, 8, 5],
-  [4, 6, 8, 10, 8, 6, 4],
-  [3, 4, 5, 7, 5, 4, 3]
-];
-
-// console.log("depth", DEPTH);
+import { COLUMNS, Player, MIN_INF, MAX_INF } from "../models";
 
 export class MinimaxSolver implements GameSolver {
   private gridUtil: GridUtil;
   private maximizePlayer: Player;
   private minimizePlayer: Player;
-
-  heuristicEvaluation(player: string, { col }: Pos) {
-    let score = 0;
-    if (this.gridUtil.isWinningMove(col, player)) {
-      score = (ROWS * COLUMNS + 1 - this.gridUtil.numMoves) / 2;
-    } else {
-      const row = ROWS - this.gridUtil.height[col] - 1;
-      score = evaluationTable[row][col];
-    }
-    return score;
-  }
 
   // Generate a game tree and find the best score of the current move
   minimax(currentMove: Pos, depth: number, maximizingPlayer: boolean): number {
@@ -46,7 +22,7 @@ export class MinimaxSolver implements GameSolver {
 
     // terminate state of the game tree: reach depth or player wins the game
     if (depth === 0 || this.gridUtil.isWinningMove(currentMove.col, player)) {
-      return this.heuristicEvaluation(player, currentMove);
+      return heuristicEvaluation(this.gridUtil, player, currentMove);
     }
 
     if (this.gridUtil.canPlay(currentMove.col)) {
@@ -99,7 +75,7 @@ export class MinimaxSolver implements GameSolver {
   }
 
   bestScore({ grid }): number {
-    let bestScore = -ROWS * COLUMNS;
+    let bestScore = MIN_INF;
     for (let col = 0; col < COLUMNS; col++) {
       if (this.gridUtil.canPlay(col)) {
         const newGrid = JSON.parse(JSON.stringify(grid));
@@ -117,7 +93,7 @@ export class MinimaxSolver implements GameSolver {
 
   bestMove({ grid }): Pos {
     let bestMove: Pos = null;
-    let bestScore = -ROWS * COLUMNS;
+    let bestScore = MIN_INF;
     for (let col = 0; col < COLUMNS; col++) {
       const newGrid = JSON.parse(JSON.stringify(grid));
       this.gridUtil.setGrid(newGrid);

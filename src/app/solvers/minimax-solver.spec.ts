@@ -1,8 +1,9 @@
+import { heuristicEvaluation } from "./game-solver";
 import { MinimaxSolver } from "./minimax-solver";
 import { FREE_CELL, ROWS, COLUMNS, Player } from "../models";
 import { GridUtil } from "../util/grid.util";
 
-describe("MinimaxSolver", () => {
+fdescribe("MinimaxSolver", () => {
   const solver = new MinimaxSolver();
   let grid: string[] = [];
 
@@ -26,7 +27,7 @@ describe("MinimaxSolver", () => {
       const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
       solver.setGridUtil(gridUtil);
-      const score = solver.heuristicEvaluation(Player.PLAYER2, {
+      const score = heuristicEvaluation(gridUtil, Player.PLAYER2, {
         row: 2,
         col: 0
       });
@@ -40,7 +41,7 @@ describe("MinimaxSolver", () => {
       const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
       solver.setGridUtil(gridUtil);
-      const score = solver.heuristicEvaluation(Player.PLAYER2, {
+      const score = heuristicEvaluation(gridUtil, Player.PLAYER2, {
         row: 1,
         col: 2
       });
@@ -58,7 +59,7 @@ describe("MinimaxSolver", () => {
       const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
       solver.setGridUtil(gridUtil);
-      const score = solver.heuristicEvaluation(Player.PLAYER2, {
+      const score = heuristicEvaluation(gridUtil, Player.PLAYER2, {
         row: 3,
         col: 2
       });

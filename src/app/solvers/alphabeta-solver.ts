@@ -1,33 +1,14 @@
-import { GameSolver, Pos } from "./game-solver";
-import { Player, ROWS, COLUMNS, MIN_INF, MAX_INF } from "../models";
+import { GameSolver, Pos, heuristicEvaluation } from "./game-solver";
+import { Player, COLUMNS, MIN_INF, MAX_INF } from "../models";
 import { GridUtil } from "../util/grid.util";
 import { environment } from "../../environments/environment";
 
 const DEPTH = environment.depth;
-const evaluationTable = [
-  [3, 4, 5, 7, 5, 4, 3],
-  [4, 6, 8, 10, 8, 6, 4],
-  [5, 8, 11, 13, 11, 8, 5],
-  [5, 8, 11, 13, 11, 8, 5],
-  [4, 6, 8, 10, 8, 6, 4],
-  [3, 4, 5, 7, 5, 4, 3]
-];
 
 export class AlphabetaSolver implements GameSolver {
   private gridUtil: GridUtil;
   private maximizePlayer: Player;
   private minimizePlayer: Player;
-
-  heuristicEvaluation(player: string, { col }: Pos) {
-    let score = 0;
-    if (this.gridUtil.isWinningMove(col, player)) {
-      score = (ROWS * COLUMNS + 1 - this.gridUtil.numMoves) / 2;
-    } else {
-      const row = ROWS - this.gridUtil.height[col] - 1;
-      score = evaluationTable[row][col];
-    }
-    return score;
-  }
 
   //   function alphabeta(node, depth, α, β, maximizingPlayer) is
   //     if depth = 0 or node is a terminal node then
@@ -72,7 +53,7 @@ export class AlphabetaSolver implements GameSolver {
 
     // terminate state of the game tree: reach depth or player wins the game
     if (depth === 0 || this.gridUtil.isWinningMove(currentMove.col, player)) {
-      return this.heuristicEvaluation(player, currentMove);
+      return heuristicEvaluation(this.gridUtil, player, currentMove);
     }
 
     if (this.gridUtil.canPlay(currentMove.col)) {
@@ -128,6 +109,8 @@ export class AlphabetaSolver implements GameSolver {
         if (this.gridUtil.canPlay(col)) {
           const move = { row: this.gridUtil.height[col], col };
           const maxScore = this.alphabeta(move, depth - 1, alpha, beta, true);
+          bestScore = Math.min(bestScore, maxScore);
+          beta = Math.min(beta, bestScore);
           console.log(
             "maximized next move",
             maxScore,
@@ -138,8 +121,13 @@ export class AlphabetaSolver implements GameSolver {
             "move",
             move
           );
-          if (maxScore < bestScore) {
+          if (alpha >= beta) {
             bestScore = maxScore;
+            console.log("alpha cutoff", "alpha", alpha, "beta", beta, "move", {
+              row: this.gridUtil.height[col],
+              col
+            });
+            break;
           }
         }
       }
@@ -153,11 +141,54 @@ export class AlphabetaSolver implements GameSolver {
   }
 
   bestScore({ grid }): number {
-    return 0;
+    let bestScore = MIN_INF;
+    for (let col = 0; col < COLUMNS; col++) {
+      if (this.gridUtil.canPlay(col)) {
+        const newGrid = JSON.parse(JSON.stringify(grid));
+        this.gridUtil.setGrid(newGrid);
+        const currentMove = { row: this.gridUtil.height[col], col };
+        const score = this.alphabeta(
+          currentMove,
+          DEPTH,
+          MIN_INF,
+          MAX_INF,
+          true
+        );
+        if (score > bestScore) {
+          bestScore = score;
+        }
+      }
+    }
+    console.log(`---- MinimaxSolver bestScore: ${bestScore} ----`);
+    return bestScore;
   }
 
   bestMove({ grid }): Pos {
-    return null;
+    let bestMove: Pos = null;
+    let bestScore = MIN_INF;
+    for (let col = 0; col < COLUMNS; col++) {
+      const newGrid = JSON.parse(JSON.stringify(grid));
+      this.gridUtil.setGrid(newGrid);
+      if (this.gridUtil.canPlay(col)) {
+        const currentMove = { row: this.gridUtil.height[col], col };
+        const score = this.alphabeta(
+          currentMove,
+          DEPTH,
+          MIN_INF,
+          MAX_INF,
+          true
+        );
+        if (score > bestScore) {
+          bestScore = score;
+          bestMove = currentMove;
+        }
+      }
+    }
+    console.log(`---- AlphaBetaSolver bestScore: ${bestScore} ----`);
+    console.log(
+      `----- AlphaBetaSolver bestMove: [${bestMove.row}, ${bestMove.col}] ----`
+    );
+    return bestMove;
   }
 
   setGridUtil(gridUtil: GridUtil) {
