@@ -5,8 +5,7 @@
 export const environment = {
   production: false,
   solver: "minimax",
-  depth: 2,
-  alphabeta_depth: 5
+  depth: 2
 };
 
 /*

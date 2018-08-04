@@ -1,43 +1,19 @@
-import { GameSolver, Pos } from "./game-solver";
+import { GameSolver, Pos, DEPTH, heuristicEvaluation } from "./game-solver";
 import { GridUtil } from "../util/grid.util";
-import { ROWS, COLUMNS, Player } from "../models";
-import { environment } from "../../environments/environment";
-
-const DEPTH = environment.depth;
-const evaluationTable = [
-  [3, 4, 5, 7, 5, 4, 3],
-  [4, 6, 8, 10, 8, 6, 4],
-  [5, 8, 11, 13, 11, 8, 5],
-  [5, 8, 11, 13, 11, 8, 5],
-  [4, 6, 8, 10, 8, 6, 4],
-  [3, 4, 5, 7, 5, 4, 3]
-];
-
-console.log("depth", DEPTH);
+import { COLUMNS, Player, MIN_INF, MAX_INF } from "../models";
 
 export class MinimaxSolver implements GameSolver {
-  private gridUtil;
-  private maximizePlayer;
-  private minimizePlayer;
-
-  heuristicEvaluation(player: string, { col }: Pos) {
-    let score = 0;
-    if (this.gridUtil.isWinningMove(col, player)) {
-      score = (ROWS * COLUMNS + 1 - this.gridUtil.numMoves) / 2;
-    } else {
-      const row = ROWS - this.gridUtil.height[col] - 1;
-      score = evaluationTable[row][col];
-    }
-    return score;
-  }
+  private gridUtil: GridUtil;
+  private maximizePlayer: Player;
+  private minimizePlayer: Player;
 
   // Generate a game tree and find the best score of the current move
   minimax(currentMove: Pos, depth: number, maximizingPlayer: boolean): number {
-    const newGrid = this.gridUtil.gridCopy;
+    const newGrid = this.gridUtil.newGrid;
     this.gridUtil.setGrid(newGrid);
 
     // terminate state of the game tree: a draw
-    if (this.gridUtil.numMoves === ROWS * COLUMNS) {
+    if (this.gridUtil.isDraw()) {
       return 0;
     }
 
@@ -46,18 +22,18 @@ export class MinimaxSolver implements GameSolver {
 
     // terminate state of the game tree: reach depth or player wins the game
     if (depth === 0 || this.gridUtil.isWinningMove(currentMove.col, player)) {
-      return this.heuristicEvaluation(player, currentMove);
+      return heuristicEvaluation(this.gridUtil, player, currentMove);
     }
 
     if (this.gridUtil.canPlay(currentMove.col)) {
       this.gridUtil.play(currentMove.col, player);
     }
-    const nextStateGrid = this.gridUtil.gridCopy;
+    const nextStateGrid = this.gridUtil.newGrid;
 
     // find the min value of all the max values of opposition
     let bestScore: number;
     if (maximizingPlayer === true) {
-      bestScore = -ROWS * COLUMNS;
+      bestScore = MIN_INF;
       for (let col = 0; col < COLUMNS; col++) {
         const maxmizeGrid = JSON.parse(JSON.stringify(nextStateGrid));
         this.gridUtil.setGrid(maxmizeGrid);
@@ -69,14 +45,12 @@ export class MinimaxSolver implements GameSolver {
             false
           );
           console.log("minimized next move", minScore);
-          if (minScore > bestScore) {
-            bestScore = minScore;
-          }
+          bestScore = Math.max(minScore, bestScore);
         }
       }
     } else {
       // minimizing player
-      bestScore = ROWS * COLUMNS;
+      bestScore = MAX_INF;
       for (let col = 0; col < COLUMNS; col++) {
         const minimizeGrid = JSON.parse(JSON.stringify(nextStateGrid));
         this.gridUtil.setGrid(minimizeGrid);
@@ -88,9 +62,7 @@ export class MinimaxSolver implements GameSolver {
             true
           );
           console.log("maximized next move", maxScore);
-          if (maxScore < bestScore) {
-            bestScore = maxScore;
-          }
+          bestScore = Math.min(bestScore, maxScore);
         }
       }
     }
@@ -103,7 +75,7 @@ export class MinimaxSolver implements GameSolver {
   }
 
   bestScore({ grid }): number {
-    let bestScore = -ROWS * COLUMNS;
+    let bestScore = MIN_INF;
     for (let col = 0; col < COLUMNS; col++) {
       if (this.gridUtil.canPlay(col)) {
         const newGrid = JSON.parse(JSON.stringify(grid));
@@ -121,7 +93,7 @@ export class MinimaxSolver implements GameSolver {
 
   bestMove({ grid }): Pos {
     let bestMove: Pos = null;
-    let bestScore = -ROWS * COLUMNS;
+    let bestScore = MIN_INF;
     for (let col = 0; col < COLUMNS; col++) {
       const newGrid = JSON.parse(JSON.stringify(grid));
       this.gridUtil.setGrid(newGrid);
