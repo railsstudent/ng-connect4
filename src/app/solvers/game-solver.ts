@@ -1,15 +1,10 @@
 import { environment } from "../../environments/environment";
 import { GridUtil } from "../util/grid.util";
-import { Player, ROWS, COLUMNS } from "../models";
+import { Player, ROWS, COLUMNS, Pos } from "../models";
 
-export interface Pos {
-  row: number;
-  col: number;
-}
-
-export interface MoveState {
-  grid: string[];
-}
+// export interface MoveState {
+//   grid: string[];
+// }
 
 export const MINI_MAX = "minimax";
 export const ALPHA_BETA = "alphabeta";
@@ -36,8 +31,8 @@ export const heuristicEvaluation = (gridUtil, player: string, { col }: Pos) => {
 };
 
 export interface GameSolver {
-  bestScore(moveState: MoveState): number;
-  bestMove(moveState: MoveState): Pos;
+  bestScore(grid: string[]): number;
+  bestMove(grid: string[]): Pos;
   setGridUtil(gridUtil: GridUtil);
   setMaximizePlayer(player: Player);
   setMinimizePlayer(player: Player);

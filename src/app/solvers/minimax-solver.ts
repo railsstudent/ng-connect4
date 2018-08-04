@@ -1,6 +1,6 @@
-import { GameSolver, Pos, DEPTH, heuristicEvaluation } from "./game-solver";
+import { GameSolver, DEPTH, heuristicEvaluation } from "./game-solver";
 import { GridUtil } from "../util/grid.util";
-import { COLUMNS, Player, MIN_INF, MAX_INF } from "../models";
+import { COLUMNS, Player, MIN_INF, MAX_INF, Pos } from "../models";
 
 export class MinimaxSolver implements GameSolver {
   private gridUtil: GridUtil;
@@ -74,7 +74,7 @@ export class MinimaxSolver implements GameSolver {
     return bestScore;
   }
 
-  bestScore({ grid }): number {
+  bestScore(grid): number {
     let bestScore = MIN_INF;
     for (let col = 0; col < COLUMNS; col++) {
       if (this.gridUtil.canPlay(col)) {
@@ -91,7 +91,7 @@ export class MinimaxSolver implements GameSolver {
     return bestScore;
   }
 
-  bestMove({ grid }): Pos {
+  bestMove(grid): Pos {
     let bestMove: Pos = null;
     let bestScore = MIN_INF;
     for (let col = 0; col < COLUMNS; col++) {

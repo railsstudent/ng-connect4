@@ -225,9 +225,7 @@ describe("MinimaxSolver", () => {
       const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
       solver.setGridUtil(gridUtil);
-      const score = solver.bestScore({
-        grid
-      });
+      const score = solver.bestScore(grid);
       expect(score).toBe(4);
     });
 
@@ -236,9 +234,7 @@ describe("MinimaxSolver", () => {
       const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
       solver.setGridUtil(gridUtil);
-      const { row, col } = solver.bestMove({
-        grid
-      });
+      const { row, col } = solver.bestMove(grid);
       expect(row).toBe(0);
       expect(col).toBe(0);
     });

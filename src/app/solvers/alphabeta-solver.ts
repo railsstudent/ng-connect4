@@ -1,5 +1,5 @@
-import { GameSolver, Pos, heuristicEvaluation } from "./game-solver";
-import { Player, COLUMNS, MIN_INF, MAX_INF } from "../models";
+import { GameSolver, heuristicEvaluation } from "./game-solver";
+import { Player, COLUMNS, MIN_INF, MAX_INF, Pos } from "../models";
 import { GridUtil } from "../util/grid.util";
 import { environment } from "../../environments/environment";
 
@@ -140,7 +140,7 @@ export class AlphabetaSolver implements GameSolver {
     return bestScore;
   }
 
-  bestScore({ grid }): number {
+  bestScore(grid): number {
     let bestScore = MIN_INF;
     for (let col = 0; col < COLUMNS; col++) {
       if (this.gridUtil.canPlay(col)) {
@@ -163,7 +163,7 @@ export class AlphabetaSolver implements GameSolver {
     return bestScore;
   }
 
-  bestMove({ grid }): Pos {
+  bestMove(grid): Pos {
     let bestMove: Pos = null;
     let bestScore = MIN_INF;
     for (let col = 0; col < COLUMNS; col++) {

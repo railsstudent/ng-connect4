@@ -215,4 +215,32 @@ describe("AlphabetaSolver", () => {
       expect(score).toBe(4);
     });
   });
+
+  describe("bestScore returns the best score minmax", () => {
+    beforeEach(() => {
+      grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
+    });
+
+    it("bestScore returns the best score among all game trees", () => {
+      grid[2] = Player.PLAYER1;
+      const gridUtil = new GridUtil();
+      gridUtil.setGrid(grid);
+      solver.setGridUtil(gridUtil);
+      const score = solver.bestScore(grid);
+      expect(score).toBe(4);
+    });
+
+    it("bestMove returns the best score among all game trees", () => {
+      grid[2] = Player.PLAYER1;
+      const gridUtil = new GridUtil();
+      gridUtil.setGrid(grid);
+      solver.setGridUtil(gridUtil);
+      const { row, col } = solver.bestMove(grid);
+      expect(row).toBe(0);
+      expect(col).toBe(0);
+    });
+  });
 });

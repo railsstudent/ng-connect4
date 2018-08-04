@@ -9,5 +9,10 @@ export enum Outcome {
   PLAYER2_WINS = "Player 2 wins!!!",
   COMPUTER_WINS = "Computer wins!!!",
   DRAW = "Draw!!!",
-  NEW_GAME = ""
+  DEFAULT = ""
+}
+
+export enum Mode {
+  HUMAN_VS_HUMAN,
+  HUMAN_VS_COMPUTER
 }
