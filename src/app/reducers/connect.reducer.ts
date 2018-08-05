@@ -1,6 +1,7 @@
 import { ConnectActionTypes, ConnectActions } from "./connect.actions";
 import { Player, Outcome, ROWS, COLUMNS, FREE_CELL, Mode } from "../models";
 import { GridUtil } from "../util/grid.util";
+import { createSelector, createFeatureSelector } from "@ngrx/store";
 
 export interface ConnectState {
   grid: string[];
@@ -89,3 +90,30 @@ export function connectReducer(
       return state;
   }
 }
+
+// connect selector
+export const selectConnect = createFeatureSelector<ConnectState>("connect");
+export const selectGrid = createSelector(
+  selectConnect,
+  (state: ConnectState) => state.grid
+);
+export const selectNextPlayer = createSelector(
+  selectConnect,
+  (state: ConnectState) => state.nextPlayer
+);
+export const selectMovesLeft = createSelector(
+  selectConnect,
+  (state: ConnectState) => state.movesLeft
+);
+export const selectOutcome = createSelector(
+  selectConnect,
+  (state: ConnectState) => state.outcome
+);
+export const selectColumnAvailable = createSelector(
+  selectConnect,
+  (state: ConnectState) => state.columnAvailable
+);
+export const selectResetGame = createSelector(
+  selectConnect,
+  (state: ConnectState) => state.reset
+);

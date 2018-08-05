@@ -1,29 +1,37 @@
-import {
-  ActionReducer,
-  ActionReducerMap,
-  createFeatureSelector,
-  createSelector,
-  MetaReducer
-} from '@ngrx/store';
-import { environment } from '../../environments/environment';
+import { ActionReducer, ActionReducerMap, MetaReducer } from "@ngrx/store";
+import { environment } from "../../environments/environment";
 
-import { ConnectState, connectReducer } from './connect.reducer';
+import { ConnectState, connectReducer } from "./connect.reducer";
 
-export interface State {
-  game: ConnectState;
+export interface AppState {
+  connect: ConnectState;
 }
 
-export const reducers: ActionReducerMap<State> = {
-  game: connectReducer
+export const reducers: ActionReducerMap<AppState> = {
+  connect: connectReducer
 };
 
-export function debug(reducer: ActionReducer<any>): ActionReducer<any> {
+export function debug(
+  reducer: ActionReducer<AppState>
+): ActionReducer<AppState> {
   return function(state, action) {
-    console.log('state', state);
-    console.log('action', action);
+    console.log("state", state);
+    console.log("action", action);
 
     return reducer(state, action);
   };
 }
 
-export const metaReducers: MetaReducer<State>[] = !environment.production ? [debug] : [];
+export const metaReducers: MetaReducer<AppState>[] = !environment.production
+  ? [debug]
+  : [];
+
+export {
+  selectConnect,
+  selectColumnAvailable,
+  selectGrid,
+  selectMovesLeft,
+  selectNextPlayer,
+  selectOutcome,
+  selectResetGame
+} from "./connect.reducer";
