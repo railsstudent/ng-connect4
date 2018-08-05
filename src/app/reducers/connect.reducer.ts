@@ -36,116 +36,55 @@ export const initialState: ConnectState = {
   columnAvailable: initColumns()
 };
 
+const nextAction = (state, action, gridUtil) => {
+  const { mode = Mode.UNKNOWN, player, column } = action.payload;
+  gridUtil.setGrid(state.grid);
+  const isWinningMove = gridUtil.isWinningMove(column, player);
+  gridUtil.play(column, player);
+  const draw = gridUtil.isDraw();
+  let outcome = Outcome.DEFAULT;
+  if (player === Player.PLAYER1 && isWinningMove === true) {
+    outcome = Outcome.PLAYER1_WINS;
+  } else if (player === Player.PLAYER2 && isWinningMove === true) {
+    outcome = Outcome.PLAYER2_WINS;
+  } else if (player === Player.COMPUTER && isWinningMove === true) {
+    outcome = Outcome.COMPUTER_WINS;
+  } else if (draw === true) {
+    outcome = Outcome.DRAW;
+  }
+  const reset = isWinningMove || draw;
+  let nextPlayer = Player.PLAYER1;
+  if (player === Player.PLAYER1) {
+    nextPlayer =
+      mode === Mode.HUMAN_VS_HUMAN ? Player.PLAYER2 : Player.COMPUTER;
+  } else if (player === Player.PLAYER2 || player === Player.COMPUTER) {
+    nextPlayer = Player.PLAYER1;
+  }
+  const columnAvailable = [];
+  for (let i = 0; i < COLUMNS; i++) {
+    columnAvailable.push(gridUtil.canPlay(i));
+  }
+  return {
+    grid: gridUtil.newGrid,
+    nextPlayer,
+    movesLeft: state.movesLeft - 1,
+    outcome,
+    reset,
+    columnAvailable
+  };
+};
+
 export function connectReducer(
   state = initialState,
   action: ConnectActions
 ): ConnectState {
   const gridUtil = new GridUtil();
-  let isWinningMove: boolean;
-  let outcome: Outcome;
-  let nextPlayer: Player;
-  let columnAvailable = [];
-  let mode: Mode;
-  let player: Player;
-  let column: number;
-  let draw: boolean;
-  let reset: boolean;
 
   switch (action.type) {
     case ConnectActionTypes.Player1Move:
-      mode = action.payload.mode;
-      player = action.payload.player;
-      column = action.payload.column;
-
-      gridUtil.setGrid(state.grid);
-      isWinningMove = gridUtil.isWinningMove(column, player);
-      draw = gridUtil.isDraw();
-      outcome = Outcome.DEFAULT;
-      reset = isWinningMove || draw;
-      if (isWinningMove === true) {
-        outcome = Outcome.PLAYER1_WINS;
-        gridUtil.play(column, player);
-      } else if (draw === true) {
-        outcome = Outcome.DRAW;
-      } else {
-        gridUtil.play(column, player);
-      }
-      nextPlayer =
-        mode === Mode.HUMAN_VS_HUMAN ? Player.PLAYER2 : Player.COMPUTER;
-      columnAvailable = [];
-      for (let i = 0; i < COLUMNS; i++) {
-        columnAvailable.push(gridUtil.canPlay(i));
-      }
-      return {
-        grid: gridUtil.newGrid,
-        nextPlayer,
-        movesLeft: state.movesLeft - 1,
-        outcome,
-        reset,
-        columnAvailable
-      };
     case ConnectActionTypes.Player2Move:
-      player = action.payload.player;
-      column = action.payload.column;
-
-      gridUtil.setGrid(state.grid);
-      isWinningMove = gridUtil.isWinningMove(column, player);
-      draw = gridUtil.isDraw();
-      outcome = Outcome.DEFAULT;
-      reset = isWinningMove || draw;
-      if (isWinningMove === true) {
-        outcome = Outcome.PLAYER2_WINS;
-        gridUtil.play(column, player);
-      } else if (draw === true) {
-        outcome = Outcome.DRAW;
-      } else {
-        gridUtil.play(column, player);
-      }
-      nextPlayer = Player.PLAYER1;
-      columnAvailable = [];
-      for (let i = 0; i < COLUMNS; i++) {
-        columnAvailable.push(gridUtil.canPlay(i));
-      }
-
-      return {
-        grid: gridUtil.newGrid,
-        nextPlayer,
-        movesLeft: state.movesLeft - 1,
-        outcome,
-        reset,
-        columnAvailable
-      };
     case ConnectActionTypes.ComputerMove:
-      player = action.payload.player;
-      column = action.payload.column;
-
-      gridUtil.setGrid(state.grid);
-      isWinningMove = gridUtil.isWinningMove(column, player);
-      draw = gridUtil.isDraw();
-      outcome = Outcome.DEFAULT;
-      reset = isWinningMove || draw;
-      if (isWinningMove === true) {
-        outcome = Outcome.COMPUTER_WINS;
-        gridUtil.play(column, player);
-      } else if (draw === true) {
-        outcome = Outcome.DRAW;
-      } else {
-        gridUtil.play(column, player);
-      }
-      nextPlayer = Player.PLAYER1;
-      columnAvailable = [];
-      for (let i = 0; i < COLUMNS; i++) {
-        columnAvailable.push(gridUtil.canPlay(i));
-      }
-
-      return {
-        grid: gridUtil.newGrid,
-        nextPlayer: Player.PLAYER1,
-        movesLeft: state.movesLeft - 1,
-        outcome,
-        reset,
-        columnAvailable
-      };
+      return nextAction(state, action, gridUtil);
     default:
       return state;
   }

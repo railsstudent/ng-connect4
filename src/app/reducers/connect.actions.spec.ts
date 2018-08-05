@@ -1,7 +1,7 @@
 import * as connectActions from "./connect.actions";
 import { Mode, Player } from "../models";
 
-fdescribe("Connect Actions", () => {
+describe("Connect Actions", () => {
   describe("NewGameAction", () => {
     it("should create an action", () => {
       const action = new connectActions.NewGameAction();

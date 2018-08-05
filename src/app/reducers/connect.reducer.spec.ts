@@ -1,13 +1,988 @@
-import { connectReducer, initialState } from './connect.reducer';
+import { connectReducer, initialState, ConnectState } from "./connect.reducer";
+import { ROWS, COLUMNS, FREE_CELL, Player, Outcome, Mode } from "../models";
+import * as connectActions from "./connect.actions";
 
-describe('Game Reducer', () => {
-  describe('unknown action', () => {
-    it('should return the initial state', () => {
+let grid: string[] = [];
+
+describe("Connect Reducer", () => {
+  describe("unknown action", () => {
+    it("should return the initial state", () => {
       const action = {} as any;
 
       const result = connectReducer(initialState, action);
 
       expect(result).toBe(initialState);
+    });
+  });
+
+  describe("NewGame action", () => {
+    it("should return the initial state", () => {
+      const action = new connectActions.NewGameAction();
+
+      const result = connectReducer(initialState, action);
+
+      expect(result).toBe(initialState);
+    });
+  });
+
+  describe("PlayerOneMove action", () => {
+    beforeEach(() => {
+      grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
+    });
+
+    it("should allow player 1 to make move in human vs human mode", () => {
+      grid[0] = Player.PLAYER1;
+      grid[1] = Player.PLAYER2;
+      const TEST_INITIAL_STATE: ConnectState = {
+        grid,
+        nextPlayer: Player.PLAYER1,
+        movesLeft: ROWS * COLUMNS - 2,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: [true, true, true, true, true, true, true]
+      };
+      const action = new connectActions.PlayerOneMoveAction({
+        mode: Mode.HUMAN_VS_HUMAN,
+        player: Player.PLAYER1,
+        column: 2
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      cloneGrid[0] = Player.PLAYER1;
+      cloneGrid[1] = Player.PLAYER2;
+      cloneGrid[2] = Player.PLAYER1;
+
+      expect(state.grid).toEqual(cloneGrid);
+      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 3);
+      expect(state.outcome).toEqual(Outcome.DEFAULT);
+      expect(state.reset).toEqual(false);
+      expect(state.nextPlayer).toEqual(Player.PLAYER2);
+      expect(state.columnAvailable).toEqual([
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]);
+    });
+
+    it("should allow player 1 to make move in human vs computer mode", () => {
+      grid[0] = Player.PLAYER1;
+      grid[7] = Player.COMPUTER;
+      grid[14] = Player.PLAYER1;
+      grid[21] = Player.COMPUTER;
+      grid[28] = Player.PLAYER1;
+      grid[1] = Player.COMPUTER;
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        grid,
+        nextPlayer: Player.PLAYER1,
+        movesLeft: ROWS * COLUMNS - 6,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: [true, true, true, true, true, true, true]
+      };
+      const action = new connectActions.PlayerOneMoveAction({
+        mode: Mode.HUMAN_VS_COMPUTER,
+        player: Player.PLAYER1,
+        column: 0
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      cloneGrid[0] = Player.PLAYER1;
+      cloneGrid[7] = Player.COMPUTER;
+      cloneGrid[14] = Player.PLAYER1;
+      cloneGrid[21] = Player.COMPUTER;
+      cloneGrid[28] = Player.PLAYER1;
+      cloneGrid[1] = Player.COMPUTER;
+      cloneGrid[35] = Player.PLAYER1;
+      expect(state.grid).toEqual(cloneGrid);
+      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 7);
+      expect(state.outcome).toEqual(Outcome.DEFAULT);
+      expect(state.reset).toEqual(false);
+      expect(state.nextPlayer).toEqual(Player.COMPUTER);
+      expect(state.columnAvailable).toEqual([
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]);
+    });
+
+    it("should stop the game after player 1 wins the game", () => {
+      grid[2] = Player.PLAYER1;
+      grid[3] = Player.COMPUTER;
+      grid[10] = Player.PLAYER1;
+      grid[4] = Player.COMPUTER;
+      grid[5] = Player.PLAYER1;
+      grid[11] = Player.COMPUTER;
+      grid[12] = Player.PLAYER1;
+      grid[17] = Player.COMPUTER;
+      grid[18] = Player.PLAYER1;
+      grid[19] = Player.COMPUTER;
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        grid,
+        nextPlayer: Player.PLAYER1,
+        movesLeft: ROWS * COLUMNS - 10,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: [true, true, true, true, true, true, true]
+      };
+      const action = new connectActions.PlayerOneMoveAction({
+        mode: Mode.HUMAN_VS_COMPUTER,
+        player: Player.PLAYER1,
+        column: 5
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      cloneGrid[2] = Player.PLAYER1;
+      cloneGrid[3] = Player.COMPUTER;
+      cloneGrid[10] = Player.PLAYER1;
+      cloneGrid[4] = Player.COMPUTER;
+      cloneGrid[5] = Player.PLAYER1;
+      cloneGrid[11] = Player.COMPUTER;
+      cloneGrid[12] = Player.PLAYER1;
+      cloneGrid[17] = Player.COMPUTER;
+      cloneGrid[18] = Player.PLAYER1;
+      cloneGrid[19] = Player.COMPUTER;
+      cloneGrid[26] = Player.PLAYER1;
+      expect(state.grid).toEqual(cloneGrid);
+      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 11);
+      expect(state.outcome).toEqual(Outcome.PLAYER1_WINS);
+      expect(state.reset).toEqual(true);
+      expect(state.nextPlayer).toEqual(Player.COMPUTER);
+      expect(state.columnAvailable).toEqual([
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]);
+    });
+  });
+
+  describe("PlayerTwoMove action", () => {
+    beforeEach(() => {
+      grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
+    });
+
+    it("should allow player 2 to make move", () => {
+      grid[1] = Player.PLAYER1;
+      grid[2] = Player.PLAYER2;
+      grid[8] = Player.PLAYER1;
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        grid,
+        nextPlayer: Player.PLAYER2,
+        movesLeft: ROWS * COLUMNS - 3,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: [true, true, true, true, true, true, true]
+      };
+      const action = new connectActions.PlayerTwoMoveAction({
+        player: Player.PLAYER2,
+        column: 1
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      cloneGrid[1] = Player.PLAYER1;
+      cloneGrid[2] = Player.PLAYER2;
+      cloneGrid[8] = Player.PLAYER1;
+      cloneGrid[15] = Player.PLAYER2;
+
+      expect(state.grid).toEqual(cloneGrid);
+      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 4);
+      expect(state.outcome).toEqual(Outcome.DEFAULT);
+      expect(state.reset).toEqual(false);
+      expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.columnAvailable).toEqual([
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]);
+    });
+
+    it("should should make the column unavailable after player 2 makes a move", () => {
+      grid[1] = Player.PLAYER1;
+      grid[2] = Player.PLAYER2;
+      grid[8] = Player.PLAYER1;
+      grid[15] = Player.PLAYER2;
+      grid[3] = Player.PLAYER1;
+      grid[22] = Player.PLAYER2;
+      grid[29] = Player.PLAYER1;
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        grid,
+        nextPlayer: Player.PLAYER2,
+        movesLeft: ROWS * COLUMNS - 7,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: [true, true, true, true, true, true, true]
+      };
+      const action = new connectActions.PlayerTwoMoveAction({
+        player: Player.PLAYER2,
+        column: 1
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      cloneGrid[1] = Player.PLAYER1;
+      cloneGrid[2] = Player.PLAYER2;
+      cloneGrid[8] = Player.PLAYER1;
+      cloneGrid[15] = Player.PLAYER2;
+      cloneGrid[3] = Player.PLAYER1;
+      cloneGrid[22] = Player.PLAYER2;
+      cloneGrid[29] = Player.PLAYER1;
+      cloneGrid[36] = Player.PLAYER2;
+      expect(state.grid).toEqual(cloneGrid);
+      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 8);
+      expect(state.outcome).toEqual(Outcome.DEFAULT);
+      expect(state.reset).toEqual(false);
+      expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.columnAvailable).toEqual([
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]);
+    });
+
+    it("should stop the game after player 2 wins the game", () => {
+      [1, 2, 4, 8, 9, 16, 24].forEach(i => (grid[i] = Player.PLAYER1));
+      [3, 5, 10, 17, 23].forEach(i => (grid[i] = Player.PLAYER2));
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        grid,
+        nextPlayer: Player.PLAYER2,
+        movesLeft: ROWS * COLUMNS - 12,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: [true, true, true, true, true, true, true]
+      };
+      const action = new connectActions.PlayerTwoMoveAction({
+        player: Player.PLAYER2,
+        column: 4
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      [1, 2, 4, 8, 9, 16, 24].forEach(i => (cloneGrid[i] = Player.PLAYER1));
+      [3, 5, 10, 17, 23, 11].forEach(i => (cloneGrid[i] = Player.PLAYER2));
+
+      expect(state.grid).toEqual(cloneGrid);
+      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 13);
+      expect(state.outcome).toEqual(Outcome.PLAYER2_WINS);
+      expect(state.reset).toEqual(true);
+      expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.columnAvailable).toEqual([
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]);
+    });
+
+    it("should stop the game after player 2 wins the game on the last move", () => {
+      [
+        0,
+        1,
+        2,
+        4,
+        7,
+        9,
+        13,
+        14,
+        15,
+        18,
+        19,
+        23,
+        24,
+        25,
+        28,
+        29,
+        30,
+        32,
+        33,
+        34,
+        37
+      ].forEach(i => (grid[i] = Player.PLAYER1));
+      [
+        3,
+        5,
+        6,
+        8,
+        10,
+        11,
+        12,
+        16,
+        17,
+        20,
+        21,
+        22,
+        26,
+        27,
+        31,
+        35,
+        36,
+        38,
+        39,
+        41
+      ].forEach(i => (grid[i] = Player.PLAYER2));
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        grid,
+        nextPlayer: Player.PLAYER2,
+        movesLeft: 1,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: [true, true, true, true, true, true, true]
+      };
+      const action = new connectActions.PlayerTwoMoveAction({
+        player: Player.PLAYER2,
+        column: 5
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      [
+        0,
+        1,
+        2,
+        4,
+        7,
+        9,
+        13,
+        14,
+        15,
+        18,
+        19,
+        23,
+        24,
+        25,
+        28,
+        29,
+        30,
+        32,
+        33,
+        34,
+        37
+      ].forEach(i => (cloneGrid[i] = Player.PLAYER1));
+      [
+        3,
+        5,
+        6,
+        8,
+        10,
+        11,
+        12,
+        16,
+        17,
+        20,
+        21,
+        22,
+        26,
+        27,
+        31,
+        35,
+        36,
+        38,
+        39,
+        40,
+        41
+      ].forEach(i => (cloneGrid[i] = Player.PLAYER2));
+
+      expect(state.grid).toEqual(cloneGrid);
+      expect(state.movesLeft).toEqual(0);
+      expect(state.outcome).toEqual(Outcome.PLAYER2_WINS);
+      expect(state.reset).toEqual(true);
+      expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.columnAvailable).toEqual([
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]);
+    });
+
+    it("should stop the game after player 2 draw the game", () => {
+      [
+        1,
+        2,
+        5,
+        7,
+        8,
+        9,
+        11,
+        13,
+        15,
+        16,
+        17,
+        19,
+        24,
+        29,
+        30,
+        33,
+        34,
+        35,
+        37,
+        38,
+        39
+      ].forEach(i => (grid[i] = Player.PLAYER1));
+      [
+        0,
+        3,
+        4,
+        6,
+        10,
+        12,
+        14,
+        18,
+        20,
+        21,
+        22,
+        23,
+        25,
+        26,
+        27,
+        28,
+        31,
+        32,
+        40,
+        41
+      ].forEach(i => (grid[i] = Player.PLAYER2));
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        grid,
+        nextPlayer: Player.PLAYER2,
+        movesLeft: 1,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: [false, true, false, false, false, false, false]
+      };
+      const action = new connectActions.PlayerTwoMoveAction({
+        player: Player.PLAYER2,
+        column: 1
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      [
+        1,
+        2,
+        5,
+        7,
+        8,
+        9,
+        11,
+        13,
+        15,
+        16,
+        17,
+        19,
+        24,
+        29,
+        30,
+        33,
+        34,
+        35,
+        37,
+        38,
+        39
+      ].forEach(i => (cloneGrid[i] = Player.PLAYER1));
+      [
+        0,
+        3,
+        4,
+        6,
+        10,
+        12,
+        14,
+        18,
+        20,
+        21,
+        22,
+        23,
+        25,
+        26,
+        27,
+        28,
+        31,
+        32,
+        40,
+        41,
+        36
+      ].forEach(i => (cloneGrid[i] = Player.PLAYER2));
+
+      expect(state.grid).toEqual(cloneGrid);
+      expect(state.movesLeft).toEqual(0);
+      expect(state.outcome).toEqual(Outcome.DRAW);
+      expect(state.reset).toEqual(true);
+      expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.columnAvailable).toEqual([
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]);
+    });
+  });
+
+  describe("ComputerMove action", () => {
+    beforeEach(() => {
+      grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
+    });
+
+    it("should allow computer to make move", () => {
+      grid[1] = Player.PLAYER1;
+      grid[2] = Player.COMPUTER;
+      grid[8] = Player.PLAYER1;
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        grid,
+        nextPlayer: Player.COMPUTER,
+        movesLeft: ROWS * COLUMNS - 3,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: [true, true, true, true, true, true, true]
+      };
+      const action = new connectActions.ComputerMoveAction({
+        player: Player.COMPUTER,
+        column: 1
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      cloneGrid[1] = Player.PLAYER1;
+      cloneGrid[2] = Player.COMPUTER;
+      cloneGrid[8] = Player.PLAYER1;
+      cloneGrid[15] = Player.COMPUTER;
+
+      expect(state.grid).toEqual(cloneGrid);
+      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 4);
+      expect(state.outcome).toEqual(Outcome.DEFAULT);
+      expect(state.reset).toEqual(false);
+      expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.columnAvailable).toEqual([
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]);
+    });
+
+    it("should should make the column unavailable after computer makes a move", () => {
+      grid[1] = Player.PLAYER1;
+      grid[2] = Player.COMPUTER;
+      grid[8] = Player.PLAYER1;
+      grid[15] = Player.COMPUTER;
+      grid[3] = Player.PLAYER1;
+      grid[22] = Player.COMPUTER;
+      grid[29] = Player.PLAYER1;
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        grid,
+        nextPlayer: Player.COMPUTER,
+        movesLeft: ROWS * COLUMNS - 7,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: [true, true, true, true, true, true, true]
+      };
+      const action = new connectActions.ComputerMoveAction({
+        player: Player.COMPUTER,
+        column: 1
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      cloneGrid[1] = Player.PLAYER1;
+      cloneGrid[2] = Player.COMPUTER;
+      cloneGrid[8] = Player.PLAYER1;
+      cloneGrid[15] = Player.COMPUTER;
+      cloneGrid[3] = Player.PLAYER1;
+      cloneGrid[22] = Player.COMPUTER;
+      cloneGrid[29] = Player.PLAYER1;
+      cloneGrid[36] = Player.COMPUTER;
+      expect(state.grid).toEqual(cloneGrid);
+      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 8);
+      expect(state.outcome).toEqual(Outcome.DEFAULT);
+      expect(state.reset).toEqual(false);
+      expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.columnAvailable).toEqual([
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]);
+    });
+
+    it("should stop the game after computer wins the game", () => {
+      [1, 2, 4, 8, 9, 16, 24].forEach(i => (grid[i] = Player.PLAYER1));
+      [3, 5, 10, 17, 23].forEach(i => (grid[i] = Player.COMPUTER));
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        grid,
+        nextPlayer: Player.COMPUTER,
+        movesLeft: ROWS * COLUMNS - 12,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: [true, true, true, true, true, true, true]
+      };
+      const action = new connectActions.ComputerMoveAction({
+        player: Player.COMPUTER,
+        column: 4
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      [1, 2, 4, 8, 9, 16, 24].forEach(i => (cloneGrid[i] = Player.PLAYER1));
+      [3, 5, 10, 17, 23, 11].forEach(i => (cloneGrid[i] = Player.COMPUTER));
+
+      expect(state.grid).toEqual(cloneGrid);
+      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 13);
+      expect(state.outcome).toEqual(Outcome.COMPUTER_WINS);
+      expect(state.reset).toEqual(true);
+      expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.columnAvailable).toEqual([
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]);
+    });
+
+    it("should stop the game after computer wins the game on the last move", () => {
+      [
+        0,
+        1,
+        2,
+        4,
+        7,
+        9,
+        13,
+        14,
+        15,
+        18,
+        19,
+        23,
+        24,
+        25,
+        28,
+        29,
+        30,
+        32,
+        33,
+        34,
+        37
+      ].forEach(i => (grid[i] = Player.PLAYER1));
+      [
+        3,
+        5,
+        6,
+        8,
+        10,
+        11,
+        12,
+        16,
+        17,
+        20,
+        21,
+        22,
+        26,
+        27,
+        31,
+        35,
+        36,
+        38,
+        39,
+        41
+      ].forEach(i => (grid[i] = Player.COMPUTER));
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        grid,
+        nextPlayer: Player.COMPUTER,
+        movesLeft: 1,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: [true, true, true, true, true, true, true]
+      };
+      const action = new connectActions.ComputerMoveAction({
+        player: Player.COMPUTER,
+        column: 5
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      [
+        0,
+        1,
+        2,
+        4,
+        7,
+        9,
+        13,
+        14,
+        15,
+        18,
+        19,
+        23,
+        24,
+        25,
+        28,
+        29,
+        30,
+        32,
+        33,
+        34,
+        37
+      ].forEach(i => (cloneGrid[i] = Player.PLAYER1));
+      [
+        3,
+        5,
+        6,
+        8,
+        10,
+        11,
+        12,
+        16,
+        17,
+        20,
+        21,
+        22,
+        26,
+        27,
+        31,
+        35,
+        36,
+        38,
+        39,
+        40,
+        41
+      ].forEach(i => (cloneGrid[i] = Player.COMPUTER));
+
+      expect(state.grid).toEqual(cloneGrid);
+      expect(state.movesLeft).toEqual(0);
+      expect(state.outcome).toEqual(Outcome.COMPUTER_WINS);
+      expect(state.reset).toEqual(true);
+      expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.columnAvailable).toEqual([
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]);
+    });
+
+    it("should stop the game after computer draws the game", () => {
+      [
+        1,
+        2,
+        5,
+        7,
+        8,
+        9,
+        11,
+        13,
+        15,
+        16,
+        17,
+        19,
+        24,
+        29,
+        30,
+        33,
+        34,
+        35,
+        37,
+        38,
+        39
+      ].forEach(i => (grid[i] = Player.PLAYER1));
+      [
+        0,
+        3,
+        4,
+        6,
+        10,
+        12,
+        14,
+        18,
+        20,
+        21,
+        22,
+        23,
+        25,
+        26,
+        27,
+        28,
+        31,
+        32,
+        40,
+        41
+      ].forEach(i => (grid[i] = Player.COMPUTER));
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        grid,
+        nextPlayer: Player.COMPUTER,
+        movesLeft: 1,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: [false, true, false, false, false, false, false]
+      };
+      const action = new connectActions.ComputerMoveAction({
+        player: Player.COMPUTER,
+        column: 1
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      [
+        1,
+        2,
+        5,
+        7,
+        8,
+        9,
+        11,
+        13,
+        15,
+        16,
+        17,
+        19,
+        24,
+        29,
+        30,
+        33,
+        34,
+        35,
+        37,
+        38,
+        39
+      ].forEach(i => (cloneGrid[i] = Player.PLAYER1));
+      [
+        0,
+        3,
+        4,
+        6,
+        10,
+        12,
+        14,
+        18,
+        20,
+        21,
+        22,
+        23,
+        25,
+        26,
+        27,
+        28,
+        31,
+        32,
+        40,
+        41,
+        36
+      ].forEach(i => (cloneGrid[i] = Player.COMPUTER));
+
+      expect(state.grid).toEqual(cloneGrid);
+      expect(state.movesLeft).toEqual(0);
+      expect(state.outcome).toEqual(Outcome.DRAW);
+      expect(state.reset).toEqual(true);
+      expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.columnAvailable).toEqual([
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]);
     });
   });
 });
