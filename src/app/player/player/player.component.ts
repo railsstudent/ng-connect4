@@ -1,4 +1,13 @@
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Input
+} from "@angular/core";
+import { Observable } from "rxjs";
+import { Store, select } from "@ngrx/store";
+import { AppState, selectNextPlayer } from "../../reducers";
+import { Player } from "../../models";
 
 @Component({
   selector: "connect-player",
@@ -7,7 +16,20 @@ import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlayerComponent implements OnInit {
-  constructor() {}
+  @Input()
+  name: string;
+
+  @Input()
+  piece: string;
+
+  @Input()
+  color: string;
+
+  nextPlayer$: Observable<Player>;
+
+  constructor(private store: Store<AppState>) {
+    this.nextPlayer$ = this.store.pipe(select(selectNextPlayer));
+  }
 
   ngOnInit() {}
 }

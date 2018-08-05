@@ -1,0 +1,34 @@
+:host {
+    height: 100vh;
+    flex: 1 0 150px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding-top: 5%;
+    background: powderblue;
+    border: 2px solid rebeccapurple;
+}
+
+.name {
+    font-size: 2em;
+    font-style: italic;
+}
+
+.piece-container {
+    width: 100px;
+    height: 100px;
+    margin: 20px 0 50px 0;
+}
+
+.piece {
+    width: 100;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.turn {
+    text-align: center;
+    font-size: 1.2em;
+}

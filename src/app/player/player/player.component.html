@@ -1,3 +1,9 @@
-<p>
-  player works!
-</p>
+<div class="name">{{name}}</div>
+<div class="piece-container">
+  <div class="piece" [style.background]="color">
+  </div>
+</div>
+<div class="turn" *ngIf="nextPlayer$ | async as np">
+  <p *ngIf="np === piece">Your Turn.</p>
+  <p *ngIf="np === piece">Please make a move</p>
+</div>
