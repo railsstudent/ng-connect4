@@ -1,4 +1,4 @@
-import { FREE_CELL, ROWS, COLUMNS } from "../models/";
+import { FREE_CELL, ROWS, COLUMNS, Player } from "../models";
 
 export class GridUtil {
   private _grid: string[];
@@ -31,21 +31,22 @@ export class GridUtil {
     }
   }
 
-  private convertRowColToIdx(row, col) {
+  private convertRowColToIdx(row: number, col: number) {
     if (row >= 0 && row < ROWS && col >= 0 && col < COLUMNS) {
       return row * COLUMNS + col;
     }
     return -1;
   }
 
-  canPlay(column): boolean {
+  canPlay(column: number): boolean {
     if (column < 0 || column >= COLUMNS) {
       return false;
     }
     return this._height[column] < ROWS;
   }
 
-  isWinningMove(column, player): boolean {
+  // Determins whether player wins the game if he inserts a new piece at column
+  isWinningMove(column: number, player): boolean {
     if (!this.canPlay(column)) {
       return false;
     }
@@ -101,7 +102,7 @@ export class GridUtil {
     return false;
   }
 
-  play(column, player) {
+  play(column: number, player: Player) {
     if (!this.canPlay(column)) {
       return;
     }

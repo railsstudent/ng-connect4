@@ -1,7 +1,7 @@
 import { TestBed, inject } from "@angular/core/testing";
 
 import { GridUtil } from "./grid.util";
-import { ROWS, COLUMNS, FREE_CELL, Player } from "../models/index";
+import { ROWS, COLUMNS, FREE_CELL, Player } from "../models";
 
 describe("GridUtil", () => {
   const gridUtil = new GridUtil();
@@ -438,6 +438,74 @@ describe("GridUtil", () => {
       ].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
       expect(gridUtil.isWinningMove(0, Player.PLAYER2)).toBe(false);
+    });
+  });
+
+  describe("isDraw returns true if the game is tied", () => {
+    beforeEach(() => {
+      grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
+      gridUtil.setGrid(grid);
+    });
+
+    it("return true if the game is a draw", () => {
+      [
+        0,
+        2,
+        3,
+        5,
+        6,
+        10,
+        11,
+        15,
+        19,
+        20,
+        22,
+        25,
+        27,
+        28,
+        29,
+        30,
+        32,
+        33,
+        37,
+        38,
+        41
+      ].forEach(i => (grid[i] = Player.PLAYER1));
+      [
+        1,
+        4,
+        7,
+        8,
+        9,
+        12,
+        13,
+        14,
+        16,
+        17,
+        18,
+        21,
+        23,
+        24,
+        26,
+        31,
+        34,
+        36,
+        39,
+        40,
+        35
+      ].forEach(i => (grid[i] = Player.PLAYER2));
+      gridUtil.setGrid(grid);
+      expect(gridUtil.isDraw()).toBe(true);
+    });
+
+    it("return false if the game is not a draw", () => {
+      [0, 2, 3].forEach(i => (grid[i] = Player.PLAYER1));
+      [1, 9, 10].forEach(i => (grid[i] = Player.PLAYER2));
+      gridUtil.setGrid(grid);
+      expect(gridUtil.isDraw()).toBe(false);
     });
   });
 });
