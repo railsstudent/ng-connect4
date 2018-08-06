@@ -2,12 +2,14 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  Input
+  Input,
+  OnDestroy
 } from "@angular/core";
-import { Observable } from "rxjs";
+import { Subject } from "rxjs";
 import { Store, select } from "@ngrx/store";
 import { AppState, selectNextPlayer } from "../../reducers";
 import { Player } from "../../models";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
   selector: "connect-player",
@@ -15,7 +17,9 @@ import { Player } from "../../models";
   styleUrls: ["./player.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PlayerComponent implements OnInit {
+export class PlayerComponent implements OnInit, OnDestroy {
+  private unsubscribe$: Subject<void> = new Subject<void>();
+
   @Input()
   name: string;
 
@@ -25,11 +29,22 @@ export class PlayerComponent implements OnInit {
   @Input()
   color: string;
 
-  nextPlayer$: Observable<Player>;
+  nextPlayer: Player;
 
-  constructor(private store: Store<AppState>) {
-    this.nextPlayer$ = this.store.pipe(select(selectNextPlayer));
+  constructor(private store: Store<AppState>) {}
+
+  ngOnInit() {
+    console.log("WTF");
+    this.store
+      .pipe(select(selectNextPlayer))
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(nextPlayer => {
+        this.nextPlayer = nextPlayer;
+      });
   }
 
-  ngOnInit() {}
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 }

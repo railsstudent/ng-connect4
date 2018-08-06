@@ -3,7 +3,7 @@
   <div class="piece" [style.background]="color">
   </div>
 </div>
-<div class="turn" *ngIf="nextPlayer$ | async as np">
-  <p *ngIf="np === piece">Your Turn.</p>
-  <p *ngIf="np === piece">Please make a move</p>
+<div class="turn-container">
+  <p class="turn" *ngIf="nextPlayer === piece">Your Turn.</p>
+  <p class="turn" *ngIf="nextPlayer === piece">Please make a move</p>
 </div>
