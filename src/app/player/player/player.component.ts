@@ -34,12 +34,12 @@ export class PlayerComponent implements OnInit, OnDestroy {
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
-    console.log("WTF");
     this.store
       .pipe(select(selectNextPlayer))
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(nextPlayer => {
         this.nextPlayer = nextPlayer;
+        console.log("this.nextPlayer", this.nextPlayer);
       });
   }
 

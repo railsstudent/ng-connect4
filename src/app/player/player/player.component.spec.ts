@@ -27,14 +27,13 @@ const initColumnAvailable = () => {
   return columns;
 };
 
-fdescribe("PlayerComponent", () => {
+describe("PlayerComponent", () => {
   let component: PlayerComponent;
   let fixture: ComponentFixture<PlayerComponent>;
   let store: TestStore<AppState>;
 
   const getName = () => fixture.debugElement.query(By.css(".name"));
   const getPiece = () => fixture.debugElement.query(By.css(".piece"));
-  const getTurn = () => fixture.debugElement.query(By.css(".turn"));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -61,22 +60,109 @@ fdescribe("PlayerComponent", () => {
     component.name = "Player 1";
     component.color = "red";
     component.piece = Player.PLAYER1;
-    fixture.detectChanges();
   }));
 
-  it("should create", () => {
+  it("should create Player 1", () => {
+    fixture.detectChanges();
+
     expect(component).toBeTruthy();
     const nameDiv = getName().nativeElement as HTMLDivElement;
     expect(nameDiv.textContent).toBe("Player 1");
 
     const pieceDiv = getPiece().nativeElement as HTMLDivElement;
     expect(pieceDiv.style.background).toBe("red");
-
-    console.log(getTurn());
   });
 
-  // it("should show player's name", () => {
-  //   const nameDiv = getName().nativeElement as HTMLDivElement;
-  //   expect(nameDiv.textContent).toBe('Player 1');
-  // });
+  it("should get next player from store that matches the piece of current player", () => {
+    store.selectors("connect", "nextPlayer");
+
+    fixture.detectChanges(); // trigger ngOnInit
+
+    const elTurns = fixture.debugElement.queryAll(By.css(".turn"));
+    expect(elTurns.length).toBe(2);
+  });
+
+  it("should get next player from store that does not match the piece of current player", () => {
+    const appState = {
+      connect: {
+        grid: initBoard(),
+        nextPlayer: Player.PLAYER2,
+        movesLeft: ROWS * COLUMNS,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: initColumnAvailable()
+      }
+    };
+    store.setState(appState);
+    store.selectors("connect", "nextPlayer");
+
+    fixture.detectChanges(); // trigger ngOnInit
+
+    const elTurns = fixture.debugElement.queryAll(By.css(".turn"));
+    expect(elTurns.length).toBe(0);
+  });
+
+  it("should create Player 2", () => {
+    component.name = "Player 2";
+    component.color = "yellow";
+    component.piece = Player.PLAYER2;
+
+    const appState = {
+      connect: {
+        grid: initBoard(),
+        nextPlayer: Player.PLAYER2,
+        movesLeft: ROWS * COLUMNS,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: initColumnAvailable()
+      }
+    };
+    store.setState(appState);
+    store.selectors("connect", "nextPlayer");
+
+    fixture.detectChanges(); // trigger ngOnInit
+
+    fixture.detectChanges();
+
+    expect(component).toBeTruthy();
+    const nameDiv = getName().nativeElement as HTMLDivElement;
+    expect(nameDiv.textContent).toBe("Player 2");
+
+    const pieceDiv = getPiece().nativeElement as HTMLDivElement;
+    expect(pieceDiv.style.background).toBe("yellow");
+
+    const elTurns = fixture.debugElement.queryAll(By.css(".turn"));
+    expect(elTurns.length).toBe(2);
+  });
+
+  it("should create Computer", () => {
+    component.name = "Computer";
+    component.color = "magenta";
+    component.piece = Player.COMPUTER;
+
+    const appState = {
+      connect: {
+        grid: initBoard(),
+        nextPlayer: Player.COMPUTER,
+        movesLeft: ROWS * COLUMNS,
+        outcome: Outcome.DEFAULT,
+        reset: false,
+        columnAvailable: initColumnAvailable()
+      }
+    };
+    store.setState(appState);
+    store.selectors("connect", "nextPlayer");
+
+    fixture.detectChanges();
+
+    expect(component).toBeTruthy();
+    const nameDiv = getName().nativeElement as HTMLDivElement;
+    expect(nameDiv.textContent).toBe("Computer");
+
+    const pieceDiv = getPiece().nativeElement as HTMLDivElement;
+    expect(pieceDiv.style.background).toBe("magenta");
+
+    const elTurns = fixture.debugElement.queryAll(By.css(".turn"));
+    expect(elTurns.length).toBe(2);
+  });
 });

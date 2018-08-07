@@ -1,21 +1,30 @@
 import { NgModule } from "@angular/core";
 import { Store } from "@ngrx/store";
-import { BehaviorSubject, Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 export class TestStore<T> {
-  private state: BehaviorSubject<T> = new BehaviorSubject(undefined);
+  data: T;
+  selectKeys: string[];
 
   setState(data: T) {
-    this.state.next(data);
-  }
-
-  select(selector?: any): Observable<T> {
-    return this.state.asObservable();
+    this.data = data;
   }
 
   dispatch(action: any) {}
 
-  pipe(selector: any) {}
+  selectors(...selectKeys: string[]) {
+    this.selectKeys = selectKeys;
+  }
+
+  pipe(mapFn: any): Observable<T> {
+    if (this.selectKeys) {
+      const selectedData = this.selectKeys.reduce((acc, k) => {
+        return acc[k] ? acc[k] : acc;
+      }, this.data);
+      return of(selectedData);
+    }
+    return of(null);
+  }
 }
 
 @NgModule({
