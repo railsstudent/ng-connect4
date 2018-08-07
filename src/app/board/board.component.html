@@ -4,4 +4,10 @@
     <span class="moves-left-label">Remaining Moves:</span>
     <span class="moves-left-content">{{moveLefts}}</span>
   </div>
+  <div class="select-column-container">
+    <div class="select-column" *ngFor="let col of columnAvailable" 
+      [ngClass]="{ show: col === true, hide: col === false }">
+      {{col}}
+    </div>
+  </div>
 </div>

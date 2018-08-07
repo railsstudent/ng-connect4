@@ -27,7 +27,7 @@ const initColumnAvailable = () => {
   return columns;
 };
 
-fdescribe("PlayerComponent", () => {
+describe("PlayerComponent", () => {
   let component: PlayerComponent;
   let fixture: ComponentFixture<PlayerComponent>;
   let store: TestStore<AppState>;

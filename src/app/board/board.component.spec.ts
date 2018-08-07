@@ -39,6 +39,8 @@ fdescribe("BoardComponent", () => {
     fixture.debugElement.query(By.css(".moves-left-label"));
   const getMovesLeftContent = () =>
     fixture.debugElement.query(By.css(".moves-left-content"));
+  const getColumnAvailable = () =>
+    fixture.debugElement.queryAll(By.css(".select-column"));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -82,15 +84,13 @@ fdescribe("BoardComponent", () => {
     const spanLabel = getMovesLeftLabel().nativeElement as HTMLSpanElement;
     const spanContent = getMovesLeftContent().nativeElement as HTMLSpanElement;
     expect(spanLabel.textContent).toBe("Remaining Moves:");
-    expect(spanContent.textContent).toBe(`${COLUMNS * ROWS}`);
+    // expect(spanContent.textContent).toBe(`${COLUMNS * ROWS}`);
   });
 
-  it("should show updated number of moves after grid cells are occupied", () => {
-    store.selectors("connect", "movesLeft");
-    fixture.detectChanges();
-    const spanLabel = getMovesLeftLabel().nativeElement as HTMLSpanElement;
-    const spanContent = getMovesLeftContent().nativeElement as HTMLSpanElement;
-    expect(spanLabel.textContent).toBe("Remaining Moves:");
-    expect(spanContent.textContent).toBe(`${COLUMNS * ROWS}`);
-  });
+  // it("should show square cells that players can click to insert piece to column", () => {
+  //   store.selectors("connect", "columnAvailable");
+  //   fixture.detectChanges();
+  //   console.log(getColumnAvailable().length, COLUMNS);
+  //   expect(getColumnAvailable().length).toBe(COLUMNS);
+  // });
 });
