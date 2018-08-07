@@ -1,3 +1,14 @@
 :host {
     display: flex;
 }
+
+$player-basis: 15%;
+$board-basis: 100% - 2 * $player-basis;
+
+connect-player {
+    flex: 1 1 $player-basis;
+}
+
+connect-board {
+    flex: 1 0 $board-basis;
+}
