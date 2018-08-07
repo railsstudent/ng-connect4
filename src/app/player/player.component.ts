@@ -7,8 +7,8 @@ import {
 } from "@angular/core";
 import { Subject } from "rxjs";
 import { Store, select } from "@ngrx/store";
-import { AppState, selectNextPlayer } from "../../reducers";
-import { Player } from "../../models";
+import { AppState, selectNextPlayer } from "../reducers";
+import { Player } from "../models";
 import { takeUntil } from "rxjs/operators";
 
 @Component({

@@ -35,10 +35,10 @@ fdescribe("BoardComponent", () => {
 
   const getBoardTitle = () =>
     fixture.debugElement.query(By.css(".board-title"));
-  const getMoveLeftLabel = () =>
-    fixture.debugElement.query(By.css(".move-left-label"));
-  const getMoveLeftDiv = () =>
-    fixture.debugElement.query(By.css(".move-left-content"));
+  const getMovesLeftLabel = () =>
+    fixture.debugElement.query(By.css(".moves-left-label"));
+  const getMovesLeftContent = () =>
+    fixture.debugElement.query(By.css(".moves-left-content"));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -72,13 +72,25 @@ fdescribe("BoardComponent", () => {
 
   it("should show board title", () => {
     fixture.detectChanges();
-    const span = getMoveLeftLabel().nativeElement as HTMLSpanElement;
-    expect(span.textContent).toBe("Remaining Moves: ");
+    const p = getBoardTitle().nativeElement as HTMLParagraphElement;
+    expect(p.textContent).toBe("Connect Four Game");
   });
 
   it("should show board moves left label and number of moves", () => {
+    store.selectors("connect", "movesLeft");
     fixture.detectChanges();
-    const p = getBoardTitle().nativeElement as HTMLParagraphElement;
-    expect(p.textContent).toBe("Connect Four Game");
+    const spanLabel = getMovesLeftLabel().nativeElement as HTMLSpanElement;
+    const spanContent = getMovesLeftContent().nativeElement as HTMLSpanElement;
+    expect(spanLabel.textContent).toBe("Remaining Moves:");
+    expect(spanContent.textContent).toBe(`${COLUMNS * ROWS}`);
+  });
+
+  it("should show updated number of moves after grid cells are occupied", () => {
+    store.selectors("connect", "movesLeft");
+    fixture.detectChanges();
+    const spanLabel = getMovesLeftLabel().nativeElement as HTMLSpanElement;
+    const spanContent = getMovesLeftContent().nativeElement as HTMLSpanElement;
+    expect(spanLabel.textContent).toBe("Remaining Moves:");
+    expect(spanContent.textContent).toBe(`${COLUMNS * ROWS}`);
   });
 });

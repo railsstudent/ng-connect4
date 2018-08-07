@@ -6,10 +6,10 @@ import {
 } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Store } from "@ngrx/store";
-import { TestStore, TestingModule } from "../../../testing/utils";
+import { TestStore, TestingModule } from "../../testing/utils";
 import { PlayerComponent } from "./player.component";
-import { AppState } from "../../reducers";
-import { FREE_CELL, ROWS, COLUMNS, Player, Outcome } from "../../models";
+import { AppState } from "../reducers";
+import { FREE_CELL, ROWS, COLUMNS, Player, Outcome } from "../models";
 
 const initBoard = () => {
   const grid = [];
@@ -27,7 +27,7 @@ const initColumnAvailable = () => {
   return columns;
 };
 
-describe("PlayerComponent", () => {
+fdescribe("PlayerComponent", () => {
   let component: PlayerComponent;
   let fixture: ComponentFixture<PlayerComponent>;
   let store: TestStore<AppState>;

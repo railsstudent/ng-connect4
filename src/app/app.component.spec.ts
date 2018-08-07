@@ -1,6 +1,6 @@
 import { TestBed, async } from "@angular/core/testing";
 import { AppComponent } from "./app.component";
-import { PlayerComponent } from "./player/player/player.component";
+import { PlayerComponent } from "./player/player.component";
 import { TestingModule } from "../testing/utils";
 import { BoardComponent } from "./board/board.component";
 describe("AppComponent", () => {
