@@ -1,12 +1,50 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input, OnDestroy } from "@angular/core";
+import { Mode } from "../models";
+import { Store, select } from "@ngrx/store";
+import { AppState, selectMovesLeft, selectColumnAvailable } from "../reducers";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 @Component({
   selector: "connect-board",
   templateUrl: "./board.component.html",
   styleUrls: ["./board.component.scss"]
 })
-export class BoardComponent implements OnInit {
-  constructor() {}
+export class BoardComponent implements OnInit, OnDestroy {
+  @Input()
+  mode: Mode;
 
-  ngOnInit() {}
+  private unsubscribeMovesLeft$: Subject<void> = new Subject<void>();
+  private unsubscribeColumnAvailable$: Subject<void> = new Subject<void>();
+
+  moveLefts: number;
+  columnAvailable: boolean[];
+
+  constructor(private store: Store<AppState>) {}
+
+  ngOnInit() {
+    this.store
+      .pipe(select(selectMovesLeft))
+      .pipe(takeUntil(this.unsubscribeMovesLeft$))
+      .subscribe(moveLefts => {
+        this.moveLefts = moveLefts;
+        console.log("this.moveLefts", this.moveLefts);
+      });
+
+    this.store
+      .pipe(select(selectColumnAvailable))
+      .pipe(takeUntil(this.unsubscribeColumnAvailable$))
+      .subscribe(columnAvailable => {
+        this.columnAvailable = columnAvailable;
+        console.log("this.columnAvailable", this.columnAvailable);
+      });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeMovesLeft$.next();
+    this.unsubscribeMovesLeft$.complete();
+
+    this.unsubscribeColumnAvailable$.next();
+    this.unsubscribeColumnAvailable$.complete();
+  }
 }

@@ -6,7 +6,7 @@ import { StoreModule } from "@ngrx/store";
 import { reducers, metaReducers } from "./reducers";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { environment } from "../environments/environment";
-import { PlayerComponent } from "./player/player/player.component";
+import { PlayerComponent } from "./player/player.component";
 import { BoardComponent } from "./board/board.component";
 
 @NgModule({
