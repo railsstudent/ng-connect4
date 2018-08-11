@@ -2,12 +2,44 @@
   <div class="board-title">Connect Four Game</div>
   <div class="moves-left">
     <span class="moves-left-label">Remaining Moves:</span>
-    <span class="moves-left-content">{{moveLefts}}</span>
+    <span class="moves-left-content">{{moveLefts$ | async }}</span>
   </div>
-  <div class="select-column-container">
-    <div class="select-column" *ngFor="let col of columnAvailable"
-      [ngClass]="{ show: col === true, hide: col === false }">
-      {{col}}
+  <div class="outcome-container">
+    <p class="outcome" *ngIf="(outcome$ | async); let outcome">{{ outcome }}</p>
+    <button class="btn-reset" *ngIf="(resetGame$ | async)" (click)="clearState()">New Game</button>
+  </div>
+  <div class="select-column-container" *ngIf="!(resetGame$ | async)">
+    <div class="select-column" *ngFor="let col of columnsAvailable; let i = index;"
+      [ngClass]="{ show: col === true, hide: col === false }" (click)="select(i)">
+      <fa-icon [icon]="['fas', 'arrow-down']" size="3x" class="arrow-down"></fa-icon>
+    </div>
+  </div>
+  <div class="grid-container">
+    <div class="grid-row" *ngFor="let i of rowRange">
+      <ng-container *ngFor="let j of columnRange">
+        <div class="grid-cell">
+          <div class="grid-circle" [ngClass]="{'free-cell': isFreeCell(i,j), player1: isPlayer1(i,j), player2: isPlayer2(i,j), computer: isComputer(i,j) }">
+            <ng-container *ngIf="(winningSequence$ | async); let ws">
+              <div *ngIf="ws.winner && ws.winner === grid[i * totalColumns + j] && strikeThrough(ws, i, j, 1)"
+                class="line"
+                [ngClass]="{ player1: isPlayer1(i,j), player2: isPlayer2(i,j), computer: isComputer(i,j) }">
+              </div>
+              <div *ngIf="ws.winner && ws.winner === grid[i * totalColumns + j] && strikeThrough(ws, i, j, 7)"
+                class="vertical-line"
+                [ngClass]="{ player1: isPlayer1(i,j), player2: isPlayer2(i,j), computer: isComputer(i,j) }">
+              </div>
+              <div *ngIf="ws.winner && ws.winner === grid[i * totalColumns + j] && strikeThrough(ws, i, j, 6)"
+                class="left-diagonal-line"
+                [ngClass]="{ player1: isPlayer1(i,j), player2: isPlayer2(i,j), computer: isComputer(i,j) }">
+              </div>
+              <div *ngIf="ws.winner && ws.winner === grid[i * totalColumns + j] && strikeThrough(ws, i, j, 8)"
+                class="right-diagonal-line"
+                [ngClass]="{ player1: isPlayer1(i,j), player2: isPlayer2(i,j), computer: isComputer(i,j) }"
+              ></div>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>

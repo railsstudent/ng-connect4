@@ -2,10 +2,12 @@ import { AlphabetaSolver } from "./alphabeta-solver";
 import { FREE_CELL, ROWS, COLUMNS, Player, MIN_INF, MAX_INF } from "../models";
 import { GridUtil } from "../util/grid.util";
 
+const gridUtil = new GridUtil();
 const solver = new AlphabetaSolver();
 let grid: string[] = [];
 
 beforeAll(() => {
+  solver.setGridUtil(gridUtil);
   solver.setMaximizePlayer(Player.COMPUTER);
   solver.setMinimizePlayer(Player.PLAYER1);
 });
@@ -66,9 +68,7 @@ describe("AlphabetaSolver", () => {
         40,
         35
       ].forEach(i => (grid[i] = Player.COMPUTER));
-      const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.alphabeta(
         { row: 6, col: 0 },
         1,
@@ -82,9 +82,7 @@ describe("AlphabetaSolver", () => {
     it("alphabeta returns winning score for a winning move", () => {
       [2, 3, 4, 9].forEach(i => (grid[i] = Player.PLAYER1));
       [1, 8, 15].forEach(i => (grid[i] = Player.COMPUTER));
-      const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.alphabeta(
         { row: 3, col: 1 },
         1,
@@ -97,9 +95,7 @@ describe("AlphabetaSolver", () => {
 
     it("alphabeta returns score after depth = 1 is reached", () => {
       grid[2] = Player.PLAYER1;
-      const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.alphabeta(
         { row: 0, col: 0 },
         1,
@@ -112,9 +108,7 @@ describe("AlphabetaSolver", () => {
 
     it("alphabeta returns score after depth = 2 is reached and move is (0,0)", () => {
       grid[2] = Player.PLAYER1;
-      const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.alphabeta(
         { row: 0, col: 0 },
         2,
@@ -127,9 +121,7 @@ describe("AlphabetaSolver", () => {
 
     it("alphabeta returns score after depth = 2 is reached and move is (0,1)", () => {
       grid[2] = Player.PLAYER1;
-      const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.alphabeta(
         { row: 0, col: 1 },
         2,
@@ -142,9 +134,7 @@ describe("AlphabetaSolver", () => {
 
     it("alphabeta returns score after depth = 2 is reached and move is (0,2)", () => {
       grid[2] = Player.PLAYER1;
-      const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.alphabeta(
         { row: 0, col: 2 },
         2,
@@ -157,9 +147,7 @@ describe("AlphabetaSolver", () => {
 
     it("alphabeta returns score after depth = 2 is reached and move is (0,3)", () => {
       grid[2] = Player.PLAYER1;
-      const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.alphabeta(
         { row: 0, col: 3 },
         2,
@@ -172,9 +160,7 @@ describe("AlphabetaSolver", () => {
 
     it("alphabeta returns score after depth = 2 is reached and move is (0,4)", () => {
       grid[2] = Player.PLAYER1;
-      const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.alphabeta(
         { row: 0, col: 4 },
         2,
@@ -187,9 +173,7 @@ describe("AlphabetaSolver", () => {
 
     it("alphabeta returns score after depth = 2 is reached and move is (0,5)", () => {
       grid[2] = Player.PLAYER1;
-      const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.alphabeta(
         { row: 0, col: 5 },
         2,
@@ -202,9 +186,7 @@ describe("AlphabetaSolver", () => {
 
     it("alphabeta returns score after depth = 2 is reached and move is (0,6)", () => {
       grid[2] = Player.PLAYER1;
-      const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.alphabeta(
         { row: 0, col: 6 },
         2,
@@ -226,18 +208,14 @@ describe("AlphabetaSolver", () => {
 
     it("bestScore returns the best score among all game trees", () => {
       grid[2] = Player.PLAYER1;
-      const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.bestScore(grid);
       expect(score).toBe(4);
     });
 
     it("bestMove returns the best score among all game trees", () => {
       grid[2] = Player.PLAYER1;
-      const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
-      solver.setGridUtil(gridUtil);
       const { row, col } = solver.bestMove(grid);
       expect(row).toBe(0);
       expect(col).toBe(0);

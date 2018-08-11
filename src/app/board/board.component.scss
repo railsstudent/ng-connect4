@@ -1,17 +1,194 @@
-.board {
-    &-container {
-        padding-top: 20px;
-    }
+:host {
+    background: beige;
+    border: 2px solid rebeccapurple;
+}
 
-    &-title {
+$primary-color: #007bff;
+$dimension: 60px;
+$select-column-color: pink;
+$select-column-border: magenta;
+$grid-border: #4a4a4a;
+
+@mixin rotateLine($angle, $border-color: white) {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    border-bottom: 1px solid $border-color;
+    transform: rotate($angle);
+}
+
+.board-container {
+    padding-top: 20px;
+
+    .board-title {
         text-align: center;
+        font-style: italic;
+        font-size: 3em;
     }
-}
 
-.show {
-    display: block;
-}
+    .moves-left{
+        margin-top: 10px;
+        font-size: 1.2em;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        &-label {
+            margin-right: 10px;
+        }
 
-.hide {
-    display: none;
+        &-content {
+            margin-right: 10px;
+        }
+    }
+
+    .outcome-container {
+        display: flex;
+        justify-content: center;
+        .outcome {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+        .btn-reset {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            background-color: $primary-color;
+            border-color: $primary-color;
+            color: #fff;
+            border: 1px solid transparent;
+            padding: .375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: .25rem;
+            transition: color .15s
+        }
+    }
+
+    .select-column-container {
+        margin-top: 30px;
+        padding: 0 8%;
+        display: flex;
+        justify-content: center;
+        .select-column {
+            height: $dimension;
+            border: solid 1px $select-column-border;
+            background: $select-column-color;
+
+            flex: 1 1 $dimension;
+
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    .show {
+        opacity: 1;
+    }
+
+    .hide {
+        opacity: 0;
+    }
+
+    .arrow-down {
+        color: red;
+    }
+
+    .grid {
+        &-container {
+            margin-top: 30px;
+            padding: 0 8%;
+
+            display: flex;
+            flex-flow: row wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &-row {
+            flex: 1 1 $dimension;
+            background: black;
+
+            display: flex;
+        }
+
+        &-cell {
+            flex: 1 1 $dimension;
+
+            height: 100%;
+            padding: 3px 0;
+            border: 1px solid $grid-border;
+
+            display: flex;
+            justify-content: center;
+        }
+
+        &-circle {
+            position: relative;
+            border-radius: 50%;
+            width: $dimension;
+            height: $dimension;
+
+            &.free-cell {
+                background: white;
+            }
+
+            &.player1 {
+                background: red;
+            }
+
+            &.player2 {
+                background: yellow;
+            }
+
+            &.computer {
+                background: magenta;
+            }
+        }
+    }
+
+    .line {
+        &.player1, &.computer {
+            @include rotateLine(0deg);
+        }
+
+        &.player2 {
+            @include rotateLine(0deg, black);
+        }
+    }
+
+    .vertical-line {
+        &.player1, &.computer {
+            @include rotateLine(90deg);
+        }
+
+        &.player2 {
+            @include rotateLine(90deg, black);
+        }
+    }
+
+    .left-diagonal-line {
+        &.player1, &.computer {
+            @include rotateLine(45deg);
+        }
+
+        &.player2 {
+            @include rotateLine(45deg, black);
+        }
+
+    }
+
+    .right-diagonal-line {
+        &.player1, &.computer {
+            @include rotateLine(-45deg);
+        }
+
+        &.player2 {
+            @include rotateLine(-45deg, black);
+        }
+
+    }
 }

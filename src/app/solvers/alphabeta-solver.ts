@@ -52,7 +52,10 @@ export class AlphabetaSolver implements GameSolver {
     console.log("player's turn", player);
 
     // terminate state of the game tree: reach depth or player wins the game
-    if (depth === 0 || this.gridUtil.isWinningMove(currentMove.col, player)) {
+    if (
+      depth === 0 ||
+      this.gridUtil.isWinningMove(currentMove.col, player).win === true
+    ) {
       return heuristicEvaluation(this.gridUtil, player, currentMove);
     }
 
@@ -70,7 +73,6 @@ export class AlphabetaSolver implements GameSolver {
         this.gridUtil.setGrid(maxmizeGrid);
         // find opposite moves
         if (this.gridUtil.canPlay(col)) {
-          const move = { row: this.gridUtil.height[col], col };
           const minScore = this.alphabeta(
             { row: this.gridUtil.height[col], col },
             depth - 1,
@@ -107,8 +109,13 @@ export class AlphabetaSolver implements GameSolver {
         this.gridUtil.setGrid(minimizeGrid);
         // find opposite moves
         if (this.gridUtil.canPlay(col)) {
-          const move = { row: this.gridUtil.height[col], col };
-          const maxScore = this.alphabeta(move, depth - 1, alpha, beta, true);
+          const maxScore = this.alphabeta(
+            { row: this.gridUtil.height[col], col },
+            depth - 1,
+            alpha,
+            beta,
+            true
+          );
           bestScore = Math.min(bestScore, maxScore);
           beta = Math.min(beta, bestScore);
           console.log(
@@ -119,7 +126,7 @@ export class AlphabetaSolver implements GameSolver {
             "beta",
             beta,
             "move",
-            move
+            { row: this.gridUtil.height[col], col }
           );
           if (alpha >= beta) {
             bestScore = maxScore;

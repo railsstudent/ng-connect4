@@ -31,8 +31,11 @@
     "@angular/platform-browser": "6.1.0",
     "@angular/platform-browser-dynamic": "6.1.0",
     "@angular/router": "6.1.0",
-    "@ngrx/store": "^6.0.1",
-    "@ngrx/store-devtools": "^6.0.1",
+    "@fortawesome/angular-fontawesome": "0.1.1",
+    "@fortawesome/fontawesome-svg-core": "1.2.2",
+    "@fortawesome/free-solid-svg-icons": "5.2.0",
+    "@ngrx/store": "6.0.1",
+    "@ngrx/store-devtools": "6.0.1",
     "core-js": "2.5.4",
     "rxjs": "^6.0.0",
     "zone.js": "^0.8.26"

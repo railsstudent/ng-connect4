@@ -21,7 +21,7 @@ const evaluationTable = [
 
 export const heuristicEvaluation = (gridUtil, player: string, { col }: Pos) => {
   let score = 0;
-  if (gridUtil.isWinningMove(col, player)) {
+  if (gridUtil.isWinningMove(col, player).win === true) {
     score = (ROWS * COLUMNS + 1 - gridUtil.numMoves) / 2;
   } else {
     const row = ROWS - gridUtil.height[col] - 1;

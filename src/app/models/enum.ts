@@ -17,3 +17,10 @@ export enum Mode {
   HUMAN_VS_HUMAN,
   HUMAN_VS_COMPUTER
 }
+
+export enum Direction {
+  HORIZONTAL,
+  VERTICAL,
+  LEFT_DIAG,
+  RIGHT_DIAG
+}

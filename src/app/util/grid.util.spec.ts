@@ -1,7 +1,5 @@
-import { TestBed, inject } from "@angular/core/testing";
-
 import { GridUtil } from "./grid.util";
-import { ROWS, COLUMNS, FREE_CELL, Player } from "../models";
+import { ROWS, COLUMNS, FREE_CELL, Player, Direction } from "../models";
 
 describe("GridUtil", () => {
   const gridUtil = new GridUtil();
@@ -206,7 +204,11 @@ describe("GridUtil", () => {
       gridUtil.play(1, Player.PLAYER2);
       gridUtil.play(0, Player.PLAYER1);
       gridUtil.play(1, Player.PLAYER2);
-      expect(gridUtil.isWinningMove(0, Player.PLAYER1)).toBe(true);
+      expect(gridUtil.isWinningMove(0, Player.PLAYER1)).toEqual({
+        win: true,
+        direction: Direction.VERTICAL,
+        sequence: [0, 7, 14, 21]
+      });
     });
 
     it("return true if it is vertically connected 2", () => {
@@ -218,7 +220,11 @@ describe("GridUtil", () => {
       gridUtil.play(1, Player.PLAYER2);
       gridUtil.play(0, Player.PLAYER1);
       gridUtil.play(1, Player.PLAYER2);
-      expect(gridUtil.isWinningMove(0, Player.PLAYER1)).toBe(true);
+      expect(gridUtil.isWinningMove(0, Player.PLAYER1)).toEqual({
+        win: true,
+        direction: Direction.VERTICAL,
+        sequence: [14, 21, 28, 35]
+      });
     });
 
     it("return true if it is vertically connected 3", () => {
@@ -229,7 +235,11 @@ describe("GridUtil", () => {
       gridUtil.play(5, Player.PLAYER1);
       gridUtil.play(4, Player.PLAYER2);
       gridUtil.play(5, Player.PLAYER1);
-      expect(gridUtil.isWinningMove(4, Player.PLAYER2)).toBe(true);
+      expect(gridUtil.isWinningMove(4, Player.PLAYER2)).toEqual({
+        win: true,
+        direction: Direction.VERTICAL,
+        sequence: [11, 18, 25, 32]
+      });
     });
   });
 
@@ -246,35 +256,55 @@ describe("GridUtil", () => {
       [0, 2, 4, 5, 11].forEach(i => (grid[i] = Player.PLAYER1));
       [1, 3, 7, 8, 10].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(2, Player.PLAYER2)).toBe(true);
+      expect(gridUtil.isWinningMove(2, Player.PLAYER2)).toEqual({
+        win: true,
+        direction: Direction.HORIZONTAL,
+        sequence: [7, 8, 9, 10]
+      });
     });
 
     it("return true if it is horizontally connected and the winning piece is the third one of the connected 4", () => {
       [1, 3, 5, 6, 13, 20].forEach(i => (grid[i] = Player.PLAYER1));
       [2, 4, 8, 9, 11].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(3, Player.PLAYER2)).toBe(true);
+      expect(gridUtil.isWinningMove(3, Player.PLAYER2)).toEqual({
+        win: true,
+        direction: Direction.HORIZONTAL,
+        sequence: [8, 9, 10, 11]
+      });
     });
 
     it("return true if it is horizontally connected and the winning piece is the last one of the connected 4", () => {
       [3, 5, 10, 11, 12].forEach(i => (grid[i] = Player.PLAYER1));
       [4, 6, 17, 18, 19].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(6, Player.PLAYER1)).toBe(true);
+      expect(gridUtil.isWinningMove(6, Player.PLAYER1)).toEqual({
+        win: true,
+        direction: Direction.HORIZONTAL,
+        sequence: [10, 11, 12, 13]
+      });
     });
 
     it("return true if it is horizontally connected and the winning piece is the first one of the connected 4", () => {
       [1, 3, 4, 5, 12, 19].forEach(i => (grid[i] = Player.PLAYER1));
       [2, 6, 9, 10, 11].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(1, Player.PLAYER2)).toBe(true);
+      expect(gridUtil.isWinningMove(1, Player.PLAYER2)).toEqual({
+        win: true,
+        direction: Direction.HORIZONTAL,
+        sequence: [8, 9, 10, 11]
+      });
     });
 
     it("return true if it is horizontally connected and it is actually connect 5", () => {
       [1, 3, 4, 5, 15, 19, 22].forEach(i => (grid[i] = Player.PLAYER1));
       [2, 8, 9, 11, 12, 18].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(3, Player.PLAYER2)).toBe(true);
+      expect(gridUtil.isWinningMove(3, Player.PLAYER2)).toEqual({
+        win: true,
+        direction: Direction.HORIZONTAL,
+        sequence: [9, 10, 11, 12]
+      });
     });
   });
 
@@ -291,32 +321,48 @@ describe("GridUtil", () => {
       [0, 1, 2, 9, 14, 15, 17, 29].forEach(i => (grid[i] = Player.PLAYER1));
       [3, 7, 8, 10, 21, 22, 28].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(2, Player.PLAYER2)).toBe(true);
+      expect(gridUtil.isWinningMove(2, Player.PLAYER2)).toEqual({
+        win: true,
+        direction: Direction.LEFT_DIAG,
+        sequence: [10, 16, 22, 28]
+      });
     });
 
-    it("return true if it is horizontally connected and the winning piece is the third one of the connected 4", () => {
+    it("return true if it is left-diagonally connected and the winning piece is the third one of the connected 4", () => {
       [1, 2, 9, 11, 15, 17, 29].forEach(i => (grid[i] = Player.PLAYER1));
       [3, 4, 5, 8, 10, 16, 22].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(2, Player.PLAYER1)).toBe(true);
+      expect(gridUtil.isWinningMove(2, Player.PLAYER1)).toEqual({
+        win: true,
+        direction: Direction.LEFT_DIAG,
+        sequence: [11, 17, 23, 29]
+      });
     });
 
-    it("return true if it is horizontally connected and the winning piece is the last one of the connected 4", () => {
+    it("return true if it is left-diagonally connected and the winning piece is the last one of the connected 4", () => {
       [0, 1, 3, 4, 8, 14, 17, 23, 29].forEach(i => (grid[i] = Player.PLAYER1));
       [2, 7, 9, 10, 15, 16, 21, 22, 28].forEach(
         i => (grid[i] = Player.PLAYER2)
       );
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(0, Player.PLAYER1)).toBe(true);
+      expect(gridUtil.isWinningMove(0, Player.PLAYER1)).toEqual({
+        win: true,
+        direction: Direction.LEFT_DIAG,
+        sequence: [17, 23, 29, 35]
+      });
     });
 
-    it("return true if it is horizontally connected and the winning piece is the first one of the connected 4", () => {
+    it("return true if it is left-diagonally connected and the winning piece is the first one of the connected 4", () => {
       [2, 4, 8, 9, 10, 22, 24, 30, 36].forEach(i => (grid[i] = Player.PLAYER1));
       [1, 3, 5, 11, 15, 16, 17, 23, 29].forEach(
         i => (grid[i] = Player.PLAYER2)
       );
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(4, Player.PLAYER1)).toBe(true);
+      expect(gridUtil.isWinningMove(4, Player.PLAYER1)).toEqual({
+        win: true,
+        direction: Direction.LEFT_DIAG,
+        sequence: [18, 24, 30, 36]
+      });
     });
   });
 
@@ -335,7 +381,11 @@ describe("GridUtil", () => {
       );
       [1, 3, 4, 5, 8, 10, 18, 19, 23].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(4, Player.PLAYER1)).toBe(true);
+      expect(gridUtil.isWinningMove(4, Player.PLAYER1)).toEqual({
+        win: true,
+        direction: Direction.RIGHT_DIAG,
+        sequence: [9, 17, 25, 33]
+      });
     });
 
     it("return true and the winning piece is the third one of the connected 4", () => {
@@ -344,7 +394,11 @@ describe("GridUtil", () => {
       );
       [1, 4, 8, 9, 17, 21, 24, 25, 32].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(2, Player.PLAYER2)).toBe(true);
+      expect(gridUtil.isWinningMove(2, Player.PLAYER2)).toEqual({
+        win: true,
+        direction: Direction.RIGHT_DIAG,
+        sequence: [8, 16, 24, 32]
+      });
     });
 
     it("return true and the winning piece is the last one of the connected 4", () => {
@@ -355,14 +409,22 @@ describe("GridUtil", () => {
         i => (grid[i] = Player.PLAYER2)
       );
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(1, Player.PLAYER1)).toBe(true);
+      expect(gridUtil.isWinningMove(1, Player.PLAYER1)).toEqual({
+        win: true,
+        direction: Direction.RIGHT_DIAG,
+        sequence: [15, 23, 31, 39]
+      });
     });
 
     it("return true and the winning piece is the first one of the connected 4", () => {
       [2, 5, 10, 18, 19].forEach(i => (grid[i] = Player.PLAYER1));
       [3, 4, 6, 11, 12].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(5, Player.PLAYER1)).toBe(true);
+      expect(gridUtil.isWinningMove(5, Player.PLAYER1)).toEqual({
+        win: true,
+        direction: Direction.RIGHT_DIAG,
+        sequence: [2, 10, 18, 26]
+      });
     });
   });
 
@@ -379,15 +441,27 @@ describe("GridUtil", () => {
       [0].forEach(i => (grid[i] = Player.PLAYER1));
       [1].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(-1, Player.PLAYER1)).toBe(false);
-      expect(gridUtil.isWinningMove(7, Player.PLAYER1)).toBe(false);
+      expect(gridUtil.isWinningMove(-1, Player.PLAYER1)).toEqual({
+        win: false,
+        direction: null,
+        sequence: null
+      });
+      expect(gridUtil.isWinningMove(7, Player.PLAYER1)).toEqual({
+        win: false,
+        direction: null,
+        sequence: null
+      });
     });
 
     it("return false if the game is not won", () => {
       [0, 2, 3].forEach(i => (grid[i] = Player.PLAYER1));
       [1, 9, 10].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(3, Player.PLAYER1)).toBe(false);
+      expect(gridUtil.isWinningMove(3, Player.PLAYER1)).toEqual({
+        win: false,
+        direction: null,
+        sequence: null
+      });
     });
 
     it("return false if the game is a draw", () => {
@@ -437,7 +511,11 @@ describe("GridUtil", () => {
         40
       ].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
-      expect(gridUtil.isWinningMove(0, Player.PLAYER2)).toBe(false);
+      expect(gridUtil.isWinningMove(0, Player.PLAYER2)).toEqual({
+        win: false,
+        direction: null,
+        sequence: null
+      });
     });
   });
 

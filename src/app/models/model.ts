@@ -1,4 +1,4 @@
-import { Mode, Player } from "./enum";
+import { Mode, Player, Direction } from "./enum";
 
 export interface Pos {
   row: number;
@@ -12,4 +12,10 @@ export interface MoveModel {
 
 export interface ConnectModeMoveModel extends MoveModel {
   mode: Mode;
+}
+
+export interface ConnectSequence {
+  win: boolean;
+  direction: Direction;
+  sequence: number[];
 }

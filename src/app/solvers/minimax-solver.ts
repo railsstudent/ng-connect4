@@ -21,7 +21,10 @@ export class MinimaxSolver implements GameSolver {
     console.log("player's turn", player);
 
     // terminate state of the game tree: reach depth or player wins the game
-    if (depth === 0 || this.gridUtil.isWinningMove(currentMove.col, player)) {
+    if (
+      depth === 0 ||
+      this.gridUtil.isWinningMove(currentMove.col, player).win === true
+    ) {
       return heuristicEvaluation(this.gridUtil, player, currentMove);
     }
 

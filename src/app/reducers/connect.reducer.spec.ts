@@ -1,5 +1,24 @@
-import { connectReducer, initialState, ConnectState } from "./connect.reducer";
-import { ROWS, COLUMNS, FREE_CELL, Player, Outcome, Mode } from "../models";
+import {
+  connectReducer,
+  initialState,
+  ConnectState,
+  selectGrid,
+  selectResetGame,
+  selectNextPlayer,
+  selectMovesLeft,
+  selectColumnAvailable,
+  selectOutcome,
+  selectWinningSequence
+} from "./connect.reducer";
+import {
+  ROWS,
+  COLUMNS,
+  FREE_CELL,
+  Player,
+  Outcome,
+  Mode,
+  Direction
+} from "../models";
 import * as connectActions from "./connect.actions";
 
 let grid: string[] = [];
@@ -19,7 +38,18 @@ describe("Connect Reducer", () => {
     it("should return the initial state", () => {
       const action = new connectActions.NewGameAction();
 
-      const result = connectReducer(initialState, action);
+      const result = connectReducer(
+        {
+          grid: [],
+          nextPlayer: Player.PLAYER1,
+          outcome: Outcome.PLAYER1_WINS,
+          winningSequence: [1, 8, 15, 22],
+          direction: Direction.VERTICAL,
+          reset: true,
+          columnAvailable: [false, false, false, false, false, false, false]
+        },
+        action
+      );
 
       expect(result).toBe(initialState);
     });
@@ -39,8 +69,9 @@ describe("Connect Reducer", () => {
       const TEST_INITIAL_STATE: ConnectState = {
         grid,
         nextPlayer: Player.PLAYER1,
-        movesLeft: ROWS * COLUMNS - 2,
         outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
         reset: false,
         columnAvailable: [true, true, true, true, true, true, true]
       };
@@ -60,10 +91,11 @@ describe("Connect Reducer", () => {
       cloneGrid[2] = Player.PLAYER1;
 
       expect(state.grid).toEqual(cloneGrid);
-      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 3);
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER2);
+      expect(state.winningSequence).toEqual(null);
+      expect(state.direction).toEqual(null);
       expect(state.columnAvailable).toEqual([
         true,
         true,
@@ -86,9 +118,10 @@ describe("Connect Reducer", () => {
       const TEST_INITIAL_STATE: ConnectState = {
         grid,
         nextPlayer: Player.PLAYER1,
-        movesLeft: ROWS * COLUMNS - 6,
         outcome: Outcome.DEFAULT,
         reset: false,
+        winningSequence: null,
+        direction: null,
         columnAvailable: [true, true, true, true, true, true, true]
       };
       const action = new connectActions.PlayerOneMoveAction({
@@ -110,18 +143,19 @@ describe("Connect Reducer", () => {
       cloneGrid[1] = Player.COMPUTER;
       cloneGrid[35] = Player.PLAYER1;
       expect(state.grid).toEqual(cloneGrid);
-      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 7);
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.COMPUTER);
+      expect(state.winningSequence).toEqual(null);
+      expect(state.direction).toEqual(null);
       expect(state.columnAvailable).toEqual([
         false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
       ]);
     });
 
@@ -140,8 +174,9 @@ describe("Connect Reducer", () => {
       const TEST_INITIAL_STATE: ConnectState = {
         grid,
         nextPlayer: Player.PLAYER1,
-        movesLeft: ROWS * COLUMNS - 10,
         outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
         reset: false,
         columnAvailable: [true, true, true, true, true, true, true]
       };
@@ -167,19 +202,21 @@ describe("Connect Reducer", () => {
       cloneGrid[18] = Player.PLAYER1;
       cloneGrid[19] = Player.COMPUTER;
       cloneGrid[26] = Player.PLAYER1;
+
       expect(state.grid).toEqual(cloneGrid);
-      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 11);
       expect(state.outcome).toEqual(Outcome.PLAYER1_WINS);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.COMPUTER);
+      expect(state.winningSequence).toEqual([2, 10, 18, 26]);
+      expect(state.direction).toEqual(Direction.RIGHT_DIAG);
       expect(state.columnAvailable).toEqual([
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
       ]);
     });
   });
@@ -200,8 +237,9 @@ describe("Connect Reducer", () => {
       const TEST_INITIAL_STATE: ConnectState = {
         grid,
         nextPlayer: Player.PLAYER2,
-        movesLeft: ROWS * COLUMNS - 3,
         outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
         reset: false,
         columnAvailable: [true, true, true, true, true, true, true]
       };
@@ -221,10 +259,11 @@ describe("Connect Reducer", () => {
       cloneGrid[15] = Player.PLAYER2;
 
       expect(state.grid).toEqual(cloneGrid);
-      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 4);
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.winningSequence).toEqual(null);
+      expect(state.direction).toEqual(null);
       expect(state.columnAvailable).toEqual([
         true,
         true,
@@ -248,8 +287,9 @@ describe("Connect Reducer", () => {
       const TEST_INITIAL_STATE: ConnectState = {
         grid,
         nextPlayer: Player.PLAYER2,
-        movesLeft: ROWS * COLUMNS - 7,
         outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
         reset: false,
         columnAvailable: [true, true, true, true, true, true, true]
       };
@@ -272,10 +312,11 @@ describe("Connect Reducer", () => {
       cloneGrid[29] = Player.PLAYER1;
       cloneGrid[36] = Player.PLAYER2;
       expect(state.grid).toEqual(cloneGrid);
-      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 8);
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.winningSequence).toEqual(null);
+      expect(state.direction).toEqual(null);
       expect(state.columnAvailable).toEqual([
         true,
         false,
@@ -294,8 +335,9 @@ describe("Connect Reducer", () => {
       const TEST_INITIAL_STATE: ConnectState = {
         grid,
         nextPlayer: Player.PLAYER2,
-        movesLeft: ROWS * COLUMNS - 12,
         outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
         reset: false,
         columnAvailable: [true, true, true, true, true, true, true]
       };
@@ -313,18 +355,19 @@ describe("Connect Reducer", () => {
       [3, 5, 10, 17, 23, 11].forEach(i => (cloneGrid[i] = Player.PLAYER2));
 
       expect(state.grid).toEqual(cloneGrid);
-      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 13);
       expect(state.outcome).toEqual(Outcome.PLAYER2_WINS);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.winningSequence).toEqual([5, 11, 17, 23]);
+      expect(state.direction).toEqual(Direction.LEFT_DIAG);
       expect(state.columnAvailable).toEqual([
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
       ]);
     });
 
@@ -378,8 +421,9 @@ describe("Connect Reducer", () => {
       const TEST_INITIAL_STATE: ConnectState = {
         grid,
         nextPlayer: Player.PLAYER2,
-        movesLeft: 1,
         outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
         reset: false,
         columnAvailable: [true, true, true, true, true, true, true]
       };
@@ -441,10 +485,11 @@ describe("Connect Reducer", () => {
       ].forEach(i => (cloneGrid[i] = Player.PLAYER2));
 
       expect(state.grid).toEqual(cloneGrid);
-      expect(state.movesLeft).toEqual(0);
       expect(state.outcome).toEqual(Outcome.PLAYER2_WINS);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.winningSequence).toEqual([38, 39, 40, 41]);
+      expect(state.direction).toEqual(Direction.HORIZONTAL);
       expect(state.columnAvailable).toEqual([
         false,
         false,
@@ -506,8 +551,9 @@ describe("Connect Reducer", () => {
       const TEST_INITIAL_STATE: ConnectState = {
         grid,
         nextPlayer: Player.PLAYER2,
-        movesLeft: 1,
         outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
         reset: false,
         columnAvailable: [false, true, false, false, false, false, false]
       };
@@ -569,10 +615,10 @@ describe("Connect Reducer", () => {
       ].forEach(i => (cloneGrid[i] = Player.PLAYER2));
 
       expect(state.grid).toEqual(cloneGrid);
-      expect(state.movesLeft).toEqual(0);
       expect(state.outcome).toEqual(Outcome.DRAW);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.winningSequence).toEqual(null);
       expect(state.columnAvailable).toEqual([
         false,
         false,
@@ -601,8 +647,9 @@ describe("Connect Reducer", () => {
       const TEST_INITIAL_STATE: ConnectState = {
         grid,
         nextPlayer: Player.COMPUTER,
-        movesLeft: ROWS * COLUMNS - 3,
         outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
         reset: false,
         columnAvailable: [true, true, true, true, true, true, true]
       };
@@ -622,10 +669,11 @@ describe("Connect Reducer", () => {
       cloneGrid[15] = Player.COMPUTER;
 
       expect(state.grid).toEqual(cloneGrid);
-      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 4);
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.winningSequence).toEqual(null);
+      expect(state.direction).toEqual(null);
       expect(state.columnAvailable).toEqual([
         true,
         true,
@@ -637,7 +685,7 @@ describe("Connect Reducer", () => {
       ]);
     });
 
-    it("should should make the column unavailable after computer makes a move", () => {
+    it("should make the column unavailable after computer makes a move", () => {
       grid[1] = Player.PLAYER1;
       grid[2] = Player.COMPUTER;
       grid[8] = Player.PLAYER1;
@@ -649,8 +697,9 @@ describe("Connect Reducer", () => {
       const TEST_INITIAL_STATE: ConnectState = {
         grid,
         nextPlayer: Player.COMPUTER,
-        movesLeft: ROWS * COLUMNS - 7,
         outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
         reset: false,
         columnAvailable: [true, true, true, true, true, true, true]
       };
@@ -673,10 +722,11 @@ describe("Connect Reducer", () => {
       cloneGrid[29] = Player.PLAYER1;
       cloneGrid[36] = Player.COMPUTER;
       expect(state.grid).toEqual(cloneGrid);
-      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 8);
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.winningSequence).toEqual(null);
+      expect(state.direction).toEqual(null);
       expect(state.columnAvailable).toEqual([
         true,
         false,
@@ -695,8 +745,9 @@ describe("Connect Reducer", () => {
       const TEST_INITIAL_STATE: ConnectState = {
         grid,
         nextPlayer: Player.COMPUTER,
-        movesLeft: ROWS * COLUMNS - 12,
         outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
         reset: false,
         columnAvailable: [true, true, true, true, true, true, true]
       };
@@ -714,18 +765,20 @@ describe("Connect Reducer", () => {
       [3, 5, 10, 17, 23, 11].forEach(i => (cloneGrid[i] = Player.COMPUTER));
 
       expect(state.grid).toEqual(cloneGrid);
-      expect(state.movesLeft).toEqual(ROWS * COLUMNS - 13);
       expect(state.outcome).toEqual(Outcome.COMPUTER_WINS);
+      expect(state.winningSequence).toEqual([5, 11, 17, 23]);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.winningSequence).toEqual([5, 11, 17, 23]);
+      expect(state.direction).toEqual(Direction.LEFT_DIAG);
       expect(state.columnAvailable).toEqual([
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
       ]);
     });
 
@@ -779,8 +832,9 @@ describe("Connect Reducer", () => {
       const TEST_INITIAL_STATE: ConnectState = {
         grid,
         nextPlayer: Player.COMPUTER,
-        movesLeft: 1,
         outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
         reset: false,
         columnAvailable: [true, true, true, true, true, true, true]
       };
@@ -842,10 +896,11 @@ describe("Connect Reducer", () => {
       ].forEach(i => (cloneGrid[i] = Player.COMPUTER));
 
       expect(state.grid).toEqual(cloneGrid);
-      expect(state.movesLeft).toEqual(0);
       expect(state.outcome).toEqual(Outcome.COMPUTER_WINS);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.winningSequence).toEqual([38, 39, 40, 41]);
+      expect(state.direction).toEqual(Direction.HORIZONTAL);
       expect(state.columnAvailable).toEqual([
         false,
         false,
@@ -907,8 +962,9 @@ describe("Connect Reducer", () => {
       const TEST_INITIAL_STATE: ConnectState = {
         grid,
         nextPlayer: Player.COMPUTER,
-        movesLeft: 1,
         outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
         reset: false,
         columnAvailable: [false, true, false, false, false, false, false]
       };
@@ -970,10 +1026,11 @@ describe("Connect Reducer", () => {
       ].forEach(i => (cloneGrid[i] = Player.COMPUTER));
 
       expect(state.grid).toEqual(cloneGrid);
-      expect(state.movesLeft).toEqual(0);
       expect(state.outcome).toEqual(Outcome.DRAW);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.winningSequence).toEqual(null);
+      expect(state.direction).toEqual(null);
       expect(state.columnAvailable).toEqual([
         false,
         false,
@@ -983,6 +1040,68 @@ describe("Connect Reducer", () => {
         false,
         false
       ]);
+    });
+  });
+
+  describe("selectGrid returns grid", () => {
+    let connectState: ConnectState;
+    beforeEach(() => {
+      connectState = {
+        grid: ["-", "o", "o", "x", "-", "-", "-"],
+        nextPlayer: Player.COMPUTER,
+        outcome: Outcome.PLAYER1_WINS,
+        winningSequence: [0, 7, 14, 21],
+        direction: Direction.VERTICAL,
+        reset: false,
+        columnAvailable: [false, true, true, true, false, true]
+      };
+    });
+
+    it("selectGrid should return grid", () => {
+      const result = selectGrid.projector(connectState);
+      const expected = ["-", "o", "o", "x", "-", "-", "-"];
+      result.forEach((p, i) => {
+        expect(p).toBe(expected[i]);
+      });
+    });
+
+    it("selectColumnAvailable should return column full status", () => {
+      const result = selectColumnAvailable.projector(connectState);
+      const expected = [false, true, true, true, false, true];
+      result.forEach((p, i) => {
+        expect(p).toBe(expected[i]);
+      });
+    });
+
+    it("selectMovesLeft should return number of moves left", () => {
+      expect(
+        selectMovesLeft.projector(["-", "o", "o", "x", "-", "-", "-"])
+      ).toBe(4);
+    });
+
+    it("selectResetGame should return false", () => {
+      expect(selectResetGame.projector(connectState)).toBe(false);
+    });
+
+    it("selectOutcome should return game outcome", () => {
+      expect(selectOutcome.projector(connectState)).toEqual(
+        Outcome.PLAYER1_WINS
+      );
+    });
+
+    it("selectNextPlayer should return reset and next player", () => {
+      expect(selectNextPlayer.projector(connectState)).toEqual({
+        reset: false,
+        nextPlayer: Player.COMPUTER
+      });
+    });
+
+    it("selectWinningSequence should return winning sequence", () => {
+      expect(selectWinningSequence.projector(connectState)).toEqual({
+        direction: Direction.VERTICAL,
+        sequence: [0, 7, 14, 21],
+        winner: Player.PLAYER1
+      });
     });
   });
 });

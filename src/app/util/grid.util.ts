@@ -1,4 +1,11 @@
-import { FREE_CELL, ROWS, COLUMNS, Player } from "../models";
+import {
+  FREE_CELL,
+  ROWS,
+  COLUMNS,
+  Player,
+  ConnectSequence,
+  Direction
+} from "../models";
 
 export class GridUtil {
   private _grid: string[];
@@ -23,7 +30,7 @@ export class GridUtil {
       this._height.push(0);
     }
     for (let i = 0; i < grid.length; i++) {
-      const { row, col } = convertIdxToRowCol(i);
+      const { col } = convertIdxToRowCol(i);
       this._grid.push(grid[i]);
       if (grid[i] !== FREE_CELL) {
         this._height[col]++;
@@ -46,9 +53,11 @@ export class GridUtil {
   }
 
   // Determins whether player wins the game if he inserts a new piece at column
-  isWinningMove(column: number, player): boolean {
+  isWinningMove(column: number, player): ConnectSequence {
+    const sortMoves = (a, b) => a - b;
+
     if (!this.canPlay(column)) {
-      return false;
+      return { win: false, direction: null, sequence: null };
     }
 
     // check vertical
@@ -56,12 +65,17 @@ export class GridUtil {
       const idx1 = this.convertRowColToIdx(this.height[column] - 1, column);
       const idx2 = this.convertRowColToIdx(this.height[column] - 2, column);
       const idx3 = this.convertRowColToIdx(this.height[column] - 3, column);
+      const idx4 = this.convertRowColToIdx(this.height[column], column);
       if (
         this._grid[idx1] === player &&
         this._grid[idx2] === player &&
         this._grid[idx3] === player
       ) {
-        return true;
+        return {
+          win: true,
+          direction: Direction.VERTICAL,
+          sequence: [idx1, idx2, idx3, idx4].sort(sortMoves)
+        };
       }
     }
 
@@ -71,10 +85,11 @@ export class GridUtil {
     for (let direction = -1; direction <= 1; direction++) {
       for (let x = 3; x >= 0; x--) {
         pieces = 0;
+        const sequence = [];
         for (let delta = -3; delta <= 0; delta++) {
+          const colIdx = column + delta + x;
+          const rowIdx = this._height[column] + direction * (delta + x);
           if (delta !== -x) {
-            const colIdx = column + delta + x;
-            const rowIdx = this._height[column] + direction * (delta + x);
             if (
               colIdx >= 0 &&
               colIdx < COLUMNS &&
@@ -82,6 +97,7 @@ export class GridUtil {
               rowIdx < ROWS
             ) {
               const idx = this.convertRowColToIdx(rowIdx, colIdx);
+              sequence.push(idx);
               if (
                 idx >= 0 &&
                 idx < ROWS * COLUMNS &&
@@ -92,14 +108,36 @@ export class GridUtil {
                 break;
               }
             }
+          } else {
+            if (
+              colIdx >= 0 &&
+              colIdx < COLUMNS &&
+              rowIdx >= 0 &&
+              rowIdx < ROWS
+            ) {
+              const idx = this.convertRowColToIdx(rowIdx, colIdx);
+              sequence.push(idx);
+            }
           }
         }
         if (pieces === 3) {
-          return true;
+          let sequenceDirection = null;
+          if (direction === 0) {
+            sequenceDirection = Direction.HORIZONTAL;
+          } else if (direction === -1) {
+            sequenceDirection = Direction.LEFT_DIAG;
+          } else if (direction === 1) {
+            sequenceDirection = Direction.RIGHT_DIAG;
+          }
+          return {
+            win: true,
+            direction: sequenceDirection,
+            sequence: sequence.sort(sortMoves)
+          };
         }
       }
     }
-    return false;
+    return { win: false, direction: null, sequence: null };
   }
 
   play(column: number, player: Player) {
@@ -129,5 +167,16 @@ export class GridUtil {
 
   isDraw() {
     return this.numMoves === ROWS * COLUMNS;
+  }
+
+  print() {
+    let str = "";
+    for (let i = ROWS - 1; i >= 0; i--) {
+      for (let j = 0; j < COLUMNS; j++) {
+        str += `${this._grid[this.convertRowColToIdx(i, j)]} `;
+      }
+      str += "\n";
+    }
+    return str;
   }
 }

@@ -33,5 +33,6 @@ export {
   selectMovesLeft,
   selectNextPlayer,
   selectOutcome,
-  selectResetGame
+  selectResetGame,
+  selectWinningSequence
 } from "./connect.reducer";
