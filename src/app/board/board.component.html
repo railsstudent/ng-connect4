@@ -18,7 +18,8 @@
     <div class="grid-row" *ngFor="let i of rowRange">
       <ng-container *ngFor="let j of columnRange">
         <div class="grid-cell">
-          <div class="grid-circle" [ngClass]="{'free-cell': isFreeCell(i,j), player1: isPlayer1(i,j), player2: isPlayer2(i,j), computer: isComputer(i,j) }">
+          <div class="grid-circle"
+            [ngClass]="{'free-cell': isFreeCell(i,j), player1: isPlayer1(i,j), player2: isPlayer2(i,j), computer: isComputer(i,j) }">
             <ng-container *ngIf="(winningSequence$ | async); let ws">
               <div *ngIf="ws.winner && ws.winner === grid[i * totalColumns + j] && strikeThrough(ws, i, j, 1)"
                 class="line"
