@@ -1,10 +1,7 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'connect-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: "connect-root",
+  template: "<connect-shell></connect-shell>"
 })
-export class AppComponent {
-  title = 'connect';
-}
+export class AppComponent {}

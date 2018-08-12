@@ -1,10 +1,13 @@
 :host {
+    width: 100vw;
+    min-height: 100vh;
     background: beige;
     border: 2px solid rebeccapurple;
 }
 
 $primary-color: #007bff;
-$dimension: 60px;
+$dimension: 70px;
+$padding: 5px;
 $select-column-color: pink;
 $select-column-border: magenta;
 $grid-border: #4a4a4a;
@@ -14,12 +17,12 @@ $grid-border: #4a4a4a;
     top: 50%;
     left: 0;
     right: 0;
-    border-bottom: 1px solid $border-color;
+    border-bottom: 3px solid $border-color;
     transform: rotate($angle);
 }
 
 .board-container {
-    padding-top: 20px;
+    padding-top: 10px;
 
     .board-title {
         text-align: center;
@@ -43,13 +46,16 @@ $grid-border: #4a4a4a;
     }
 
     .outcome-container {
+        margin-top: 30px;
         display: flex;
         justify-content: center;
         .outcome {
             font-size: 1.5em;
             margin-right: 10px;
         }
-        .btn-reset {
+        .btn-reset, .btn-choose-mode {
+            margin-right: 10px;
+
             display: inline-block;
             font-weight: 400;
             text-align: center;
@@ -68,18 +74,19 @@ $grid-border: #4a4a4a;
     }
 
     .select-column-container {
-        margin-top: 30px;
+        margin-top: 15px;
         padding: 0 8%;
         display: flex;
         justify-content: center;
+
         .select-column {
             height: $dimension;
             border: solid 1px $select-column-border;
             background: $select-column-color;
+            padding: 0 $padding;
 
-            flex: 1 1 $dimension;
-
-            display: inline-flex;
+            flex: 1 1 auto;
+            display: flex;
             justify-content: center;
             align-items: center;
         }
@@ -95,31 +102,36 @@ $grid-border: #4a4a4a;
 
     .arrow-down {
         color: red;
+        width: $dimension;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .grid {
         &-container {
-            margin-top: 30px;
+            margin: 20px 0;
             padding: 0 8%;
 
             display: flex;
-            flex-flow: row wrap;
+            flex-wrap: wrap;
             align-items: center;
             justify-content: center;
         }
 
         &-row {
-            flex: 1 1 $dimension;
+            flex: 1 1 auto;
             background: black;
 
             display: flex;
         }
 
         &-cell {
-            flex: 1 1 $dimension;
+            flex: 1 1 auto;
 
             height: 100%;
-            padding: 3px 0;
+            padding: $padding;
             border: 1px solid $grid-border;
 
             display: flex;

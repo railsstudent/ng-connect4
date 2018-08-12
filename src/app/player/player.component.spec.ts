@@ -3,7 +3,7 @@ import { By } from "@angular/platform-browser";
 import { StoreModule, Store } from "@ngrx/store";
 import { PlayerComponent } from "./player.component";
 import { AppState, reducers } from "../reducers";
-import { Player, Mode } from "../models";
+import { Player, Mode, PieceColor } from "../models";
 import * as connectActions from "../reducers/connect.actions";
 
 describe("PlayerComponent", () => {
@@ -29,7 +29,7 @@ describe("PlayerComponent", () => {
     fixture = TestBed.createComponent(PlayerComponent);
     component = fixture.componentInstance;
     component.name = "Player 1";
-    component.color = "red";
+    component.color = PieceColor.RED;
     component.piece = Player.PLAYER1;
     fixture.detectChanges();
   });
@@ -40,7 +40,7 @@ describe("PlayerComponent", () => {
     expect(nameDiv.textContent).toBe("Player 1");
 
     const pieceDiv = getPiece().nativeElement as HTMLDivElement;
-    expect(pieceDiv.style.background).toBe("red");
+    expect(pieceDiv.style.background).toBe(PieceColor.RED);
   });
 
   it("should be player 1's turn when game starts", () => {
@@ -84,10 +84,9 @@ describe("PlayerComponent", () => {
         column: 0
       })
     );
-    component.nextPlayer$.subscribe(nextPlayer => {
-      console.log("next player", nextPlayer);
-      expect(nextPlayer).toEqual({ reset: false, nextPlayer: Player.COMPUTER });
-    });
+    component.nextPlayer$.subscribe(nextPlayer =>
+      expect(nextPlayer).toEqual({ reset: false, nextPlayer: Player.COMPUTER })
+    );
   });
 
   it("next move should be player 1 in human vs computer", () => {
@@ -97,9 +96,8 @@ describe("PlayerComponent", () => {
         column: 0
       })
     );
-    component.nextPlayer$.subscribe(nextPlayer => {
-      console.log("next player", nextPlayer);
-      expect(nextPlayer).toEqual({ reset: false, nextPlayer: Player.PLAYER1 });
-    });
+    component.nextPlayer$.subscribe(nextPlayer =>
+      expect(nextPlayer).toEqual({ reset: false, nextPlayer: Player.PLAYER1 })
+    );
   });
 });

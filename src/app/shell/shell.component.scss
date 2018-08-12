@@ -1,0 +1,25 @@
+$player-basis: 15%;
+$board-basis: 100% - 2 * $player-basis;
+
+.shell-container {
+    width: 100vw;
+    min-height: 100vh;
+
+    display: flex;
+    // justify-content: center;
+    // align-items: center;
+}
+
+.shell-title {
+    text-align: center;
+    font-style: italic;
+    font-size: 3em;
+}
+
+connect-player {
+    flex: 1 1 $player-basis;
+}
+
+connect-board {
+    flex: 1 0 $board-basis;
+}

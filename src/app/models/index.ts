@@ -1,4 +1,4 @@
-export { Player, Outcome, Mode, Direction } from "./enum";
+export { Player, Outcome, Mode, Direction, PieceColor } from "./enum";
 export { Pos, MoveModel, ConnectModeMoveModel, ConnectSequence } from "./model";
 export const FREE_CELL = "-";
 export const ROWS = 6;

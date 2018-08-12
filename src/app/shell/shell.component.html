@@ -1,0 +1,22 @@
+<div class="shell-container">
+    <div *ngIf="mode === _Mode.UNKNOWN">
+        <p class="shell-title">Choose Game Mode</p>
+        <button class="btn-human" (click)="mode = _Mode.HUMAN_VS_HUMAN">Human vs Human</button>
+        <button class="btn-computer" (click)="mode =_Mode.HUMAN_VS_COMPUTER">Human vs Computer</button>
+    </div>
+    <ng-container *ngIf="mode !== _Mode.UNKNOWN">
+        {{ mode }}
+        <ng-container *ngIf="mode === _Mode.HUMAN_VS_HUMAN then twoPlayers else onePlayer"></ng-container>
+    </ng-container>
+</div>
+<ng-template #twoPlayers>
+    <connect-player [name]="'Player 1'" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
+    <connect-board [mode]="_Mode.HUMAN_VS_HUMAN"></connect-board>
+    <connect-player [name]="'Player 2'" [piece]="_Player.PLAYER2" [color]="_PieceColor.YELLOW"></connect-player>
+</ng-template>
+
+<ng-template #onePlayer>
+    <connect-player [name]="'Player 1'" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
+    <connect-board [mode]="_Mode.HUMAN_VS_COMPUTER"></connect-board>
+    <connect-player [name]="'Computer'" [piece]="_Player.COMPUTER" [color]="_PieceColor.MAGENTA"></connect-player>
+</ng-template>

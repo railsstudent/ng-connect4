@@ -24,3 +24,9 @@ export enum Direction {
   LEFT_DIAG,
   RIGHT_DIAG
 }
+
+export enum PieceColor {
+  RED = "red",
+  YELLOW = "yellow",
+  MAGENTA = "magenta"
+}

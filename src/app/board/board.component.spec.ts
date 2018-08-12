@@ -46,7 +46,7 @@ describe("BoardComponent", () => {
     spyOn(store, "dispatch").and.callThrough();
     fixture = TestBed.createComponent(BoardComponent);
     component = fixture.componentInstance;
-    component.mode = "HUMAN_VS_HUMAN";
+    component.mode = Mode.HUMAN_VS_HUMAN;
     spyOn(component, "initSolver").and.callThrough();
     fixture.detectChanges();
   });
@@ -85,7 +85,7 @@ describe("BoardComponent", () => {
 
     store.dispatch(
       new connectActions.PlayerOneMoveAction({
-        mode: Mode[component.mode],
+        mode: component.mode,
         player: Player.PLAYER1,
         column: 0
       })
@@ -122,7 +122,7 @@ describe("BoardComponent", () => {
 
       store.dispatch(
         new connectActions.PlayerOneMoveAction({
-          mode: Mode[component.mode],
+          mode: component.mode,
           player: Player.PLAYER1,
           column: 0
         })
@@ -135,7 +135,7 @@ describe("BoardComponent", () => {
       );
       store.dispatch(
         new connectActions.PlayerOneMoveAction({
-          mode: Mode[component.mode],
+          mode: component.mode,
           player: Player.PLAYER1,
           column: 0
         })
@@ -403,7 +403,7 @@ describe("BoardComponent", () => {
 
     beforeEach(() => {
       component.setTestSolver(new MockSolver([0, 0, 0]));
-      component.mode = "HUMAN_VS_COMPUTER";
+      component.mode = Mode.HUMAN_VS_COMPUTER;
       fixture.detectChanges();
     });
 

@@ -12,12 +12,13 @@ import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
 import { PlayerComponent } from "./player/player.component";
 import { BoardComponent } from "./board/board.component";
+import { ShellComponent } from "./shell/shell.component";
 
 // Add an icon to the library for convenient access in other components
 library.add(faArrowDown);
 
 @NgModule({
-  declarations: [AppComponent, PlayerComponent, BoardComponent],
+  declarations: [AppComponent, ShellComponent, PlayerComponent, BoardComponent],
   imports: [
     BrowserModule,
     StoreModule.forRoot(reducers, { metaReducers }),

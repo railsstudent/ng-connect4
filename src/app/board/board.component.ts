@@ -23,8 +23,11 @@ import { AlphabetaSolver } from "../solvers/alphabeta-solver";
   styleUrls: ["./board.component.scss"]
 })
 export class BoardComponent implements OnInit {
+  _Mode = Mode;
+  _Player = Player;
+
   @Input()
-  mode: string;
+  mode: Mode;
 
   // Observables
   grid$ = this.store.pipe(select(selectGrid));
@@ -95,7 +98,7 @@ export class BoardComponent implements OnInit {
     if (this.nextPlayer === Player.PLAYER1) {
       this.store.dispatch(
         new connectActions.PlayerOneMoveAction({
-          mode: Mode[this.mode],
+          mode: this.mode,
           player: this.nextPlayer,
           column
         })
@@ -113,6 +116,8 @@ export class BoardComponent implements OnInit {
   clearState() {
     this.store.dispatch(new connectActions.NewGameAction());
   }
+
+  backToMode() {}
 
   // for testing
   setTestSolver(solver: MinimaxSolver | AlphabetaSolver) {
@@ -140,16 +145,8 @@ export class BoardComponent implements OnInit {
     return this.grid[row * COLUMNS + column] === FREE_CELL;
   }
 
-  isPlayer1(row: number, column: number) {
-    return this.grid[row * COLUMNS + column] === Player.PLAYER1;
-  }
-
-  isPlayer2(row: number, column: number) {
-    return this.grid[row * COLUMNS + column] === Player.PLAYER2;
-  }
-
-  isComputer(row: number, column: number) {
-    return this.grid[row * COLUMNS + column] === Player.COMPUTER;
+  isSamePlayer(row: number, column: number, player: Player) {
+    return this.grid[row * COLUMNS + column] === player;
   }
 
   strikeThrough(
@@ -158,7 +155,6 @@ export class BoardComponent implements OnInit {
     column: number,
     delta: number
   ) {
-    console.log("sequence", sequence, "direction", direction);
     const idx = row * COLUMNS + column;
     if (
       direction == null ||
@@ -169,12 +165,6 @@ export class BoardComponent implements OnInit {
     ) {
       return false;
     }
-    console.log(
-      sequence[1],
-      sequence[0],
-      delta,
-      sequence[1] - sequence[0] === delta
-    );
     switch (delta) {
       case 1:
         return direction === Direction.HORIZONTAL;
