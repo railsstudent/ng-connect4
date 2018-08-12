@@ -46,7 +46,9 @@ describe("ShellComponent", () => {
   });
 
   it("should show title", () => {
-    expect(getTitle().nativeElement.textContent).toEqual("Choose Game Mode");
+    expect(getTitle().nativeElement.textContent).toEqual(
+      "Enter game of Connect Four"
+    );
   });
 
   it("should show human vs human button", () => {

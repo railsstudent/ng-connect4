@@ -1,19 +1,44 @@
+@import "../../mixins";
+
 $player-basis: 15%;
 $board-basis: 100% - 2 * $player-basis;
+$primary-color: #007bff;
 
 .shell-container {
     width: 100vw;
     min-height: 100vh;
 
     display: flex;
-    // justify-content: center;
-    // align-items: center;
+
+    &.unknown {
+        padding-top: 20%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn-group {
+        margin-top: 30px;
+
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    .btn-human, .btn-computer {
+        margin-right: 10px;
+        @include blueButton();
+    }
+}
+
+.shell-selection {
+    padding: 5%;
+    border: 10px dotted darkblue;
 }
 
 .shell-title {
     text-align: center;
     font-style: italic;
     font-size: 3em;
+    width: 100%;
 }
 
 connect-player {

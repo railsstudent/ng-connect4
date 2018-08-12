@@ -17,10 +17,12 @@
     }
   },
   "lint-staged": {
-    "{src,test}/**/*.ts": [
-      "prettier --write",
-      "git add"
-    ]
+    "linters": {
+      "{src,test}/**/*.ts": [
+        "prettier --write",
+        "git add"
+      ]
+    }
   },
   "private": true,
   "dependencies": {
@@ -61,7 +63,7 @@
     "karma-coverage-istanbul-reporter": "~1.4.2",
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
-    "lint-staged": "^7.2.0",
+    "lint-staged": "7.1.2",
     "prettier": "^1.13.7",
     "protractor": "~5.3.0",
     "ts-node": "~5.0.1",

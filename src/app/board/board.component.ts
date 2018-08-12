@@ -117,7 +117,9 @@ export class BoardComponent implements OnInit {
     this.store.dispatch(new connectActions.NewGameAction({ mode: this.mode }));
   }
 
-  backToMode() {}
+  backToMode() {
+    this.store.dispatch(new connectActions.ChooseModeAction());
+  }
 
   // for testing
   setTestSolver(solver: MinimaxSolver | AlphabetaSolver) {

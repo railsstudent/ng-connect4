@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Mode, Player, PieceColor } from "../models";
+import { Store, select } from "@ngrx/store";
+import { AppState, selectMode } from "../reducers";
 
 @Component({
   selector: "connect-shell",
@@ -12,8 +14,21 @@ export class ShellComponent implements OnInit {
   _PieceColor = PieceColor;
 
   mode = Mode.UNKNOWN;
+  isUnknown = true;
 
-  constructor() {}
+  mode$ = this.store.pipe(select(selectMode));
 
-  ngOnInit() {}
+  constructor(private store: Store<AppState>) {}
+
+  ngOnInit() {
+    this.mode$.subscribe(mode => {
+      this.mode = mode;
+      this.isUnknown = this.mode === Mode.UNKNOWN;
+    });
+  }
+
+  choose(mode) {
+    this.mode = mode;
+    this.isUnknown = this.mode === Mode.UNKNOWN;
+  }
 }
