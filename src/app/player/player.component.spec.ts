@@ -44,7 +44,9 @@ describe("PlayerComponent", () => {
   });
 
   it("should be player 1's turn when game starts", () => {
-    store.dispatch(new connectActions.NewGameAction());
+    store.dispatch(
+      new connectActions.NewGameAction({ mode: Mode.HUMAN_VS_HUMAN })
+    );
 
     component.nextPlayer$.subscribe(nextPlayer =>
       expect(nextPlayer).toEqual({ reset: false, nextPlayer: Player.PLAYER1 })

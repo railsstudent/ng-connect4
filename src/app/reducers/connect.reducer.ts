@@ -10,6 +10,7 @@ import {
 } from "../models";
 import { GridUtil } from "../util/grid.util";
 import { createSelector, createFeatureSelector } from "@ngrx/store";
+import "es6-object-assign";
 
 export interface ConnectState {
   grid: string[];
@@ -19,6 +20,7 @@ export interface ConnectState {
   direction: Direction;
   reset: boolean;
   columnAvailable: boolean[];
+  mode: Mode;
 }
 
 const initBoard = () => {
@@ -44,7 +46,8 @@ export const initialState: ConnectState = {
   winningSequence: null,
   direction: null,
   reset: false,
-  columnAvailable: initColumns()
+  columnAvailable: initColumns(),
+  mode: Mode.UNKNOWN
 };
 
 const nextAction = (
@@ -93,7 +96,8 @@ const nextAction = (
     winningSequence,
     direction,
     reset,
-    columnAvailable
+    columnAvailable,
+    mode: state.mode
   };
 };
 
@@ -109,6 +113,9 @@ export function connectReducer(
     case ConnectActionTypes.ComputerMove:
       return nextAction(state, action, gridUtil);
     case ConnectActionTypes.NewGame:
+      const { mode } = action.payload;
+      return Object.assign({}, initialState, { mode });
+    case ConnectActionTypes.ChooseMode:
       return initialState;
     default:
       return state;
@@ -163,4 +170,8 @@ export const selectWinningSequence = createSelector(
       winner
     };
   }
+);
+export const selectMode = createSelector(
+  selectConnect,
+  (state: ConnectState) => state.mode
 );

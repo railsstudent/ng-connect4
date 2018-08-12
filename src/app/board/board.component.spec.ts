@@ -63,7 +63,9 @@ describe("BoardComponent", () => {
   });
 
   it("should dispatch action to initialize new game", () => {
-    const action = new connectActions.NewGameAction();
+    const action = new connectActions.NewGameAction({
+      mode: Mode.HUMAN_VS_HUMAN
+    });
 
     expect(component.initSolver).toHaveBeenCalled();
     expect(component.initSolver).toHaveBeenCalledTimes(1);

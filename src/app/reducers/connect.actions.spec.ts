@@ -4,9 +4,12 @@ import { Mode, Player } from "../models";
 describe("Connect Actions", () => {
   describe("NewGameAction", () => {
     it("should create an action", () => {
-      const action = new connectActions.NewGameAction();
+      const action = new connectActions.NewGameAction({
+        mode: Mode.HUMAN_VS_HUMAN
+      });
       expect({ ...action }).toEqual({
-        type: connectActions.ConnectActionTypes.NewGame
+        type: connectActions.ConnectActionTypes.NewGame,
+        payload: { mode: Mode.HUMAN_VS_HUMAN }
       });
     });
   });
@@ -69,6 +72,15 @@ describe("Connect Actions", () => {
       expect({ ...action }).toEqual({
         type: connectActions.ConnectActionTypes.ComputerMove,
         payload: { player: Player.COMPUTER, column: 0 }
+      });
+    });
+  });
+
+  describe("ChooseModeAction", () => {
+    it("should create an action", () => {
+      const action = new connectActions.ChooseModeAction();
+      expect({ ...action }).toEqual({
+        type: connectActions.ConnectActionTypes.ChooseMode
       });
     });
   });

@@ -55,7 +55,7 @@ export class BoardComponent implements OnInit {
     if (!this.solver) {
       this.initSolver();
     }
-    this.store.dispatch(new connectActions.NewGameAction());
+    this.store.dispatch(new connectActions.NewGameAction({ mode: this.mode }));
     this.nextPlayer$.subscribe(({ reset, nextPlayer }) => {
       this.nextPlayer = nextPlayer;
       if (reset === false && this.nextPlayer === Player.COMPUTER) {
@@ -114,7 +114,7 @@ export class BoardComponent implements OnInit {
   }
 
   clearState() {
-    this.store.dispatch(new connectActions.NewGameAction());
+    this.store.dispatch(new connectActions.NewGameAction({ mode: this.mode }));
   }
 
   backToMode() {}
