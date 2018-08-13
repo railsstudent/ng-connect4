@@ -57,15 +57,15 @@ export class AppPage {
     return element(by.tagName('connect-board'));
   }
 
-  getBoardTitle() {
+  getBoardTitle(): string {
     return this.getBoard().$('.board-title').getText();
   }
 
-  getBoardMovesLeftLabel() {
+  getBoardMovesLeftLabel(): string {
     return this.getBoard().$('.moves-left-label').getText();
   }
 
-  getBoardMovesLeftContent() {
+  getBoardMovesLeftContent(): string {
     return this.getBoard().$('.moves-left-content').getText();
   }
 
@@ -75,5 +75,34 @@ export class AppPage {
 
   getBoardSelectionColumns(): ElementFinder {
     return this.getBoard().$('.select-column-container');
+  }
+
+  getBoardSelectionColumn(i: number): ElementFinder {
+    return this.getBoard().$(`.select-column:nth-of-type(${i})`);
+  }
+
+  getOutcome() {
+    return this.getBoard().$('.outcome');
+  }
+
+  getOutcomeText() {
+    return this.getOutcome().getText();
+  }
+
+  getNewGameButton() {
+    return this.getBoard().$('.btn-reset');
+  }
+
+  getBackToStartButton() {
+    return this.getBoard().$('.btn-choose-mode');
+  }
+
+  getNumCells() {
+    return {
+      freeCell: $$('connect-board .grid-circle.free-cell').count(),
+      player1: $$('connect-board .grid-circle.player1').count(),
+      player2: $$('connect-board .grid-circle.player2').count(),
+      computer: $$('connect-board .grid-circle.computer').count()
+    };
   }
 }

@@ -7,7 +7,7 @@
   <div class="outcome-container" *ngIf="(outcome$ | async); let outcome">
     <p class="outcome" *ngIf="outcome">{{ outcome }}</p>
     <button class="btn-reset" *ngIf="(resetGame$ | async)" (click)="clearState()">New Game</button>
-    <button class="btn-choose-mode" *ngIf="(resetGame$ | async)" (click)="backToMode()">Back to Choose Mode</button>
+    <button class="btn-choose-mode" *ngIf="(resetGame$ | async)" (click)="backToMode()">Back to start</button>
   </div>
   <div class="select-column-container" *ngIf="!(resetGame$ | async)">
     <div class="select-column" *ngFor="let col of columnsAvailable; let i = index;"
