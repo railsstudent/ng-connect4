@@ -71,8 +71,13 @@ describe('workspace-project App', () => {
     const column1 = page.getBoardSelectionColumn(1);
     const column2 = page.getBoardSelectionColumn(2);
 
-    const promises = [column1, column2, column1, column2, column1, column2, column1].map(c => c.click());
-    await Promise.all(promises);
+    await column1.click();
+    await column2.click();
+    await column1.click();
+    await column2.click();
+    await column1.click();
+    await column2.click();
+    await column1.click();
 
     expect(page.getOutcomeText()).toEqual('Player 1 wins!!!');
     expect(await page.getNewGameButton().isPresent()).toBe(true);
@@ -97,8 +102,14 @@ describe('workspace-project App', () => {
     const column4 = page.getBoardSelectionColumn(4);
     const column5 = page.getBoardSelectionColumn(5);
 
-    const promises = [column1, column2, column1, column3, column2, column4, column2, column5].map(c => c.click());
-    await Promise.all(promises);
+    await column1.click();
+    await column2.click();
+    await column1.click();
+    await column3.click();
+    await column2.click();
+    await column4.click();
+    await column2.click();
+    await column5.click();
 
     expect(page.getOutcomeText()).toEqual('Player 2 wins!!!');
     expect(await page.getNewGameButton().isPresent()).toBe(true);
@@ -120,8 +131,13 @@ describe('workspace-project App', () => {
     const column1 = page.getBoardSelectionColumn(1);
     const column2 = page.getBoardSelectionColumn(2);
 
-    const promises = [column1, column2, column1, column2, column1, column2, column1].map(c => c.click());
-    await Promise.all(promises);
+    await column1.click();
+    await column2.click();
+    await column1.click();
+    await column2.click();
+    await column1.click();
+    await column2.click();
+    await column1.click();
 
     expect(await page.getNewGameButton().isPresent()).toBe(true);
     await page.getNewGameButton().click();

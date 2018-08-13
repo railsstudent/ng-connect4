@@ -1,4 +1,4 @@
-import { browser, by, element, ElementFinder } from 'protractor';
+import { browser, by, element, ElementFinder, $$ } from 'protractor';
 
 export class AppPage {
   navigateTo() {
@@ -57,15 +57,15 @@ export class AppPage {
     return element(by.tagName('connect-board'));
   }
 
-  getBoardTitle(): string {
+  getBoardTitle() {
     return this.getBoard().$('.board-title').getText();
   }
 
-  getBoardMovesLeftLabel(): string {
+  getBoardMovesLeftLabel() {
     return this.getBoard().$('.moves-left-label').getText();
   }
 
-  getBoardMovesLeftContent(): string {
+  getBoardMovesLeftContent() {
     return this.getBoard().$('.moves-left-content').getText();
   }
 
