@@ -1,8 +1,8 @@
-import { browser, by, element, ElementFinder, $$ } from 'protractor';
+import { browser, by, element, ElementFinder, $$ } from "protractor";
 
 export class AppPage {
   navigateTo() {
-    return browser.get('/');
+    return browser.get("/");
   }
 
   refresh() {
@@ -10,71 +10,89 @@ export class AppPage {
   }
 
   getShellTitle() {
-    return element(by.css('connect-root .shell-title')).getText();
+    return element(by.css("connect-root .shell-title")).getText();
   }
 
   getTwoPlayersButton() {
-    return element(by.css('connect-root .btn-human'));
+    return element(by.css("connect-root .btn-human"));
   }
 
   getOnePlayerButton() {
-    return element(by.css('connect-root .btn-computer'));
+    return element(by.css("connect-root .btn-computer"));
   }
 
   getFirstPlayer() {
-    return element(by.tagName('connect-player:nth-of-type(1)'));
+    return element(by.tagName("connect-player:nth-of-type(1)"));
   }
 
   getSecondPlayer() {
-    return element(by.tagName('connect-player:nth-of-type(2)'));
+    return element(by.tagName("connect-player:nth-of-type(2)"));
   }
 
   getFirstPlayerName() {
-    return this.getFirstPlayer().$('.name').getText();
+    return this.getFirstPlayer()
+      .$(".name")
+      .getText();
   }
 
   getFirstPlayerColor() {
-    return this.getFirstPlayer().$('.piece').getCssValue('background-color');
+    return this.getFirstPlayer()
+      .$(".piece")
+      .getCssValue("background-color");
   }
 
   getFirstPlayerTurn() {
-    return this.getFirstPlayer().$$('.turn');
+    return this.getFirstPlayer().$$(".turn");
   }
 
   getSecondPlayerName() {
-    return this.getSecondPlayer().$('.name').getText();
+    return this.getSecondPlayer()
+      .$(".name")
+      .getText();
   }
 
   getSecondPlayerColor() {
-    return this.getSecondPlayer().$('.piece').getCssValue('background-color');
+    return this.getSecondPlayer()
+      .$(".piece")
+      .getCssValue("background-color");
   }
 
   getSecondPlayerTurn() {
-    return this.getSecondPlayer().$$('.turn');
+    return this.getSecondPlayer().$$(".turn");
   }
 
   getBoard() {
-    return element(by.tagName('connect-board'));
+    return element(by.tagName("connect-board"));
   }
 
   getBoardTitle() {
-    return this.getBoard().$('.board-title').getText();
+    return this.getBoard()
+      .$(".board-title")
+      .getText();
   }
 
   getBoardMovesLeftLabel() {
-    return this.getBoard().$('.moves-left-label').getText();
+    return this.getBoard()
+      .$(".moves-left-label")
+      .getText();
   }
 
   getBoardMovesLeftContent() {
-    return this.getBoard().$('.moves-left-content').getText();
+    return this.getBoard()
+      .$(".moves-left-content")
+      .getText();
   }
 
   getBoardGrid(): ElementFinder {
-    return this.getBoard().$('.grid-container');
+    return this.getBoard().$(".grid-container");
   }
 
-  getBoardSelectionColumns(): ElementFinder {
-    return this.getBoard().$('.select-column-container');
+  getBoardSelectionContainer(): ElementFinder {
+    return this.getBoard().$(".select-column-container");
+  }
+
+  getBoardSelectionColumns() {
+    return $$(`connect-board .select-column`);
   }
 
   getBoardSelectionColumn(i: number): ElementFinder {
@@ -82,7 +100,7 @@ export class AppPage {
   }
 
   getOutcome() {
-    return this.getBoard().$('.outcome');
+    return this.getBoard().$(".outcome");
   }
 
   getOutcomeText() {
@@ -90,19 +108,19 @@ export class AppPage {
   }
 
   getNewGameButton() {
-    return this.getBoard().$('.btn-reset');
+    return this.getBoard().$(".btn-reset");
   }
 
   getBackToStartButton() {
-    return this.getBoard().$('.btn-choose-mode');
+    return this.getBoard().$(".btn-choose-mode");
   }
 
   getNumCells() {
     return {
-      freeCell: $$('connect-board .grid-circle.free-cell').count(),
-      player1: $$('connect-board .grid-circle.player1').count(),
-      player2: $$('connect-board .grid-circle.player2').count(),
-      computer: $$('connect-board .grid-circle.computer').count()
+      freeCell: $$("connect-board .grid-circle.free-cell").count(),
+      player1: $$("connect-board .grid-circle.player1").count(),
+      player2: $$("connect-board .grid-circle.player2").count(),
+      computer: $$("connect-board .grid-circle.computer").count()
     };
   }
 }

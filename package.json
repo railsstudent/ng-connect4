@@ -16,9 +16,14 @@
       "pre-push": "npm run sr-tests && ng e2e --port=4201"
     }
   },
+  "prettier": {
+    "printWidth": 120,
+    "semi": true,
+    "trailingComma": "none"
+  },
   "lint-staged": {
     "linters": {
-      "{src,test}/**/*.ts": [
+      "{src,test,e2e}/**/*.ts": [
         "prettier --write",
         "git add"
       ]
