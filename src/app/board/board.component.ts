@@ -56,7 +56,9 @@ export class BoardComponent implements OnInit {
       this.initSolver();
     }
     this.store.dispatch(new connectActions.NewGameAction({ mode: this.mode }));
-    this.nextPlayer$.subscribe(({ reset, nextPlayer }) => {
+    this.grid$.subscribe(({ grid, reset, nextPlayer }) => {
+      this.gridUtil.setGrid(grid);
+      this.grid = grid;
       this.nextPlayer = nextPlayer;
       if (reset === false && this.nextPlayer === Player.COMPUTER) {
         const { col } = this.solver.bestMove(this.gridUtil.newGrid);
@@ -69,13 +71,7 @@ export class BoardComponent implements OnInit {
         );
       }
     });
-    this.grid$.subscribe(grid => {
-      this.gridUtil.setGrid(grid);
-      this.grid = grid;
-    });
-    this.columnAvailable$.subscribe(
-      columnsAvailable => (this.columnsAvailable = columnsAvailable)
-    );
+    this.columnAvailable$.subscribe(columnsAvailable => (this.columnsAvailable = columnsAvailable));
   }
 
   initSolver() {
@@ -151,20 +147,9 @@ export class BoardComponent implements OnInit {
     return this.grid[row * COLUMNS + column] === player;
   }
 
-  strikeThrough(
-    { direction, sequence, winner },
-    row: number,
-    column: number,
-    delta: number
-  ) {
+  strikeThrough({ direction, sequence, winner }, row: number, column: number, delta: number) {
     const idx = row * COLUMNS + column;
-    if (
-      direction == null ||
-      !sequence ||
-      !winner ||
-      this.grid[idx] !== winner ||
-      sequence.indexOf(idx) < 0
-    ) {
+    if (direction == null || !sequence || !winner || this.grid[idx] !== winner || sequence.indexOf(idx) < 0) {
       return false;
     }
     switch (delta) {

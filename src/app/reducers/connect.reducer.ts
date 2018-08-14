@@ -1,13 +1,5 @@
 import { ConnectActionTypes, ConnectActions } from "./connect.actions";
-import {
-  Player,
-  Outcome,
-  ROWS,
-  COLUMNS,
-  FREE_CELL,
-  Mode,
-  Direction
-} from "../models";
+import { Player, Outcome, ROWS, COLUMNS, FREE_CELL, Mode, Direction } from "../models";
 import { GridUtil } from "../util/grid.util";
 import { createSelector, createFeatureSelector } from "@ngrx/store";
 import "es6-object-assign";
@@ -50,11 +42,7 @@ export const initialState: ConnectState = {
   mode: Mode.UNKNOWN
 };
 
-const nextAction = (
-  state: ConnectState,
-  action,
-  gridUtil: GridUtil
-): ConnectState => {
+const nextAction = (state: ConnectState, action, gridUtil: GridUtil): ConnectState => {
   const { mode = Mode.UNKNOWN, player, column } = action.payload;
   gridUtil.setGrid(state.grid);
   const winning = gridUtil.isWinningMove(column, player);
@@ -74,8 +62,7 @@ const nextAction = (
   const reset = win || draw;
   let nextPlayer = Player.PLAYER1;
   if (player === Player.PLAYER1) {
-    nextPlayer =
-      mode === Mode.HUMAN_VS_HUMAN ? Player.PLAYER2 : Player.COMPUTER;
+    nextPlayer = mode === Mode.HUMAN_VS_HUMAN ? Player.PLAYER2 : Player.COMPUTER;
   } else if (player === Player.PLAYER2 || player === Player.COMPUTER) {
     nextPlayer = Player.PLAYER1;
   }
@@ -101,10 +88,7 @@ const nextAction = (
   };
 };
 
-export function connectReducer(
-  state = initialState,
-  action: ConnectActions
-): ConnectState {
+export function connectReducer(state = initialState, action: ConnectActions): ConnectState {
   const gridUtil = new GridUtil();
 
   switch (action.type) {
@@ -124,54 +108,33 @@ export function connectReducer(
 
 // connect selector
 export const selectConnect = createFeatureSelector<ConnectState>("connect");
-export const selectGrid = createSelector(
-  selectConnect,
-  (state: ConnectState) => state.grid
-);
-export const selectNextPlayer = createSelector(
-  selectConnect,
-  (state: ConnectState) => ({
-    reset: state.reset,
-    nextPlayer: state.nextPlayer
-  })
-);
-export const selectMovesLeft = createSelector(
-  selectGrid,
-  (grid: string[]) => grid.filter(g => g === FREE_CELL).length
-);
-export const selectOutcome = createSelector(
-  selectConnect,
-  (state: ConnectState) => state.outcome
-);
-export const selectColumnAvailable = createSelector(
-  selectConnect,
-  (state: ConnectState) => state.columnAvailable
-);
-export const selectResetGame = createSelector(
-  selectConnect,
-  (state: ConnectState) => state.reset
-);
-export const selectWinningSequence = createSelector(
-  selectConnect,
-  (state: ConnectState) => {
-    let winner: Player;
-    if (state.outcome === Outcome.PLAYER1_WINS) {
-      winner = Player.PLAYER1;
-    } else if (state.outcome === Outcome.PLAYER2_WINS) {
-      winner = Player.PLAYER2;
-    } else if (state.outcome === Outcome.COMPUTER_WINS) {
-      winner = Player.COMPUTER;
-    } else {
-      winner = null;
-    }
-    return {
-      direction: state.direction,
-      sequence: state.winningSequence,
-      winner
-    };
+export const selectGrid = createSelector(selectConnect, (state: ConnectState) => ({
+  grid: state.grid,
+  reset: state.reset,
+  nextPlayer: state.nextPlayer
+}));
+export const selectNextPlayer = createSelector(selectConnect, (state: ConnectState) => ({
+  nextPlayer: state.nextPlayer
+}));
+export const selectMovesLeft = createSelector(selectGrid, ({ grid }) => grid.filter(g => g === FREE_CELL).length);
+export const selectOutcome = createSelector(selectConnect, (state: ConnectState) => state.outcome);
+export const selectColumnAvailable = createSelector(selectConnect, (state: ConnectState) => state.columnAvailable);
+export const selectResetGame = createSelector(selectConnect, (state: ConnectState) => state.reset);
+export const selectWinningSequence = createSelector(selectConnect, (state: ConnectState) => {
+  let winner: Player;
+  if (state.outcome === Outcome.PLAYER1_WINS) {
+    winner = Player.PLAYER1;
+  } else if (state.outcome === Outcome.PLAYER2_WINS) {
+    winner = Player.PLAYER2;
+  } else if (state.outcome === Outcome.COMPUTER_WINS) {
+    winner = Player.COMPUTER;
+  } else {
+    winner = null;
   }
-);
-export const selectMode = createSelector(
-  selectConnect,
-  (state: ConnectState) => state.mode
-);
+  return {
+    direction: state.direction,
+    sequence: state.winningSequence,
+    winner
+  };
+});
+export const selectMode = createSelector(selectConnect, (state: ConnectState) => state.mode);

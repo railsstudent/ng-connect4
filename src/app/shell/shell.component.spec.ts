@@ -15,17 +15,12 @@ describe("ShellComponent", () => {
 
   const getTitle = () => fixture.debugElement.query(By.css(".shell-title"));
   const getHumanButton = () => fixture.debugElement.query(By.css(".btn-human"));
-  const getComputerButton = () =>
-    fixture.debugElement.query(By.css(".btn-computer"));
+  const getComputerButton = () => fixture.debugElement.query(By.css(".btn-computer"));
   const getFirstPlayerComponent = () =>
-    fixture.debugElement.children[0].children[0]
-      .componentInstance as PlayerComponent;
-  const getBoardComponent = () =>
-    fixture.debugElement.children[0].children[1]
-      .componentInstance as BoardComponent;
+    fixture.debugElement.children[0].children[0].componentInstance as PlayerComponent;
+  const getBoardComponent = () => fixture.debugElement.children[0].children[1].componentInstance as BoardComponent;
   const getSecondPlayerComponent = () =>
-    fixture.debugElement.children[0].children[2]
-      .componentInstance as PlayerComponent;
+    fixture.debugElement.children[0].children[2].componentInstance as PlayerComponent;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -46,9 +41,7 @@ describe("ShellComponent", () => {
   });
 
   it("should show title", () => {
-    expect(getTitle().nativeElement.textContent).toEqual(
-      "Enter game of Connect Four"
-    );
+    expect(getTitle().nativeElement.textContent).toEqual("Enter game of Connect Four");
   });
 
   it("should show human vs human button", () => {
@@ -78,18 +71,16 @@ describe("ShellComponent", () => {
     expect(player1.color).toEqual("red");
     expect(player1.name).toEqual("Player 1");
     expect(player1.piece).toEqual(Player.PLAYER1);
-    player1.nextPlayer$.subscribe(nextPlayer => {
-      expect(nextPlayer.reset).toEqual(false);
-      expect(nextPlayer.nextPlayer).toEqual(Player.PLAYER1);
+    player1.nextPlayer$.subscribe(({ nextPlayer }) => {
+      expect(nextPlayer).toEqual(Player.PLAYER1);
     });
 
     expect(player2).toBeTruthy();
     expect(player2.color).toEqual("yellow");
     expect(player2.name).toEqual("Player 2");
     expect(player2.piece).toEqual(Player.PLAYER2);
-    player2.nextPlayer$.subscribe(nextPlayer => {
-      expect(nextPlayer.reset).toEqual(false);
-      expect(nextPlayer.nextPlayer).toEqual(Player.PLAYER1);
+    player2.nextPlayer$.subscribe(({ nextPlayer }) => {
+      expect(nextPlayer).toEqual(Player.PLAYER1);
     });
 
     expect(board).toBeTruthy();
@@ -107,18 +98,16 @@ describe("ShellComponent", () => {
     expect(player1.color).toEqual("red");
     expect(player1.name).toEqual("Player 1");
     expect(player1.piece).toEqual(Player.PLAYER1);
-    player1.nextPlayer$.subscribe(nextPlayer => {
-      expect(nextPlayer.reset).toEqual(false);
-      expect(nextPlayer.nextPlayer).toEqual(Player.PLAYER1);
+    player1.nextPlayer$.subscribe(({ nextPlayer }) => {
+      expect(nextPlayer).toEqual(Player.PLAYER1);
     });
 
     expect(player2).toBeTruthy();
     expect(player2.color).toEqual("magenta");
     expect(player2.name).toEqual("Computer");
     expect(player2.piece).toEqual(Player.COMPUTER);
-    player2.nextPlayer$.subscribe(nextPlayer => {
-      expect(nextPlayer.reset).toEqual(false);
-      expect(nextPlayer.nextPlayer).toEqual(Player.PLAYER1);
+    player2.nextPlayer$.subscribe(({ nextPlayer }) => {
+      expect(nextPlayer).toEqual(Player.PLAYER1);
     });
 
     expect(board).toBeTruthy();

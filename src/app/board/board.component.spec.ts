@@ -6,15 +6,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
 import { BoardComponent } from "./board.component";
 import { AppState, reducers } from "../reducers";
 import * as connectActions from "../reducers/connect.actions";
-import {
-  ROWS,
-  COLUMNS,
-  Player,
-  Mode,
-  Outcome,
-  Pos,
-  Direction
-} from "../models";
+import { ROWS, COLUMNS, Player, Mode, Outcome, Pos, Direction } from "../models";
 import { AlphabetaSolver } from "../solvers/alphabeta-solver";
 
 describe("BoardComponent", () => {
@@ -22,12 +14,9 @@ describe("BoardComponent", () => {
   let fixture: ComponentFixture<BoardComponent>;
   let store: Store<AppState>;
 
-  const getBoardTitle = () =>
-    fixture.debugElement.query(By.css(".board-title"));
-  const getMovesLeftLabel = () =>
-    fixture.debugElement.query(By.css(".moves-left-label"));
-  const getColumnsAvailable = () =>
-    fixture.debugElement.queryAll(By.css(".select-column"));
+  const getBoardTitle = () => fixture.debugElement.query(By.css(".board-title"));
+  const getMovesLeftLabel = () => fixture.debugElement.query(By.css(".moves-left-label"));
+  const getColumnsAvailable = () => fixture.debugElement.queryAll(By.css(".select-column"));
   const getColumnAvailable = i => {
     const allColumns = fixture.debugElement.queryAll(By.css(".select-column"));
     return allColumns[i];
@@ -108,9 +97,7 @@ describe("BoardComponent", () => {
     expect(component.initSolver).toHaveBeenCalled();
     expect(component.initSolver).toHaveBeenCalledTimes(1);
 
-    component.outcome$.subscribe(outcome =>
-      expect(outcome).toEqual(Outcome.DEFAULT)
-    );
+    component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.DEFAULT));
     component.resetGame$.subscribe(resetGame => expect(resetGame).toBe(false));
   });
 
@@ -178,7 +165,7 @@ describe("BoardComponent", () => {
         });
       });
 
-      component.grid$.subscribe(grid => {
+      component.grid$.subscribe(({ grid }) => {
         expect(grid[0]).toBe(Player.PLAYER1);
         expect(grid[14]).toBe(Player.PLAYER1);
         expect(grid[28]).toBe(Player.PLAYER1);
@@ -187,9 +174,7 @@ describe("BoardComponent", () => {
         expect(grid[21]).toBe(Player.PLAYER2);
         expect(grid[35]).toBe(Player.PLAYER2);
       });
-      component.outcome$.subscribe(outcome =>
-        expect(outcome).toEqual(Outcome.DEFAULT)
-      );
+      component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.DEFAULT));
       component.winningSequence$.subscribe(sequence =>
         expect(sequence).toEqual({
           direction: null,
@@ -214,12 +199,8 @@ describe("BoardComponent", () => {
       elSecondColumn.triggerEventHandler("click", 1);
       elFirstColumn.triggerEventHandler("click", 0);
 
-      component.moveLefts$.subscribe(movesLeft =>
-        expect(movesLeft).toBe(ROWS * COLUMNS - 7)
-      );
-      component.outcome$.subscribe(outcome =>
-        expect(outcome).toEqual(Outcome.PLAYER1_WINS)
-      );
+      component.moveLefts$.subscribe(movesLeft => expect(movesLeft).toBe(ROWS * COLUMNS - 7));
+      component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.PLAYER1_WINS));
       component.resetGame$.subscribe(resetGame => expect(resetGame).toBe(true));
       component.columnAvailable$.subscribe(columns => {
         for (let i = 0; i < COLUMNS; i++) {
@@ -254,12 +235,8 @@ describe("BoardComponent", () => {
       elThirdColumn.triggerEventHandler("click", 2);
       elFifthColumn.triggerEventHandler("click", 4);
 
-      component.moveLefts$.subscribe(movesLeft =>
-        expect(movesLeft).toBe(ROWS * COLUMNS - 8)
-      );
-      component.outcome$.subscribe(outcome =>
-        expect(outcome).toEqual(Outcome.PLAYER2_WINS)
-      );
+      component.moveLefts$.subscribe(movesLeft => expect(movesLeft).toBe(ROWS * COLUMNS - 8));
+      component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.PLAYER2_WINS));
       component.winningSequence$.subscribe(ws =>
         expect(ws).toEqual({
           direction: Direction.HORIZONTAL,
@@ -364,11 +341,9 @@ describe("BoardComponent", () => {
       expectedGrid.push(Player.PLAYER1);
       expectedGrid.push(Player.PLAYER2);
 
-      component.grid$.subscribe(grid => expect(grid).toEqual(expectedGrid));
+      component.grid$.subscribe(({ grid }) => expect(grid).toEqual(expectedGrid));
       component.moveLefts$.subscribe(movesLeft => expect(movesLeft).toBe(0));
-      component.outcome$.subscribe(outcome =>
-        expect(outcome).toEqual(Outcome.DRAW)
-      );
+      component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.DRAW));
       component.resetGame$.subscribe(resetGame => expect(resetGame).toBe(true));
       component.columnAvailable$.subscribe(columns => {
         for (let i = 0; i < COLUMNS; i++) {
@@ -420,9 +395,7 @@ describe("BoardComponent", () => {
 
       expect(store.dispatch).toHaveBeenCalledWith(action);
 
-      component.moveLefts$.subscribe(moveLefts =>
-        expect(moveLefts).toBe(ROWS * COLUMNS - 2)
-      );
+      component.moveLefts$.subscribe(moveLefts => expect(moveLefts).toBe(ROWS * COLUMNS - 2));
     });
 
     it("should hide column when it is full in human vs human mode", () => {
@@ -437,12 +410,10 @@ describe("BoardComponent", () => {
           expectedResults.push(true);
         }
         expectedResults[0] = false;
-        columnAvailable.forEach((c, i) =>
-          expect(columnAvailable).toEqual(expectedResults)
-        );
+        columnAvailable.forEach((c, i) => expect(columnAvailable).toEqual(expectedResults));
       });
 
-      component.grid$.subscribe(grid => {
+      component.grid$.subscribe(({ grid }) => {
         expect(grid[0]).toBe(Player.PLAYER1);
         expect(grid[14]).toBe(Player.PLAYER1);
         expect(grid[28]).toBe(Player.PLAYER1);
@@ -452,9 +423,7 @@ describe("BoardComponent", () => {
         expect(grid[35]).toBe(Player.COMPUTER);
       });
 
-      component.outcome$.subscribe(outcome =>
-        expect(outcome).toEqual(Outcome.DEFAULT)
-      );
+      component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.DEFAULT));
       component.resetGame$.subscribe(reset => expect(reset).toEqual(false));
       component.winningSequence$.subscribe(sequence =>
         expect(sequence).toEqual({
@@ -476,19 +445,15 @@ describe("BoardComponent", () => {
       elFirstColumn.triggerEventHandler("click", 0);
       elFirstColumn.triggerEventHandler("click", 0);
 
-      component.moveLefts$.subscribe(movesLeft =>
-        expect(movesLeft).toBe(ROWS * COLUMNS - 7)
-      );
-      component.outcome$.subscribe(outcome =>
-        expect(outcome).toEqual(Outcome.PLAYER1_WINS)
-      );
+      component.moveLefts$.subscribe(movesLeft => expect(movesLeft).toBe(ROWS * COLUMNS - 7));
+      component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.PLAYER1_WINS));
       component.resetGame$.subscribe(resetGame => expect(resetGame).toBe(true));
       component.columnAvailable$.subscribe(columns => {
         for (let i = 0; i < COLUMNS; i++) {
           expect(columns[i]).toBe(false);
         }
       });
-      component.grid$.subscribe(grid => {
+      component.grid$.subscribe(({ grid }) => {
         expect(grid[0]).toBe(Player.PLAYER1);
         expect(grid[7]).toBe(Player.PLAYER1);
         expect(grid[14]).toBe(Player.PLAYER1);
@@ -519,25 +484,13 @@ describe("BoardComponent", () => {
       elSecondColumn.triggerEventHandler("click", 1);
       elThirdColumn.triggerEventHandler("click", 2);
 
-      component.moveLefts$.subscribe(movesLeft =>
-        expect(movesLeft).toBe(ROWS * COLUMNS - 8)
-      );
-      component.outcome$.subscribe(outcome =>
-        expect(outcome).toEqual(Outcome.COMPUTER_WINS)
-      );
+      component.moveLefts$.subscribe(movesLeft => expect(movesLeft).toBe(ROWS * COLUMNS - 8));
+      component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.COMPUTER_WINS));
       component.resetGame$.subscribe(resetGame => expect(resetGame).toBe(true));
       component.columnAvailable$.subscribe(columns =>
-        expect(columns).toEqual([
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false
-        ])
+        expect(columns).toEqual([false, false, false, false, false, false, false])
       );
-      component.grid$.subscribe(grid => {
+      component.grid$.subscribe(({ grid }) => {
         expect(grid[0]).toBe(Player.PLAYER1);
         expect(grid[7]).toBe(Player.PLAYER1);
         expect(grid[8]).toBe(Player.PLAYER1);
@@ -565,29 +518,7 @@ describe("BoardComponent", () => {
       // c o c o c o c
       // o c o c o c o
       // o c o c o c o
-      const computerMoves = [
-        1,
-        3,
-        5,
-        1,
-        3,
-        5,
-        4,
-        2,
-        0,
-        4,
-        2,
-        0,
-        1,
-        3,
-        0,
-        2,
-        4,
-        5,
-        6,
-        6,
-        6
-      ];
+      const computerMoves = [1, 3, 5, 1, 3, 5, 4, 2, 0, 4, 2, 0, 1, 3, 0, 2, 4, 5, 6, 6, 6];
       component.setTestSolver(new MockSolver(computerMoves));
       const elColumns = getColumnsAvailable();
 
@@ -675,24 +606,12 @@ describe("BoardComponent", () => {
       expectedGrid.push(Player.PLAYER1);
       expectedGrid.push(Player.COMPUTER);
 
-      component.outcome$.subscribe(outcome =>
-        expect(outcome).toEqual(Outcome.DRAW)
-      );
-      component.grid$.subscribe(grid => expect(grid).toEqual(expectedGrid));
+      component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.DRAW));
+      component.grid$.subscribe(({ grid }) => expect(grid).toEqual(expectedGrid));
       component.moveLefts$.subscribe(movesLeft => expect(movesLeft).toEqual(0));
-      component.resetGame$.subscribe(resetGame =>
-        expect(resetGame).toEqual(true)
-      );
+      component.resetGame$.subscribe(resetGame => expect(resetGame).toEqual(true));
       component.columnAvailable$.subscribe(columns =>
-        expect(columns).toEqual([
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false
-        ])
+        expect(columns).toEqual([false, false, false, false, false, false, false])
       );
       component.winningSequence$.subscribe(sequence =>
         expect(sequence).toEqual({

@@ -44,13 +44,9 @@ describe("PlayerComponent", () => {
   });
 
   it("should be player 1's turn when game starts", () => {
-    store.dispatch(
-      new connectActions.NewGameAction({ mode: Mode.HUMAN_VS_HUMAN })
-    );
+    store.dispatch(new connectActions.NewGameAction({ mode: Mode.HUMAN_VS_HUMAN }));
 
-    component.nextPlayer$.subscribe(nextPlayer =>
-      expect(nextPlayer).toEqual({ reset: false, nextPlayer: Player.PLAYER1 })
-    );
+    component.nextPlayer$.subscribe(nextPlayer => expect(nextPlayer).toEqual({ nextPlayer: Player.PLAYER1 }));
   });
 
   it("next move should be player 2 in human vs human", () => {
@@ -61,9 +57,7 @@ describe("PlayerComponent", () => {
         column: 0
       })
     );
-    component.nextPlayer$.subscribe(nextPlayer =>
-      expect(nextPlayer).toEqual({ reset: false, nextPlayer: Player.PLAYER2 })
-    );
+    component.nextPlayer$.subscribe(nextPlayer => expect(nextPlayer).toEqual({ nextPlayer: Player.PLAYER2 }));
   });
 
   it("next move should be player 1 in human vs human", () => {
@@ -73,9 +67,7 @@ describe("PlayerComponent", () => {
         column: 0
       })
     );
-    component.nextPlayer$.subscribe(nextPlayer =>
-      expect(nextPlayer).toEqual({ reset: false, nextPlayer: Player.PLAYER1 })
-    );
+    component.nextPlayer$.subscribe(nextPlayer => expect(nextPlayer).toEqual({ nextPlayer: Player.PLAYER1 }));
   });
 
   it("next move should be computer in human vs computer", () => {
@@ -86,9 +78,7 @@ describe("PlayerComponent", () => {
         column: 0
       })
     );
-    component.nextPlayer$.subscribe(nextPlayer =>
-      expect(nextPlayer).toEqual({ reset: false, nextPlayer: Player.COMPUTER })
-    );
+    component.nextPlayer$.subscribe(nextPlayer => expect(nextPlayer).toEqual({ nextPlayer: Player.COMPUTER }));
   });
 
   it("next move should be player 1 in human vs computer", () => {
@@ -98,8 +88,6 @@ describe("PlayerComponent", () => {
         column: 0
       })
     );
-    component.nextPlayer$.subscribe(nextPlayer =>
-      expect(nextPlayer).toEqual({ reset: false, nextPlayer: Player.PLAYER1 })
-    );
+    component.nextPlayer$.subscribe(nextPlayer => expect(nextPlayer).toEqual({ nextPlayer: Player.PLAYER1 }));
   });
 });
