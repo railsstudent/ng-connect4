@@ -49,7 +49,7 @@ export class AlphabetaSolver implements GameSolver {
     if (depth === 0) {
       return heuristicEvaluation(this.gridUtil, player, currentMove);
     } else if (this.gridUtil.isWinningMove(currentMove.col, player).win === true) {
-      console.log(`Winning move for ${player} - ${currentMove}`);
+      console.log(`Winning move for ${player} - [${currentMove.row}, ${currentMove.col}]`);
       return (maximizingPlayer ? 1 : -1) * 10000;
     }
 
@@ -71,7 +71,7 @@ export class AlphabetaSolver implements GameSolver {
           const minScore = this.alphabeta(move, depth - 1, alpha, beta, false);
           bestScore = Math.max(bestScore, minScore);
           alpha = Math.max(alpha, bestScore);
-          console.log("minimized next move", minScore, "alpha", alpha, "beta", beta, "move", move);
+          console.log("minimized next move", minScore, "bestScore", bestScore, "alpha", alpha, "beta", beta, "move", move);
           if (alpha >= beta) {
             console.log("beta cutoff", "alpha", alpha, "beta", beta, "move", move);
             break;
@@ -90,7 +90,7 @@ export class AlphabetaSolver implements GameSolver {
           const maxScore = this.alphabeta(move, depth - 1, alpha, beta, true);
           bestScore = Math.min(bestScore, maxScore);
           beta = Math.min(beta, bestScore);
-          console.log("maximized next move", maxScore, "alpha", alpha, "beta", beta, "move", move);
+          console.log("maximized next move", maxScore, "bestScore", bestScore, "alpha", alpha, "beta", beta, "move", move);
           if (alpha >= beta) {
             console.log("alpha cutoff", "alpha", alpha, "beta", beta, "move", move);
             break;
