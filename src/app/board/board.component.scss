@@ -13,6 +13,7 @@ $padding: 5px;
 $select-column-color: pink;
 $select-column-border: magenta;
 $grid-border: #4a4a4a;
+$hover-color: goldenrod;
 
 @mixin rotateLine($angle, $border-color: white) {
     position: absolute;
@@ -77,6 +78,10 @@ $grid-border: #4a4a4a;
             display: flex;
             justify-content: center;
             align-items: center;
+
+            &:hover {
+                border: solid 3px $hover-color;
+            }
         }
     }
 
@@ -95,6 +100,10 @@ $grid-border: #4a4a4a;
         display: flex;
         justify-content: center;
         align-items: center;
+
+        &:hover {
+            color: $hover-color;
+        }
     }
 
     .grid {
