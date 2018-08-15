@@ -33,13 +33,7 @@ export class AlphabetaSolver implements GameSolver {
   // alphabeta(origin, depth, −∞, +∞, TRUE)
 
   // Generate a game tree and find the best score of the current move
-  alphabeta(
-    currentMove: Pos,
-    depth: number,
-    alpha: number,
-    beta: number,
-    maximizingPlayer: boolean
-  ): number {
+  alphabeta(currentMove: Pos, depth: number, alpha: number, beta: number, maximizingPlayer: boolean): number {
     const newGrid = this.gridUtil.newGrid;
     this.gridUtil.setGrid(newGrid);
 
@@ -52,11 +46,11 @@ export class AlphabetaSolver implements GameSolver {
     console.log("player's turn", player);
 
     // terminate state of the game tree: reach depth or player wins the game
-    if (
-      depth === 0 ||
-      this.gridUtil.isWinningMove(currentMove.col, player).win === true
-    ) {
+    if (depth === 0) {
       return heuristicEvaluation(this.gridUtil, player, currentMove);
+    } else if (this.gridUtil.isWinningMove(currentMove.col, player).win === true) {
+      console.log(`Winning move for ${player} - ${currentMove}`);
+      return (maximizingPlayer ? 1 : -1) * 10000;
     }
 
     if (this.gridUtil.canPlay(currentMove.col)) {
@@ -73,30 +67,13 @@ export class AlphabetaSolver implements GameSolver {
         this.gridUtil.setGrid(maxmizeGrid);
         // find opposite moves
         if (this.gridUtil.canPlay(col)) {
-          const minScore = this.alphabeta(
-            { row: this.gridUtil.height[col], col },
-            depth - 1,
-            alpha,
-            beta,
-            false
-          );
+          const move = { row: this.gridUtil.height[col], col };
+          const minScore = this.alphabeta(move, depth - 1, alpha, beta, false);
           bestScore = Math.max(bestScore, minScore);
           alpha = Math.max(alpha, bestScore);
-          console.log(
-            "minimized next move",
-            minScore,
-            "alpha",
-            alpha,
-            "beta",
-            beta,
-            "move",
-            { row: this.gridUtil.height[col], col }
-          );
+          console.log("minimized next move", minScore, "alpha", alpha, "beta", beta, "move", move);
           if (alpha >= beta) {
-            console.log("beta cutoff", "alpha", alpha, "beta", beta, "move", {
-              row: this.gridUtil.height[col],
-              col
-            });
+            console.log("beta cutoff", "alpha", alpha, "beta", beta, "move", move);
             break;
           }
         }
@@ -109,41 +86,18 @@ export class AlphabetaSolver implements GameSolver {
         this.gridUtil.setGrid(minimizeGrid);
         // find opposite moves
         if (this.gridUtil.canPlay(col)) {
-          const maxScore = this.alphabeta(
-            { row: this.gridUtil.height[col], col },
-            depth - 1,
-            alpha,
-            beta,
-            true
-          );
+          const move = { row: this.gridUtil.height[col], col };
+          const maxScore = this.alphabeta(move, depth - 1, alpha, beta, true);
           bestScore = Math.min(bestScore, maxScore);
           beta = Math.min(beta, bestScore);
-          console.log(
-            "maximized next move",
-            maxScore,
-            "alpha",
-            alpha,
-            "beta",
-            beta,
-            "move",
-            { row: this.gridUtil.height[col], col }
-          );
+          console.log("maximized next move", maxScore, "alpha", alpha, "beta", beta, "move", move);
           if (alpha >= beta) {
-            bestScore = maxScore;
-            console.log("alpha cutoff", "alpha", alpha, "beta", beta, "move", {
-              row: this.gridUtil.height[col],
-              col
-            });
+            console.log("alpha cutoff", "alpha", alpha, "beta", beta, "move", move);
             break;
           }
         }
       }
     }
-    console.log(
-      `row: ${currentMove.row}, col: ${
-        currentMove.col
-      }, bestScore: ${bestScore}`
-    );
     return bestScore;
   }
 
@@ -154,13 +108,7 @@ export class AlphabetaSolver implements GameSolver {
         const newGrid = JSON.parse(JSON.stringify(grid));
         this.gridUtil.setGrid(newGrid);
         const currentMove = { row: this.gridUtil.height[col], col };
-        const score = this.alphabeta(
-          currentMove,
-          DEPTH,
-          MIN_INF,
-          MAX_INF,
-          true
-        );
+        const score = this.alphabeta(currentMove, DEPTH, MIN_INF, MAX_INF, true);
         if (score > bestScore) {
           bestScore = score;
         }
@@ -178,13 +126,8 @@ export class AlphabetaSolver implements GameSolver {
       this.gridUtil.setGrid(newGrid);
       if (this.gridUtil.canPlay(col)) {
         const currentMove = { row: this.gridUtil.height[col], col };
-        const score = this.alphabeta(
-          currentMove,
-          DEPTH,
-          MIN_INF,
-          MAX_INF,
-          true
-        );
+        const score = this.alphabeta(currentMove, DEPTH, MIN_INF, MAX_INF, true);
+        console.log(`[bestMove] Score of ${currentMove} is ${score}`);
         if (score > bestScore) {
           bestScore = score;
           bestMove = currentMove;
@@ -192,9 +135,7 @@ export class AlphabetaSolver implements GameSolver {
       }
     }
     console.log(`---- AlphaBetaSolver bestScore: ${bestScore} ----`);
-    console.log(
-      `----- AlphaBetaSolver bestMove: [${bestMove.row}, ${bestMove.col}] ----`
-    );
+    console.log(`----- AlphaBetaSolver bestMove: [${bestMove.row}, ${bestMove.col}] ----`);
     return bestMove;
   }
 
