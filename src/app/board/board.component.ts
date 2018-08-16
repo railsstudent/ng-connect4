@@ -61,6 +61,13 @@ export class BoardComponent implements OnInit {
       this.grid = grid;
       this.nextPlayer = nextPlayer;
       if (reset === false && this.nextPlayer === Player.COMPUTER) {
+        const totalHumanPieces = grid.filter((piece) => piece === Player.PLAYER1).length;
+        const totalComputerPieces = grid.filter((piece) => piece === Player.COMPUTER).length;
+        if (totalComputerPieces >= totalHumanPieces) {
+          console.log('Do not make consecutive computer moves',
+            `human: ${totalHumanPieces}, computer: ${totalComputerPieces}`);
+          return;
+        }
         const { col } = this.solver.bestMove(this.gridUtil.newGrid);
         console.log("dispatch computerMoveAction", col);
         this.store.dispatch(

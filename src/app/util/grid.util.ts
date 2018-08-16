@@ -7,6 +7,8 @@ import {
   Direction
 } from "../models";
 
+const winning_points =  4;
+
 export class GridUtil {
   private _grid: string[];
   private _height: number[] = [];
@@ -61,20 +63,19 @@ export class GridUtil {
     }
 
     // check vertical
-    if (this.height[column] >= 3) {
-      const idx1 = this.convertRowColToIdx(this.height[column] - 1, column);
-      const idx2 = this.convertRowColToIdx(this.height[column] - 2, column);
-      const idx3 = this.convertRowColToIdx(this.height[column] - 3, column);
-      const idx4 = this.convertRowColToIdx(this.height[column], column);
+    if (this.height[column] >= winning_points - 1) {
+      const idxs = [];
+      for (let i = 1; i < winning_points; i++) {
+        idxs.push(this.convertRowColToIdx(this.height[column] - i, column));
+      }
       if (
-        this._grid[idx1] === player &&
-        this._grid[idx2] === player &&
-        this._grid[idx3] === player
+        idxs.every((idx) => this._grid[idx] === player)
       ) {
+        idxs.push(this.convertRowColToIdx(this.height[column], column));
         return {
           win: true,
           direction: Direction.VERTICAL,
-          sequence: [idx1, idx2, idx3, idx4].sort(sortMoves)
+          sequence: idxs.sort(sortMoves)
         };
       }
     }
@@ -83,10 +84,10 @@ export class GridUtil {
     let pieces = 0;
     // 0 is horizontal checking, -1 is left-diagonally checking, 1 is right-diagonally
     for (let direction = -1; direction <= 1; direction++) {
-      for (let x = 3; x >= 0; x--) {
+      for (let x = winning_points; x >= 0; x--) {
         pieces = 0;
         const sequence = [];
-        for (let delta = -3; delta <= 0; delta++) {
+        for (let delta = -winning_points; delta <= 0; delta++) {
           const colIdx = column + delta + x;
           const rowIdx = this._height[column] + direction * (delta + x);
           if (delta !== -x) {
@@ -120,7 +121,7 @@ export class GridUtil {
             }
           }
         }
-        if (pieces === 3) {
+        if ((pieces + 1) === winning_points) {
           let sequenceDirection = null;
           if (direction === 0) {
             sequenceDirection = Direction.HORIZONTAL;

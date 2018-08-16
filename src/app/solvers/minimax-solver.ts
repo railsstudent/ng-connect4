@@ -1,6 +1,6 @@
 import { GameSolver, DEPTH, heuristicEvaluation } from "./game-solver";
 import { GridUtil } from "../util/grid.util";
-import { COLUMNS, Player, MIN_INF, MAX_INF, Pos } from "../models";
+import { COLUMNS, Player, INF, Pos } from "../models";
 
 export class MinimaxSolver implements GameSolver {
   private gridUtil: GridUtil;
@@ -25,7 +25,7 @@ export class MinimaxSolver implements GameSolver {
       depth === 0 ||
       this.gridUtil.isWinningMove(currentMove.col, player).win === true
     ) {
-      return heuristicEvaluation(this.gridUtil, player, currentMove);
+      return heuristicEvaluation(this.gridUtil, player, currentMove, (maximizingPlayer ? 1 : -1));
     }
 
     if (this.gridUtil.canPlay(currentMove.col)) {
@@ -36,7 +36,7 @@ export class MinimaxSolver implements GameSolver {
     // find the min value of all the max values of opposition
     let bestScore: number;
     if (maximizingPlayer === true) {
-      bestScore = MIN_INF;
+      bestScore = -INF;
       for (let col = 0; col < COLUMNS; col++) {
         const maxmizeGrid = JSON.parse(JSON.stringify(nextStateGrid));
         this.gridUtil.setGrid(maxmizeGrid);
@@ -53,7 +53,7 @@ export class MinimaxSolver implements GameSolver {
       }
     } else {
       // minimizing player
-      bestScore = MAX_INF;
+      bestScore = INF;
       for (let col = 0; col < COLUMNS; col++) {
         const minimizeGrid = JSON.parse(JSON.stringify(nextStateGrid));
         this.gridUtil.setGrid(minimizeGrid);
@@ -78,7 +78,7 @@ export class MinimaxSolver implements GameSolver {
   }
 
   bestScore(grid): number {
-    let bestScore = MIN_INF;
+    let bestScore = INF;
     for (let col = 0; col < COLUMNS; col++) {
       if (this.gridUtil.canPlay(col)) {
         const newGrid = JSON.parse(JSON.stringify(grid));
@@ -96,7 +96,7 @@ export class MinimaxSolver implements GameSolver {
 
   bestMove(grid): Pos {
     let bestMove: Pos = null;
-    let bestScore = MIN_INF;
+    let bestScore = -INF;
     for (let col = 0; col < COLUMNS; col++) {
       const newGrid = JSON.parse(JSON.stringify(grid));
       this.gridUtil.setGrid(newGrid);
