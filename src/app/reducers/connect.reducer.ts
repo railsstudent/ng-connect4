@@ -45,9 +45,9 @@ export const initialState: ConnectState = {
 const nextAction = (state: ConnectState, action, gridUtil: GridUtil): ConnectState => {
   const { mode = Mode.UNKNOWN, player, column } = action.payload;
   gridUtil.setGrid(state.grid);
+  gridUtil.play(column, player);
   const winning = gridUtil.isWinningMove(column, player);
   const { win, direction, sequence: winningSequence } = winning;
-  gridUtil.play(column, player);
   const draw = gridUtil.isDraw();
   let outcome = Outcome.DEFAULT;
   if (player === Player.PLAYER1 && win === true) {
