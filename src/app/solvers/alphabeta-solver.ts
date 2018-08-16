@@ -1,5 +1,5 @@
 import { GameSolver, heuristicEvaluation } from "./game-solver";
-import { Player, COLUMNS, MIN_INF, MAX_INF, Pos } from "../models";
+import { Player, COLUMNS, INF, Pos } from "../models";
 import { GridUtil } from "../util/grid.util";
 import { environment } from "../../environments/environment";
 
@@ -61,7 +61,7 @@ export class AlphabetaSolver implements GameSolver {
     // find the min value of all the max values of opposition
     let bestScore: number;
     if (maximizingPlayer === true) {
-      bestScore = MIN_INF;
+      bestScore = -INF;
       for (let col = 0; col < COLUMNS; col++) {
         const maxmizeGrid = JSON.parse(JSON.stringify(nextStateGrid));
         this.gridUtil.setGrid(maxmizeGrid);
@@ -71,7 +71,18 @@ export class AlphabetaSolver implements GameSolver {
           const minScore = this.alphabeta(move, depth - 1, alpha, beta, false);
           bestScore = Math.max(bestScore, minScore);
           alpha = Math.max(alpha, bestScore);
-          console.log("minimized next move", minScore, "bestScore", bestScore, "alpha", alpha, "beta", beta, "move", move);
+          console.log(
+            "minimized next move",
+            minScore,
+            "bestScore",
+            bestScore,
+            "alpha",
+            alpha,
+            "beta",
+            beta,
+            "move",
+            move
+          );
           if (alpha >= beta) {
             console.log("beta cutoff", "alpha", alpha, "beta", beta, "move", move);
             break;
@@ -80,7 +91,7 @@ export class AlphabetaSolver implements GameSolver {
       }
     } else {
       // minimizing player
-      bestScore = MAX_INF;
+      bestScore = INF;
       for (let col = 0; col < COLUMNS; col++) {
         const minimizeGrid = JSON.parse(JSON.stringify(nextStateGrid));
         this.gridUtil.setGrid(minimizeGrid);
@@ -90,7 +101,18 @@ export class AlphabetaSolver implements GameSolver {
           const maxScore = this.alphabeta(move, depth - 1, alpha, beta, true);
           bestScore = Math.min(bestScore, maxScore);
           beta = Math.min(beta, bestScore);
-          console.log("maximized next move", maxScore, "bestScore", bestScore, "alpha", alpha, "beta", beta, "move", move);
+          console.log(
+            "maximized next move",
+            maxScore,
+            "bestScore",
+            bestScore,
+            "alpha",
+            alpha,
+            "beta",
+            beta,
+            "move",
+            move
+          );
           if (alpha >= beta) {
             console.log("alpha cutoff", "alpha", alpha, "beta", beta, "move", move);
             break;
@@ -102,13 +124,13 @@ export class AlphabetaSolver implements GameSolver {
   }
 
   bestScore(grid): number {
-    let bestScore = MIN_INF;
+    let bestScore = -INF;
     for (let col = 0; col < COLUMNS; col++) {
       if (this.gridUtil.canPlay(col)) {
         const newGrid = JSON.parse(JSON.stringify(grid));
         this.gridUtil.setGrid(newGrid);
         const currentMove = { row: this.gridUtil.height[col], col };
-        const score = this.alphabeta(currentMove, DEPTH, MIN_INF, MAX_INF, true);
+        const score = this.alphabeta(currentMove, DEPTH, -INF, INF, true);
         if (score > bestScore) {
           bestScore = score;
         }
@@ -120,13 +142,13 @@ export class AlphabetaSolver implements GameSolver {
 
   bestMove(grid): Pos {
     let bestMove: Pos = null;
-    let bestScore = MIN_INF;
+    let bestScore = -INF;
     for (let col = 0; col < COLUMNS; col++) {
       const newGrid = JSON.parse(JSON.stringify(grid));
       this.gridUtil.setGrid(newGrid);
       if (this.gridUtil.canPlay(col)) {
         const currentMove = { row: this.gridUtil.height[col], col };
-        const score = this.alphabeta(currentMove, DEPTH, MIN_INF, MAX_INF, true);
+        const score = this.alphabeta(currentMove, DEPTH, -INF, INF, true);
         console.log(`[bestMove] Score of ${currentMove} is ${score}`);
         if (score > bestScore) {
           bestScore = score;

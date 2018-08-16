@@ -2,9 +2,16 @@ import { AppPage } from "./app.po";
 
 describe("workspace-project App", () => {
   let page: AppPage;
+  let originalTimeout;
 
   beforeEach(() => {
     page = new AppPage();
+    originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+  });
+
+  afterEach(function() {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
   });
 
   it("should display enter game message", () => {
