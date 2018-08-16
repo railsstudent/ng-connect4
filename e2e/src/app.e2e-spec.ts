@@ -7,7 +7,7 @@ describe("workspace-project App", () => {
   beforeEach(() => {
     page = new AppPage();
     originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
   });
 
   afterEach(function() {
