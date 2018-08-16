@@ -19,11 +19,11 @@ export const heuristicEvaluation = (gridUtil, player: string, { col }: Pos, sign
   let score = 0;
   if (gridUtil.isWinningMove(col, player).win === true) {
     const row = gridUtil.height[col];
-    console.log('line 1', `row: ${row}, col: ${col}, value: ${sign * INF}`);
+    console.log(`Player ${player} line 1`, `row: ${row}, col: ${col}, value: ${sign * INF}`);
     score = sign * INF;
   } else {
     const row = gridUtil.height[col];
-    console.log('line 2', `row: ${row}, col: ${col}, height: ${gridUtil.height[col]}`);
+    console.log(`Player ${player} line 2`, `row: ${row}, col: ${col}, height: ${gridUtil.height[col]}`);
     score = evaluationTable[row][col];
   }
   return score;
