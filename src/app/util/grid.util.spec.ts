@@ -33,9 +33,7 @@ describe("GridUtil", () => {
 
   describe("canPlay returns true if the column has vacant cell", () => {
     beforeAll(() => {
-      [0, 5, 8, 10, 19, 22, 24, 33, 36].forEach(
-        i => (grid[i] = Player.PLAYER2)
-      );
+      [0, 5, 8, 10, 19, 22, 24, 33, 36].forEach(i => (grid[i] = Player.PLAYER2));
       [1, 3, 4, 12, 15, 17, 26, 29].forEach(i => (grid[i] = Player.PLAYER1));
       gridUtil.setGrid(grid);
     });
@@ -321,6 +319,9 @@ describe("GridUtil", () => {
       [0, 1, 2, 9, 14, 15, 17, 29].forEach(i => (grid[i] = Player.PLAYER1));
       [3, 7, 8, 10, 21, 22, 28].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
+      console.log(gridUtil.print());
+      const x = gridUtil.isWinningMove(2, Player.PLAYER2);
+      console.log("x", x);
       expect(gridUtil.isWinningMove(2, Player.PLAYER2)).toEqual({
         win: true,
         direction: Direction.LEFT_DIAG,
@@ -341,9 +342,7 @@ describe("GridUtil", () => {
 
     it("return true if it is left-diagonally connected and the winning piece is the last one of the connected 4", () => {
       [0, 1, 3, 4, 8, 14, 17, 23, 29].forEach(i => (grid[i] = Player.PLAYER1));
-      [2, 7, 9, 10, 15, 16, 21, 22, 28].forEach(
-        i => (grid[i] = Player.PLAYER2)
-      );
+      [2, 7, 9, 10, 15, 16, 21, 22, 28].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
       expect(gridUtil.isWinningMove(0, Player.PLAYER1)).toEqual({
         win: true,
@@ -354,9 +353,7 @@ describe("GridUtil", () => {
 
     it("return true if it is left-diagonally connected and the winning piece is the first one of the connected 4", () => {
       [2, 4, 8, 9, 10, 22, 24, 30, 36].forEach(i => (grid[i] = Player.PLAYER1));
-      [1, 3, 5, 11, 15, 16, 17, 23, 29].forEach(
-        i => (grid[i] = Player.PLAYER2)
-      );
+      [1, 3, 5, 11, 15, 16, 17, 23, 29].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
       expect(gridUtil.isWinningMove(4, Player.PLAYER1)).toEqual({
         win: true,
@@ -376,9 +373,7 @@ describe("GridUtil", () => {
     });
 
     it("return true and the winning piece is the second one of the connected 4", () => {
-      [2, 6, 9, 11, 12, 16, 17, 26, 33].forEach(
-        i => (grid[i] = Player.PLAYER1)
-      );
+      [2, 6, 9, 11, 12, 16, 17, 26, 33].forEach(i => (grid[i] = Player.PLAYER1));
       [1, 3, 4, 5, 8, 10, 18, 19, 23].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
       expect(gridUtil.isWinningMove(4, Player.PLAYER1)).toEqual({
@@ -389,9 +384,7 @@ describe("GridUtil", () => {
     });
 
     it("return true and the winning piece is the third one of the connected 4", () => {
-      [0, 2, 3, 7, 10, 11, 14, 15, 18, 31].forEach(
-        i => (grid[i] = Player.PLAYER1)
-      );
+      [0, 2, 3, 7, 10, 11, 14, 15, 18, 31].forEach(i => (grid[i] = Player.PLAYER1));
       [1, 4, 8, 9, 17, 21, 24, 25, 32].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
       expect(gridUtil.isWinningMove(2, Player.PLAYER2)).toEqual({
@@ -402,12 +395,8 @@ describe("GridUtil", () => {
     });
 
     it("return true and the winning piece is the last one of the connected 4", () => {
-      [0, 4, 5, 8, 9, 16, 23, 24, 31, 32, 39].forEach(
-        i => (grid[i] = Player.PLAYER1)
-      );
-      [1, 2, 3, 10, 11, 12, 17, 18, 19, 25, 30].forEach(
-        i => (grid[i] = Player.PLAYER2)
-      );
+      [0, 4, 5, 8, 9, 16, 23, 24, 31, 32, 39].forEach(i => (grid[i] = Player.PLAYER1));
+      [1, 2, 3, 10, 11, 12, 17, 18, 19, 25, 30].forEach(i => (grid[i] = Player.PLAYER2));
       gridUtil.setGrid(grid);
       expect(gridUtil.isWinningMove(1, Player.PLAYER1)).toEqual({
         win: true,
@@ -465,51 +454,12 @@ describe("GridUtil", () => {
     });
 
     it("return false if the game is a draw", () => {
-      [
-        0,
-        2,
-        3,
-        5,
-        6,
-        10,
-        11,
-        15,
-        19,
-        20,
-        22,
-        25,
-        27,
-        28,
-        29,
-        30,
-        32,
-        33,
-        37,
-        38,
-        41
-      ].forEach(i => (grid[i] = Player.PLAYER1));
-      [
-        1,
-        4,
-        7,
-        8,
-        9,
-        12,
-        13,
-        14,
-        16,
-        17,
-        18,
-        21,
-        23,
-        24,
-        26,
-        31,
-        34,
-        36,
-        39,
-        40
-      ].forEach(i => (grid[i] = Player.PLAYER2));
+      [0, 2, 3, 5, 6, 10, 11, 15, 19, 20, 22, 25, 27, 28, 29, 30, 32, 33, 37, 38, 41].forEach(
+        i => (grid[i] = Player.PLAYER1)
+      );
+      [1, 4, 7, 8, 9, 12, 13, 14, 16, 17, 18, 21, 23, 24, 26, 31, 34, 36, 39, 40].forEach(
+        i => (grid[i] = Player.PLAYER2)
+      );
       gridUtil.setGrid(grid);
       expect(gridUtil.isWinningMove(0, Player.PLAYER2)).toEqual({
         win: false,
@@ -529,52 +479,12 @@ describe("GridUtil", () => {
     });
 
     it("return true if the game is a draw", () => {
-      [
-        0,
-        2,
-        3,
-        5,
-        6,
-        10,
-        11,
-        15,
-        19,
-        20,
-        22,
-        25,
-        27,
-        28,
-        29,
-        30,
-        32,
-        33,
-        37,
-        38,
-        41
-      ].forEach(i => (grid[i] = Player.PLAYER1));
-      [
-        1,
-        4,
-        7,
-        8,
-        9,
-        12,
-        13,
-        14,
-        16,
-        17,
-        18,
-        21,
-        23,
-        24,
-        26,
-        31,
-        34,
-        36,
-        39,
-        40,
-        35
-      ].forEach(i => (grid[i] = Player.PLAYER2));
+      [0, 2, 3, 5, 6, 10, 11, 15, 19, 20, 22, 25, 27, 28, 29, 30, 32, 33, 37, 38, 41].forEach(
+        i => (grid[i] = Player.PLAYER1)
+      );
+      [1, 4, 7, 8, 9, 12, 13, 14, 16, 17, 18, 21, 23, 24, 26, 31, 34, 36, 39, 40, 35].forEach(
+        i => (grid[i] = Player.PLAYER2)
+      );
       gridUtil.setGrid(grid);
       expect(gridUtil.isDraw()).toBe(true);
     });

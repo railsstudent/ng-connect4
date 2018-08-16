@@ -27,10 +27,15 @@ describe("MinimaxSolver", () => {
       const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
       solver.setGridUtil(gridUtil);
-      const score = heuristicEvaluation(gridUtil, Player.PLAYER2, {
-        row: 2,
-        col: 0
-      });
+      const score = heuristicEvaluation(
+        gridUtil,
+        Player.PLAYER2,
+        {
+          row: 2,
+          col: 0
+        },
+        1
+      );
       expect(score).toBe(5);
     });
 
@@ -41,10 +46,15 @@ describe("MinimaxSolver", () => {
       const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
       solver.setGridUtil(gridUtil);
-      const score = heuristicEvaluation(gridUtil, Player.PLAYER2, {
-        row: 1,
-        col: 2
-      });
+      const score = heuristicEvaluation(
+        gridUtil,
+        Player.PLAYER2,
+        {
+          row: 1,
+          col: 2
+        },
+        1
+      );
       expect(score).toBe(8);
     });
 
@@ -59,11 +69,16 @@ describe("MinimaxSolver", () => {
       const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
       solver.setGridUtil(gridUtil);
-      const score = heuristicEvaluation(gridUtil, Player.PLAYER2, {
-        row: 3,
-        col: 2
-      });
-      expect(score).toBe(18);
+      const score = heuristicEvaluation(
+        gridUtil,
+        Player.PLAYER2,
+        {
+          row: 3,
+          col: 2
+        },
+        1
+      );
+      expect(score).toBe(42);
     });
   });
 
@@ -76,52 +91,12 @@ describe("MinimaxSolver", () => {
     });
 
     it("minimax returns 0 score in a draw game", () => {
-      [
-        0,
-        2,
-        3,
-        5,
-        6,
-        10,
-        11,
-        15,
-        19,
-        20,
-        22,
-        25,
-        27,
-        28,
-        29,
-        30,
-        32,
-        33,
-        37,
-        38,
-        41
-      ].forEach(i => (grid[i] = Player.PLAYER1));
-      [
-        1,
-        4,
-        7,
-        8,
-        9,
-        12,
-        13,
-        14,
-        16,
-        17,
-        18,
-        21,
-        23,
-        24,
-        26,
-        31,
-        34,
-        36,
-        39,
-        40,
-        35
-      ].forEach(i => (grid[i] = Player.COMPUTER));
+      [0, 2, 3, 5, 6, 10, 11, 15, 19, 20, 22, 25, 27, 28, 29, 30, 32, 33, 37, 38, 41].forEach(
+        i => (grid[i] = Player.PLAYER1)
+      );
+      [1, 4, 7, 8, 9, 12, 13, 14, 16, 17, 18, 21, 23, 24, 26, 31, 34, 36, 39, 40, 35].forEach(
+        i => (grid[i] = Player.COMPUTER)
+      );
       const gridUtil = new GridUtil();
       gridUtil.setGrid(grid);
       solver.setGridUtil(gridUtil);
@@ -136,7 +111,7 @@ describe("MinimaxSolver", () => {
       gridUtil.setGrid(grid);
       solver.setGridUtil(gridUtil);
       const score = solver.minimax({ row: 3, col: 1 }, 1, true);
-      expect(score).toBe(18);
+      expect(score).toBe(42);
     });
 
     it("minimax returns score after depth = 1 is reached", () => {
@@ -226,7 +201,7 @@ describe("MinimaxSolver", () => {
       gridUtil.setGrid(grid);
       solver.setGridUtil(gridUtil);
       const score = solver.bestScore(grid);
-      expect(score).toBe(4);
+      expect(score).toBe(42);
     });
 
     it("bestMove returns the best score among all game trees", () => {

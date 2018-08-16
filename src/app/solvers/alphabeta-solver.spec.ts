@@ -38,7 +38,7 @@ describe("AlphabetaSolver", () => {
       [1, 8, 15].forEach(i => (grid[i] = Player.COMPUTER));
       gridUtil.setGrid(grid);
       const score = solver.alphabeta({ row: 3, col: 1 }, 1, -INF, INF, true);
-      expect(score).toBe(10000);
+      expect(score).toBe(42);
     });
 
     it("alphabeta returns score after depth = 1 is reached", () => {
@@ -118,7 +118,7 @@ describe("AlphabetaSolver", () => {
       gridUtil.setGrid(grid);
       const { row, col } = solver.bestMove(grid);
       expect(row).toBe(0);
-      expect(col).toBe(0);
+      expect(col).toBe(6);
     });
   });
 });

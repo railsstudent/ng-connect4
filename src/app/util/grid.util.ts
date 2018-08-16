@@ -1,13 +1,6 @@
-import {
-  FREE_CELL,
-  ROWS,
-  COLUMNS,
-  Player,
-  ConnectSequence,
-  Direction
-} from "../models";
+import { FREE_CELL, ROWS, COLUMNS, Player, ConnectSequence, Direction } from "../models";
 
-const winning_points =  4;
+const winning_points = 4;
 
 export class GridUtil {
   private _grid: string[];
@@ -68,9 +61,7 @@ export class GridUtil {
       for (let i = 1; i < winning_points; i++) {
         idxs.push(this.convertRowColToIdx(this.height[column] - i, column));
       }
-      if (
-        idxs.every((idx) => this._grid[idx] === player)
-      ) {
+      if (idxs.every(idx => this._grid[idx] === player)) {
         idxs.push(this.convertRowColToIdx(this.height[column], column));
         return {
           win: true,
@@ -84,44 +75,30 @@ export class GridUtil {
     let pieces = 0;
     // 0 is horizontal checking, -1 is left-diagonally checking, 1 is right-diagonally
     for (let direction = -1; direction <= 1; direction++) {
-      for (let x = winning_points; x >= 0; x--) {
+      for (let x = winning_points - 1; x >= 0; x--) {
         pieces = 0;
         const sequence = [];
-        for (let delta = -winning_points; delta <= 0; delta++) {
+        for (let delta = -(winning_points - 1); delta <= 0; delta++) {
           const colIdx = column + delta + x;
           const rowIdx = this._height[column] + direction * (delta + x);
           if (delta !== -x) {
-            if (
-              colIdx >= 0 &&
-              colIdx < COLUMNS &&
-              rowIdx >= 0 &&
-              rowIdx < ROWS
-            ) {
+            if (colIdx >= 0 && colIdx < COLUMNS && rowIdx >= 0 && rowIdx < ROWS) {
               const idx = this.convertRowColToIdx(rowIdx, colIdx);
               sequence.push(idx);
-              if (
-                idx >= 0 &&
-                idx < ROWS * COLUMNS &&
-                this._grid[idx] === player
-              ) {
+              if (idx >= 0 && idx < ROWS * COLUMNS && this._grid[idx] === player) {
                 pieces += 1;
               } else {
                 break;
               }
             }
           } else {
-            if (
-              colIdx >= 0 &&
-              colIdx < COLUMNS &&
-              rowIdx >= 0 &&
-              rowIdx < ROWS
-            ) {
+            if (colIdx >= 0 && colIdx < COLUMNS && rowIdx >= 0 && rowIdx < ROWS) {
               const idx = this.convertRowColToIdx(rowIdx, colIdx);
               sequence.push(idx);
             }
           }
         }
-        if ((pieces + 1) === winning_points) {
+        if (pieces + 1 === winning_points) {
           let sequenceDirection = null;
           if (direction === 0) {
             sequenceDirection = Direction.HORIZONTAL;
