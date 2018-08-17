@@ -51,18 +51,13 @@ export class GridUtil {
   isWinningMove(column: number, player): ConnectSequence {
     const sortMoves = (a, b) => a - b;
 
-    if (!this.canPlay(column)) {
-      return { win: false, direction: null, sequence: null };
-    }
-
     // check vertical
-    if (this.height[column] >= winning_points - 1) {
+    if (this.height[column] >= winning_points) {
       const idxs = [];
-      for (let i = 1; i < winning_points; i++) {
+      for (let i = 1; i <= winning_points; i++) {
         idxs.push(this.convertRowColToIdx(this.height[column] - i, column));
       }
       if (idxs.every(idx => this._grid[idx] === player)) {
-        idxs.push(this.convertRowColToIdx(this.height[column], column));
         return {
           win: true,
           direction: Direction.VERTICAL,
@@ -73,6 +68,7 @@ export class GridUtil {
 
     // check horizontal, left diagonally and right diagonally
     let pieces = 0;
+    const height = this._height[column] - 1;
     // 0 is horizontal checking, -1 is left-diagonally checking, 1 is right-diagonally
     for (let direction = -1; direction <= 1; direction++) {
       for (let x = winning_points - 1; x >= 0; x--) {
@@ -80,25 +76,18 @@ export class GridUtil {
         const sequence = [];
         for (let delta = -(winning_points - 1); delta <= 0; delta++) {
           const colIdx = column + delta + x;
-          const rowIdx = this._height[column] + direction * (delta + x);
-          if (delta !== -x) {
-            if (colIdx >= 0 && colIdx < COLUMNS && rowIdx >= 0 && rowIdx < ROWS) {
-              const idx = this.convertRowColToIdx(rowIdx, colIdx);
-              sequence.push(idx);
-              if (idx >= 0 && idx < ROWS * COLUMNS && this._grid[idx] === player) {
-                pieces += 1;
-              } else {
-                break;
-              }
-            }
-          } else {
-            if (colIdx >= 0 && colIdx < COLUMNS && rowIdx >= 0 && rowIdx < ROWS) {
-              const idx = this.convertRowColToIdx(rowIdx, colIdx);
-              sequence.push(idx);
+          const rowIdx = height + direction * (delta + x);
+          if (colIdx >= 0 && colIdx < COLUMNS && rowIdx >= 0 && rowIdx < ROWS) {
+            const idx = this.convertRowColToIdx(rowIdx, colIdx);
+            sequence.push(idx);
+            if (idx >= 0 && idx < ROWS * COLUMNS && this._grid[idx] === player) {
+              pieces += 1;
+            } else {
+              break;
             }
           }
         }
-        if (pieces === winning_points - 1) {
+        if (pieces === winning_points) {
           let sequenceDirection = null;
           if (direction === 0) {
             sequenceDirection = Direction.HORIZONTAL;
