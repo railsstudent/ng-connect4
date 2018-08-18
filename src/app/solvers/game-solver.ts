@@ -1,6 +1,6 @@
 import { environment } from "../../environments/environment";
 import { Board } from "../util/board";
-import { Player, ROWS, COLUMNS } from "../models";
+import { Player, ROWS } from "../models";
 
 export const MINI_MAX = "minimax";
 export const ALPHA_BETA = "alphabeta";
@@ -15,14 +15,10 @@ const evaluationTable = [
   [3, 4, 5, 7, 5, 4, 3]
 ];
 
-export const heuristicEvaluation = (board: Board, player: string, col: number) => {
+export const heuristicEvaluation = (board: Board, column: number) => {
   let score = 0;
-  if (board.isWinningMove(col, player).win === true) {
-    score = (ROWS * COLUMNS + 1 - board.numMoves) / 2;
-  } else {
-    const row = board.height[col];
-    score = evaluationTable[row][col];
-  }
+  const row = ROWS - board.height[column];
+  score = evaluationTable[row][column];
   return score;
 };
 

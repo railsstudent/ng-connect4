@@ -1,107 +1,82 @@
-import { GameSolver, heuristicEvaluation } from "./game-solver";
+import { GameSolver, DEPTH, heuristicEvaluation } from "./game-solver";
 import { Board } from "../util/board";
-import { COLUMNS, Player, INF, Pos } from "../models";
+import { Player, INF } from "../models";
 
 export class MinimaxSolver implements GameSolver {
-  private board: Board;
   private maximizePlayer: Player;
   private minimizePlayer: Player;
 
-  // Generate a game tree and find the best score of the current move
-  minimax(currentMove: Pos, depth: number, maximizingPlayer: boolean): number {
-    const newGrid = this.board.newGrid;
-    this.board.clone(newGrid);
-
-    // terminate state of the game tree: a draw
-    if (this.board.isDraw()) {
-      return 0;
+  private hasHeuristicValue(board: Board, column: number, depth: number) {
+    if (board.isDraw()) {
+      return [null, 0];
     }
-
-    const player = maximizingPlayer ? this.maximizePlayer : this.minimizePlayer;
-    console.log("player's turn", player);
 
     // terminate state of the game tree: reach depth or player wins the game
-    if (depth === 0 || this.board.isWinningMove(currentMove.col, player).win === true) {
-      return heuristicEvaluation(this.board, player, currentMove.col);
+    if (column != null && board.isWinningMove(column, this.maximizePlayer).win === true) {
+      return [null, INF];
     }
 
-    if (this.board.canPlay(currentMove.col)) {
-      this.board.play(currentMove.col, player);
+    if (column != null && board.isWinningMove(column, this.minimizePlayer).win === true) {
+      return [null, -INF];
     }
-    const nextStateGrid = this.board.newGrid;
 
-    // find the min value of all the max values of opposition
-    let bestScore: number;
-    if (maximizingPlayer === true) {
-      bestScore = -INF;
-      for (let col = 0; col < COLUMNS; col++) {
-        const maxmizeGrid = JSON.parse(JSON.stringify(nextStateGrid));
-        this.board.clone(maxmizeGrid);
-        // find opposite moves
-        if (this.board.canPlay(col)) {
-          const minScore = this.minimax({ row: this.board.height[col], col }, depth - 1, false);
-          console.log("minimized next move", minScore);
-          bestScore = Math.max(minScore, bestScore);
-        }
-      }
-    } else {
-      // minimizing player
-      bestScore = INF;
-      for (let col = 0; col < COLUMNS; col++) {
-        const minimizeGrid = JSON.parse(JSON.stringify(nextStateGrid));
-        this.board.clone(minimizeGrid);
-        // find opposite moves
-        if (this.board.canPlay(col)) {
-          const maxScore = this.minimax({ row: this.board.height[col], col }, depth - 1, true);
-          console.log("maximized next move", maxScore);
-          bestScore = Math.min(bestScore, maxScore);
-        }
-      }
+    if (depth === 0) {
+      const score = heuristicEvaluation(board, column);
+      return [null, score];
     }
-    console.log(`row: ${currentMove.row}, col: ${currentMove.col}, bestScore: ${bestScore}`);
-    return bestScore;
+
+    return null;
   }
 
-  // bestScore(grid): number {
-  //   let bestScore = -INF;
-  //   for (let col = 0; col < COLUMNS; col++) {
-  //     if (this.gridUtil.canPlay(col)) {
-  //       const newGrid = JSON.parse(JSON.stringify(grid));
-  //       this.gridUtil.clone(newGrid);
-  //       const currentMove = { row: this.gridUtil.height[col], col };
-  //       const score = this.minimax(currentMove, DEPTH, true);
-  //       if (score > bestScore) {
-  //         bestScore = score;
-  //       }
-  //     }
-  //   }
-  //   console.log(`---- MinimaxSolver bestScore: ${bestScore} ----`);
-  //   return bestScore;
-  // }
+  maximizePlay(board: Board, column: number, depth: number) {
+    const hValue = this.hasHeuristicValue(board, column, depth);
+    if (hValue) {
+      return hValue;
+    }
 
-  bestMove(board: Board) {
-    // let bestMove = 0;
-    // let bestScore = -INF;
-    // for (let col = 0; col < COLUMNS; col++) {
-    //   const newGrid = JSON.parse(JSON.stringify(grid));
-    //   this.gridUtil.clone(newGrid);
-    //   if (this.gridUtil.canPlay(col)) {
-    //     const currentMove = { row: this.gridUtil.height[col], col };
-    //     const score = this.minimax(currentMove, DEPTH, true);
-    //     if (score > bestScore) {
-    //       bestScore = score;
-    //       bestMove = currentMove;
-    //     }
-    //   }
-    // }
-    // console.log(`---- MinimaxSolver bestScore: ${bestScore} ----`);
-    // console.log(`----- MinimaxSolver bestMove: [${bestMove.row}, ${bestMove.col}] ----`);
-    return 0;
+    let max = [null, -INF];
+    const childBoards = board.generateChildBoards(this.maximizePlayer);
+    for (const cb of childBoards) {
+      const { column: childColumn, board: childBoard } = cb;
+      const nextMove = this.minimizePlay(childBoard, childColumn, depth - 1);
+      console.log("maximizePlay - ", "nextMove", nextMove);
+
+      // Evaluate new move
+      if (max[0] === null || nextMove[1] > max[1]) {
+        max = [childColumn, nextMove[1]];
+      }
+    }
+    return max;
   }
 
-  // setGridUtil(gridUtil: Board) {
-  //   this.gridUtil = gridUtil;
-  // }
+  minimizePlay(board: Board, column: number, depth: number) {
+    const hValue = this.hasHeuristicValue(board, column, depth);
+    if (hValue) {
+      return hValue;
+    }
+
+    let min = [null, INF];
+    const childBoards = board.generateChildBoards(this.minimizePlayer);
+    for (const cb of childBoards) {
+      const { column: childColumn, board: childBoard } = cb;
+      const nextMove = this.maximizePlay(childBoard, childColumn, depth - 1);
+      console.log("minimizePlay - ", "nextMove", nextMove);
+
+      // Evaluate new move
+      if (min[0] === null || nextMove[1] < min[1]) {
+        min = [childColumn, nextMove[1]];
+      }
+    }
+    return min;
+  }
+
+  bestMove(board: Board): number {
+    const aiMove = this.maximizePlay(board, null, DEPTH);
+    const column = aiMove[0];
+    const score = aiMove[1];
+    console.log(`----- MinimaxSolver bestMove: column: ${column}, score: ${score} ----`);
+    return column;
+  }
 
   setMaximizePlayer(player: Player) {
     this.maximizePlayer = player;
