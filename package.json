@@ -8,7 +8,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "sr-tests": "ng test --watch=false"
+    "sr-tests": "ng test --watch=false",
+    "build-prod": "ng build --prod --build-optimizer false",
+    "start:prod": "http-server dist/ng-connect4 -p 8000"
   },
   "husky": {
     "hooks": {
@@ -60,6 +62,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
     "codelyzer": "~4.2.1",
+    "http-server": "0.11.1",
     "husky": "^1.0.0-rc.13",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
