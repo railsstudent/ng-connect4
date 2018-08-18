@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
   solver: "alphabeta",
-  depth: 2,
+  depth: 4,
   winningPieces: 4
 };

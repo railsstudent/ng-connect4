@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   solver: "alphabeta",
-  depth: 2,
+  depth: 4,
   winningPieces: 4
 };
 

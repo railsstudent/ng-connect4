@@ -39,16 +39,16 @@ export class AlphabetaSolver implements GameSolver {
     for (const cb of childBoards) {
       const { column: childColumn, board: childBoard } = cb;
       const nextMove = this.minimizePlay(childBoard, childColumn, depth - 1, alpha, beta);
-      console.log("maximizePlay - ", "nextMove", nextMove);
+      console.log("maximizePlay - ", "childColumn", childColumn, "nextMove", nextMove, "max", max);
 
       // Evaluate new move
       if (max[0] === null || nextMove[1] > max[1]) {
         max = [childColumn, nextMove[1]];
         alpha = nextMove[1];
-        console.log(`update alpha, alpha ${alpha}, beta ${beta}, max ${max}`);
+        // console.log(`update alpha, alpha ${alpha}, beta ${beta}, max [${max[0]}, ${max[1]}]`);
       }
       if (alpha >= beta) {
-        console.log(`alpha cut', alpha ${alpha}, beta ${beta}, max ${max}`);
+        // console.log(`alpha cut', alpha ${alpha}, beta ${beta}, max ${max}`);
         return max;
       }
     }
@@ -66,16 +66,16 @@ export class AlphabetaSolver implements GameSolver {
     for (const cb of childBoards) {
       const { column: childColumn, board: childBoard } = cb;
       const nextMove = this.maximizePlay(childBoard, childColumn, depth - 1, alpha, beta);
-      console.log("minimizePlay - ", "nextMove", nextMove);
+      console.log("minimizePlay - ", "childColumn", childColumn, "nextMove", nextMove, "min", min);
 
       // Evaluate new move
       if (min[0] === null || nextMove[1] < min[1]) {
         min = [childColumn, nextMove[1]];
         beta = nextMove[1];
-        console.log(`update beta, alpha ${alpha}, beta ${beta}, min ${min}`);
+        // console.log(`update beta, alpha ${alpha}, beta ${beta}, min [${min[0]}, ${min[1]}]`);
       }
       if (alpha >= beta) {
-        console.log(`beta cut', alpha ${alpha}, beta ${beta}, min ${min}`);
+        // console.log(`beta cut', alpha ${alpha}, beta ${beta}, min ${min}`);
         return min;
       }
     }

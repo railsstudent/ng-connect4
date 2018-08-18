@@ -1,5 +1,5 @@
 import { MinimaxSolver } from "./minimax-solver";
-import { Player } from "../models";
+import { Player, ROWS, COLUMNS, FREE_CELL } from "../models";
 import { Board } from "../util/board";
 
 describe("MinimaxSolver", () => {
@@ -42,6 +42,20 @@ describe("MinimaxSolver", () => {
       expect(col).toBe(4);
     });
 
+    it("bestMove returns the best move that let computer win", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
+
+      [0, 1, 3, 5, 10, 11, 18, 19, 20, 26].forEach(i => (grid[i] = Player.PLAYER1));
+      [2, 4, 6, 9, 12, 13, 17, 25, 27].forEach(i => (grid[i] = Player.COMPUTER));
+      board.clone(grid);
+
+      const col = solver.bestMove(board);
+      expect(col).toBe(5);
+    });
+
     it("bestMove returns the best move that maximize the minimum value", () => {
       board.play(0, Player.PLAYER1);
       board.play(0, Player.COMPUTER);
@@ -54,7 +68,7 @@ describe("MinimaxSolver", () => {
       board.play(4, Player.PLAYER1);
 
       const col = solver.bestMove(board);
-      expect(col).toBe(6);
+      expect(col).toBe(0);
     });
   });
 });
