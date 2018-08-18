@@ -3,17 +3,26 @@ import { environment } from "../../environments/environment";
 
 const winning_points = environment.winningPieces;
 
+export interface ChildBoard {
+  column: number;
+  board: Board;
+}
+
 export class Board {
   private _grid: string[];
   private _height: number[] = [];
 
-  constructor() {
-    this._grid = [];
-    for (let i = 0; i < ROWS * COLUMNS; i++) {
-      this._grid.push(FREE_CELL);
-    }
-    for (let i = 0; i < COLUMNS; i++) {
-      this._height.push(0);
+  constructor(grid?: string[]) {
+    if (grid) {
+      this.clone(grid);
+    } else {
+      this._grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        this._grid.push(FREE_CELL);
+      }
+      for (let i = 0; i < COLUMNS; i++) {
+        this._height.push(0);
+      }
     }
   }
 
@@ -168,5 +177,17 @@ export class Board {
   isSamePlayer(row: number, column: number, player: Player): boolean {
     const idx = this.convertRowColToIdx(row, column);
     return this._grid[idx] === player;
+  }
+
+  generateChildBoards(player = Player.COMPUTER): ChildBoard[] {
+    const childBoards: ChildBoard[] = [];
+    for (let column = 0; column < COLUMNS; column++) {
+      if (this.canPlay(column)) {
+        const board = new Board(this._grid);
+        board.play(column, player);
+        childBoards.push({ column, board });
+      }
+    }
+    return childBoards;
   }
 }

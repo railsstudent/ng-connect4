@@ -15,12 +15,12 @@ const evaluationTable = [
   [3, 4, 5, 7, 5, 4, 3]
 ];
 
-export const heuristicEvaluation = (gridUtil, player: string, { col }: Pos) => {
+export const heuristicEvaluation = (board: Board, player: string, { col }: Pos) => {
   let score = 0;
-  if (gridUtil.isWinningMove(col, player).win === true) {
-    score = (ROWS * COLUMNS + 1 - gridUtil.numMoves) / 2;
+  if (board.isWinningMove(col, player).win === true) {
+    score = (ROWS * COLUMNS + 1 - board.numMoves) / 2;
   } else {
-    const row = ROWS - gridUtil.height[col] - 1;
+    const row = board.height[col];
     score = evaluationTable[row][col];
   }
   return score;
