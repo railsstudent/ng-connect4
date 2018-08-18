@@ -12,10 +12,8 @@ import {
 } from "../reducers";
 import * as connectActions from "../reducers/connect.actions";
 import { Player, Mode, ROWS, COLUMNS, Direction } from "../models";
-import { createSolver } from "../solvers";
+import { createSolver, SolverType } from "../solvers";
 import { Board } from "../util/board";
-import { MinimaxSolver } from "../solvers/minimax-solver";
-import { AlphabetaSolver } from "../solvers/alphabeta-solver";
 
 @Component({
   selector: "connect-board",
@@ -41,7 +39,7 @@ export class BoardComponent implements OnInit {
   columnsAvailable: boolean[];
 
   // AI algorithm
-  solver: MinimaxSolver | AlphabetaSolver;
+  solver: SolverType;
   board: Board;
   grid: string[];
 
@@ -52,16 +50,17 @@ export class BoardComponent implements OnInit {
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
+    this.board = new Board();
     if (!this.solver) {
       this.initSolver();
     }
     this.store.dispatch(new connectActions.NewGameAction({ mode: this.mode }));
-    this.grid$.subscribe(({ grid, reset, nextPlayer }) => {
-      this.board = grid;
+    this.grid$.subscribe(({ board, reset, nextPlayer }) => {
+      this.board = board;
       this.nextPlayer = nextPlayer;
       if (reset === false && this.nextPlayer === Player.COMPUTER) {
-        const totalHumanPieces = grid.numPieces(Player.PLAYER1);
-        const totalComputerPieces = grid.numPieces(Player.COMPUTER);
+        const totalHumanPieces = board.numPieces(Player.PLAYER1);
+        const totalComputerPieces = board.numPieces(Player.COMPUTER);
         if (totalComputerPieces >= totalHumanPieces) {
           console.log(
             "Do not make consecutive computer moves",
@@ -69,7 +68,7 @@ export class BoardComponent implements OnInit {
           );
           return;
         }
-        const { col } = this.solver.bestMove(this.board.newGrid);
+        const col = this.solver.bestMove(this.board);
         console.log("dispatch computerMoveAction", col);
         this.store.dispatch(
           new connectActions.ComputerMoveAction({
@@ -84,10 +83,8 @@ export class BoardComponent implements OnInit {
 
   initSolver() {
     this.solver = createSolver();
-    this.board = new Board();
     this.solver.setMinimizePlayer(Player.PLAYER1);
     this.solver.setMaximizePlayer(Player.COMPUTER);
-    this.solver.setGridUtil(this.board);
   }
 
   select(column) {
@@ -121,7 +118,7 @@ export class BoardComponent implements OnInit {
   }
 
   // for testing
-  setTestSolver(solver: MinimaxSolver | AlphabetaSolver) {
+  setTestSolver(solver: SolverType) {
     this.solver = solver;
   }
 

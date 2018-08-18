@@ -13,3 +13,5 @@ export const createSolver = () => {
   }
   return new MinimaxSolver();
 };
+
+export type SolverType = AlphabetaSolver | MinimaxSolver;

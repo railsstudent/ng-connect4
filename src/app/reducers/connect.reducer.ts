@@ -5,7 +5,7 @@ import { createSelector, createFeatureSelector } from "@ngrx/store";
 import "es6-object-assign";
 
 export interface ConnectState {
-  grid: Board;
+  board: Board;
   nextPlayer: Player;
   outcome: Outcome;
   winningSequence: number[];
@@ -24,7 +24,7 @@ const initColumns = () => {
 };
 
 export const initialState: ConnectState = {
-  grid: new Board(),
+  board: new Board(),
   nextPlayer: Player.PLAYER1,
   outcome: Outcome.DEFAULT,
   winningSequence: null,
@@ -37,7 +37,7 @@ export const initialState: ConnectState = {
 const nextAction = (state: ConnectState, action): ConnectState => {
   const { mode = Mode.UNKNOWN, player, column } = action.payload;
   const board = new Board();
-  board.clone(state.grid.newGrid);
+  board.clone(state.board.newGrid);
   board.play(column, player);
   const winning = board.isWinningMove(column, player);
   const { win, direction, sequence: winningSequence } = winning;
@@ -70,7 +70,7 @@ const nextAction = (state: ConnectState, action): ConnectState => {
     }
   }
   return {
-    grid: board,
+    board,
     nextPlayer,
     outcome,
     winningSequence,
@@ -99,33 +99,36 @@ export function connectReducer(state = initialState, action: ConnectActions): Co
 
 // connect selector
 export const selectConnect = createFeatureSelector<ConnectState>("connect");
-export const selectGrid = createSelector(selectConnect, (state: ConnectState) => ({
-  grid: state.grid,
-  reset: state.reset,
-  nextPlayer: state.nextPlayer
+export const selectGrid = createSelector(selectConnect, ({ board, reset, nextPlayer }) => ({
+  board,
+  reset,
+  nextPlayer
 }));
-export const selectNextPlayer = createSelector(selectConnect, (state: ConnectState) => ({
-  nextPlayer: state.nextPlayer
+export const selectNextPlayer = createSelector(selectConnect, ({ nextPlayer }) => ({
+  nextPlayer
 }));
-export const selectMovesLeft = createSelector(selectGrid, ({ grid }) => grid.remainingMoves);
-export const selectOutcome = createSelector(selectConnect, (state: ConnectState) => state.outcome);
-export const selectColumnAvailable = createSelector(selectConnect, (state: ConnectState) => state.columnAvailable);
-export const selectResetGame = createSelector(selectConnect, (state: ConnectState) => state.reset);
-export const selectWinningSequence = createSelector(selectConnect, (state: ConnectState) => {
-  let winner: Player;
-  if (state.outcome === Outcome.PLAYER1_WINS) {
-    winner = Player.PLAYER1;
-  } else if (state.outcome === Outcome.PLAYER2_WINS) {
-    winner = Player.PLAYER2;
-  } else if (state.outcome === Outcome.COMPUTER_WINS) {
-    winner = Player.COMPUTER;
-  } else {
-    winner = null;
+export const selectMovesLeft = createSelector(selectGrid, ({ board }) => board.remainingMoves);
+export const selectOutcome = createSelector(selectConnect, ({ outcome }) => outcome);
+export const selectColumnAvailable = createSelector(selectConnect, ({ columnAvailable }) => columnAvailable);
+export const selectResetGame = createSelector(selectConnect, ({ reset }) => reset);
+export const selectWinningSequence = createSelector(
+  selectConnect,
+  ({ outcome, direction, winningSequence: sequence }) => {
+    let winner: Player;
+    if (outcome === Outcome.PLAYER1_WINS) {
+      winner = Player.PLAYER1;
+    } else if (outcome === Outcome.PLAYER2_WINS) {
+      winner = Player.PLAYER2;
+    } else if (outcome === Outcome.COMPUTER_WINS) {
+      winner = Player.COMPUTER;
+    } else {
+      winner = null;
+    }
+    return {
+      direction,
+      sequence,
+      winner
+    };
   }
-  return {
-    direction: state.direction,
-    sequence: state.winningSequence,
-    winner
-  };
-});
+);
 export const selectMode = createSelector(selectConnect, (state: ConnectState) => state.mode);

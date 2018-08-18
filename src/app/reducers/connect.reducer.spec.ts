@@ -38,7 +38,7 @@ describe("Connect Reducer", () => {
       board = new Board();
       const result = connectReducer(
         {
-          grid: board,
+          board,
           nextPlayer: Player.PLAYER1,
           outcome: Outcome.PLAYER1_WINS,
           winningSequence: [1, 8, 15, 22],
@@ -69,7 +69,7 @@ describe("Connect Reducer", () => {
       board.clone(grid);
 
       const TEST_INITIAL_STATE: ConnectState = {
-        grid: board,
+        board,
         nextPlayer: Player.PLAYER1,
         outcome: Outcome.DEFAULT,
         winningSequence: null,
@@ -95,7 +95,7 @@ describe("Connect Reducer", () => {
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
 
-      expect(state.grid).toEqual(nextBoard);
+      expect(state.board).toEqual(nextBoard);
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER2);
@@ -115,7 +115,7 @@ describe("Connect Reducer", () => {
       board.clone(grid);
 
       const TEST_INITIAL_STATE: ConnectState = {
-        grid: board,
+        board,
         nextPlayer: Player.PLAYER1,
         outcome: Outcome.DEFAULT,
         reset: false,
@@ -145,7 +145,7 @@ describe("Connect Reducer", () => {
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
 
-      expect(state.grid).toEqual(nextBoard);
+      expect(state.board).toEqual(nextBoard);
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.COMPUTER);
@@ -169,7 +169,7 @@ describe("Connect Reducer", () => {
       board.clone(grid);
 
       const TEST_INITIAL_STATE: ConnectState = {
-        grid: board,
+        board,
         nextPlayer: Player.PLAYER1,
         outcome: Outcome.DEFAULT,
         winningSequence: null,
@@ -203,7 +203,7 @@ describe("Connect Reducer", () => {
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
 
-      expect(state.grid).toEqual(nextBoard);
+      expect(state.board).toEqual(nextBoard);
       expect(state.outcome).toEqual(Outcome.PLAYER1_WINS);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.COMPUTER);
@@ -230,7 +230,7 @@ describe("Connect Reducer", () => {
       board.clone(grid);
 
       const TEST_INITIAL_STATE: ConnectState = {
-        grid: board,
+        board,
         nextPlayer: Player.PLAYER2,
         outcome: Outcome.DEFAULT,
         winningSequence: null,
@@ -256,7 +256,7 @@ describe("Connect Reducer", () => {
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
 
-      expect(state.grid).toEqual(nextBoard);
+      expect(state.board).toEqual(nextBoard);
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
@@ -277,7 +277,7 @@ describe("Connect Reducer", () => {
       board.clone(grid);
 
       const TEST_INITIAL_STATE: ConnectState = {
-        grid: board,
+        board,
         nextPlayer: Player.PLAYER2,
         outcome: Outcome.DEFAULT,
         winningSequence: null,
@@ -307,7 +307,7 @@ describe("Connect Reducer", () => {
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
 
-      expect(state.grid).toEqual(nextBoard);
+      expect(state.board).toEqual(nextBoard);
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
@@ -323,7 +323,7 @@ describe("Connect Reducer", () => {
       board.clone(grid);
 
       const TEST_INITIAL_STATE: ConnectState = {
-        grid: board,
+        board,
         nextPlayer: Player.PLAYER2,
         outcome: Outcome.DEFAULT,
         winningSequence: null,
@@ -347,7 +347,7 @@ describe("Connect Reducer", () => {
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
 
-      expect(state.grid).toEqual(nextBoard);
+      expect(state.board).toEqual(nextBoard);
       expect(state.outcome).toEqual(Outcome.PLAYER2_WINS);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
@@ -367,7 +367,7 @@ describe("Connect Reducer", () => {
       board.clone(grid);
 
       const TEST_INITIAL_STATE: ConnectState = {
-        grid: board,
+        board,
         nextPlayer: Player.PLAYER2,
         outcome: Outcome.DEFAULT,
         winningSequence: null,
@@ -395,7 +395,7 @@ describe("Connect Reducer", () => {
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
 
-      expect(state.grid).toEqual(nextBoard);
+      expect(state.board).toEqual(nextBoard);
       expect(state.outcome).toEqual(Outcome.PLAYER2_WINS);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
@@ -415,7 +415,7 @@ describe("Connect Reducer", () => {
       board.clone(grid);
 
       const TEST_INITIAL_STATE: ConnectState = {
-        grid: board,
+        board,
         nextPlayer: Player.PLAYER2,
         outcome: Outcome.DEFAULT,
         winningSequence: null,
@@ -443,7 +443,7 @@ describe("Connect Reducer", () => {
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
 
-      expect(state.grid).toEqual(nextBoard);
+      expect(state.board).toEqual(nextBoard);
       expect(state.outcome).toEqual(Outcome.DRAW);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
@@ -469,7 +469,7 @@ describe("Connect Reducer", () => {
       board.clone(grid);
 
       const TEST_INITIAL_STATE: ConnectState = {
-        grid: board,
+        board,
         nextPlayer: Player.COMPUTER,
         outcome: Outcome.DEFAULT,
         winningSequence: null,
@@ -495,7 +495,7 @@ describe("Connect Reducer", () => {
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
 
-      expect(state.grid).toEqual(nextBoard);
+      expect(state.board).toEqual(nextBoard);
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
@@ -516,7 +516,7 @@ describe("Connect Reducer", () => {
       board.clone(grid);
 
       const TEST_INITIAL_STATE: ConnectState = {
-        grid: board,
+        board,
         nextPlayer: Player.COMPUTER,
         outcome: Outcome.DEFAULT,
         winningSequence: null,
@@ -546,7 +546,7 @@ describe("Connect Reducer", () => {
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
 
-      expect(state.grid).toEqual(nextBoard);
+      expect(state.board).toEqual(nextBoard);
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
@@ -562,7 +562,7 @@ describe("Connect Reducer", () => {
       board.clone(grid);
 
       const TEST_INITIAL_STATE: ConnectState = {
-        grid: board,
+        board,
         nextPlayer: Player.COMPUTER,
         outcome: Outcome.DEFAULT,
         winningSequence: null,
@@ -586,7 +586,7 @@ describe("Connect Reducer", () => {
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
 
-      expect(state.grid).toEqual(nextBoard);
+      expect(state.board).toEqual(nextBoard);
       expect(state.outcome).toEqual(Outcome.COMPUTER_WINS);
       expect(state.winningSequence).toEqual([5, 11, 17, 23]);
       expect(state.reset).toEqual(true);
@@ -607,7 +607,7 @@ describe("Connect Reducer", () => {
       board.clone(grid);
 
       const TEST_INITIAL_STATE: ConnectState = {
-        grid: board,
+        board,
         nextPlayer: Player.COMPUTER,
         outcome: Outcome.DEFAULT,
         winningSequence: null,
@@ -635,7 +635,7 @@ describe("Connect Reducer", () => {
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
 
-      expect(state.grid).toEqual(nextBoard);
+      expect(state.board).toEqual(nextBoard);
       expect(state.outcome).toEqual(Outcome.COMPUTER_WINS);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
@@ -655,7 +655,7 @@ describe("Connect Reducer", () => {
       board.clone(grid);
 
       const TEST_INITIAL_STATE: ConnectState = {
-        grid: board,
+        board,
         nextPlayer: Player.COMPUTER,
         outcome: Outcome.DEFAULT,
         winningSequence: null,
@@ -683,7 +683,7 @@ describe("Connect Reducer", () => {
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
 
-      expect(state.grid).toEqual(nextBoard);
+      expect(state.board).toEqual(nextBoard);
       expect(state.outcome).toEqual(Outcome.DRAW);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
@@ -712,7 +712,7 @@ describe("Connect Reducer", () => {
       board.clone(grid);
 
       connectState = {
-        grid: board,
+        board,
         nextPlayer: Player.COMPUTER,
         outcome: Outcome.PLAYER1_WINS,
         winningSequence: [0, 7, 14, 21],
@@ -727,7 +727,7 @@ describe("Connect Reducer", () => {
       const result = selectGrid.projector(connectState);
       const expected = board;
       expect(result).toEqual({
-        grid: expected,
+        board: expected,
         reset: false,
         nextPlayer: Player.COMPUTER
       });
@@ -742,7 +742,7 @@ describe("Connect Reducer", () => {
     });
 
     it("selectMovesLeft should return number of moves left", () => {
-      expect(selectMovesLeft.projector({ grid: board })).toBe(ROWS * COLUMNS - 3);
+      expect(selectMovesLeft.projector({ board })).toBe(ROWS * COLUMNS - 3);
     });
 
     it("selectResetGame should return false", () => {

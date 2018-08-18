@@ -1,6 +1,6 @@
 import { environment } from "../../environments/environment";
 import { Board } from "../util/board";
-import { Player, ROWS, COLUMNS, Pos } from "../models";
+import { Player, ROWS, COLUMNS } from "../models";
 
 export const MINI_MAX = "minimax";
 export const ALPHA_BETA = "alphabeta";
@@ -15,7 +15,7 @@ const evaluationTable = [
   [3, 4, 5, 7, 5, 4, 3]
 ];
 
-export const heuristicEvaluation = (board: Board, player: string, { col }: Pos) => {
+export const heuristicEvaluation = (board: Board, player: string, col: number) => {
   let score = 0;
   if (board.isWinningMove(col, player).win === true) {
     score = (ROWS * COLUMNS + 1 - board.numMoves) / 2;
@@ -27,9 +27,7 @@ export const heuristicEvaluation = (board: Board, player: string, { col }: Pos) 
 };
 
 export interface GameSolver {
-  bestScore(grid: string[]): number;
-  bestMove(grid: string[]): Pos;
-  setGridUtil(gridUtil: Board);
+  bestMove(board: Board): number;
   setMaximizePlayer(player: Player);
   setMinimizePlayer(player: Player);
 }

@@ -24,13 +24,9 @@ xdescribe("MinimaxSolver", () => {
       grid[2] = Player.PLAYER1;
       grid[0] = Player.PLAYER2;
       grid[7] = Player.PLAYER1;
-      const gridUtil = new Board();
-      gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
-      const score = heuristicEvaluation(gridUtil, Player.PLAYER2, {
-        row: 2,
-        col: 0
-      });
+      const board = new Board();
+      board.clone(grid);
+      const score = heuristicEvaluation(board, Player.PLAYER2, 0);
       expect(score).toBe(5);
     });
 
@@ -38,13 +34,9 @@ xdescribe("MinimaxSolver", () => {
       grid[2] = Player.PLAYER1;
       grid[0] = Player.PLAYER2;
       grid[7] = Player.PLAYER1;
-      const gridUtil = new Board();
-      gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
-      const score = heuristicEvaluation(gridUtil, Player.PLAYER2, {
-        row: 1,
-        col: 2
-      });
+      const board = new Board();
+      board.clone(grid);
+      const score = heuristicEvaluation(board, Player.PLAYER2, 2);
       expect(score).toBe(8);
     });
 
@@ -58,11 +50,7 @@ xdescribe("MinimaxSolver", () => {
       grid[15] = Player.PLAYER1;
       const gridUtil = new Board();
       gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
-      const score = heuristicEvaluation(gridUtil, Player.PLAYER2, {
-        row: 3,
-        col: 2
-      });
+      const score = heuristicEvaluation(gridUtil, Player.PLAYER2, 2);
       expect(score).toBe(18);
     });
   });
@@ -82,9 +70,8 @@ xdescribe("MinimaxSolver", () => {
       [1, 4, 7, 8, 9, 12, 13, 14, 16, 17, 18, 21, 23, 24, 26, 31, 34, 36, 39, 40, 35].forEach(
         i => (grid[i] = Player.COMPUTER)
       );
-      const gridUtil = new Board();
-      gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
+      const board = new Board();
+      board.clone(grid);
       const score = solver.minimax({ row: 6, col: 0 }, 1, true);
       expect(score).toBe(0);
     });
@@ -94,7 +81,6 @@ xdescribe("MinimaxSolver", () => {
       [1, 8, 15].forEach(i => (grid[i] = Player.COMPUTER));
       const gridUtil = new Board();
       gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.minimax({ row: 3, col: 1 }, 1, true);
       expect(score).toBe(18);
     });
@@ -103,7 +89,6 @@ xdescribe("MinimaxSolver", () => {
       grid[2] = Player.PLAYER1;
       const gridUtil = new Board();
       gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.minimax({ row: 0, col: 0 }, 1, true);
       expect(score).toBe(8);
     });
@@ -112,7 +97,6 @@ xdescribe("MinimaxSolver", () => {
       grid[2] = Player.PLAYER1;
       const gridUtil = new Board();
       gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.minimax({ row: 0, col: 0 }, 2, true);
       expect(score).toBe(4);
     });
@@ -121,7 +105,6 @@ xdescribe("MinimaxSolver", () => {
       grid[2] = Player.PLAYER1;
       const gridUtil = new Board();
       gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.minimax({ row: 0, col: 1 }, 2, true);
       expect(score).toBe(3);
     });
@@ -130,7 +113,6 @@ xdescribe("MinimaxSolver", () => {
       grid[2] = Player.PLAYER1;
       const gridUtil = new Board();
       gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.minimax({ row: 0, col: 2 }, 2, true);
       expect(score).toBe(3);
     });
@@ -139,7 +121,6 @@ xdescribe("MinimaxSolver", () => {
       grid[2] = Player.PLAYER1;
       const gridUtil = new Board();
       gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.minimax({ row: 0, col: 3 }, 2, true);
       expect(score).toBe(3);
     });
@@ -148,7 +129,6 @@ xdescribe("MinimaxSolver", () => {
       grid[2] = Player.PLAYER1;
       const gridUtil = new Board();
       gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.minimax({ row: 0, col: 4 }, 2, true);
       expect(score).toBe(3);
     });
@@ -157,7 +137,6 @@ xdescribe("MinimaxSolver", () => {
       grid[2] = Player.PLAYER1;
       const gridUtil = new Board();
       gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.minimax({ row: 0, col: 5 }, 2, true);
       expect(score).toBe(3);
     });
@@ -166,7 +145,6 @@ xdescribe("MinimaxSolver", () => {
       grid[2] = Player.PLAYER1;
       const gridUtil = new Board();
       gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
       const score = solver.minimax({ row: 0, col: 6 }, 2, true);
       expect(score).toBe(4);
     });
@@ -180,22 +158,11 @@ xdescribe("MinimaxSolver", () => {
       }
     });
 
-    it("bestScore returns the best score among all game trees", () => {
-      grid[2] = Player.PLAYER1;
-      const gridUtil = new Board();
-      gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
-      const score = solver.bestScore(grid);
-      expect(score).toBe(4);
-    });
-
     it("bestMove returns the best score among all game trees", () => {
       grid[2] = Player.PLAYER1;
-      const gridUtil = new Board();
-      gridUtil.clone(grid);
-      solver.setGridUtil(gridUtil);
-      const { row, col } = solver.bestMove(grid);
-      expect(row).toBe(0);
+      const board = new Board();
+      board.clone(grid);
+      const col = solver.bestMove(board);
       expect(col).toBe(0);
     });
   });
