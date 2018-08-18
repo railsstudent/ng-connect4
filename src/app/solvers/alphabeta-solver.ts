@@ -1,12 +1,12 @@
 import { GameSolver, heuristicEvaluation } from "./game-solver";
 import { Player, COLUMNS, INF, Pos } from "../models";
-import { GridUtil } from "../util/grid.util";
+import { Board } from "../util/board";
 import { environment } from "../../environments/environment";
 
 const DEPTH = environment.depth;
 
 export class AlphabetaSolver implements GameSolver {
-  private gridUtil: GridUtil;
+  private gridUtil: Board;
   private maximizePlayer: Player;
   private minimizePlayer: Player;
 
@@ -35,7 +35,7 @@ export class AlphabetaSolver implements GameSolver {
   // Generate a game tree and find the best score of the current move
   alphabeta(currentMove: Pos, depth: number, alpha: number, beta: number, maximizingPlayer: boolean): number {
     const newGrid = this.gridUtil.newGrid;
-    this.gridUtil.setGrid(newGrid);
+    this.gridUtil.clone(newGrid);
 
     // terminate state of the game tree: a draw
     if (this.gridUtil.isDraw()) {
@@ -64,7 +64,7 @@ export class AlphabetaSolver implements GameSolver {
       bestScore = -INF;
       for (let col = 0; col < COLUMNS; col++) {
         const maxmizeGrid = JSON.parse(JSON.stringify(nextStateGrid));
-        this.gridUtil.setGrid(maxmizeGrid);
+        this.gridUtil.clone(maxmizeGrid);
         // find opposite moves
         if (this.gridUtil.canPlay(col)) {
           const move = { row: this.gridUtil.height[col], col };
@@ -94,7 +94,7 @@ export class AlphabetaSolver implements GameSolver {
       bestScore = INF;
       for (let col = 0; col < COLUMNS; col++) {
         const minimizeGrid = JSON.parse(JSON.stringify(nextStateGrid));
-        this.gridUtil.setGrid(minimizeGrid);
+        this.gridUtil.clone(minimizeGrid);
         // find opposite moves
         if (this.gridUtil.canPlay(col)) {
           const move = { row: this.gridUtil.height[col], col };
@@ -128,7 +128,7 @@ export class AlphabetaSolver implements GameSolver {
     for (let col = 0; col < COLUMNS; col++) {
       if (this.gridUtil.canPlay(col)) {
         const newGrid = JSON.parse(JSON.stringify(grid));
-        this.gridUtil.setGrid(newGrid);
+        this.gridUtil.clone(newGrid);
         const currentMove = { row: this.gridUtil.height[col], col };
         const score = this.alphabeta(currentMove, DEPTH, -INF, INF, true);
         if (score > bestScore) {
@@ -145,7 +145,7 @@ export class AlphabetaSolver implements GameSolver {
     let bestScore = -INF;
     for (let col = 0; col < COLUMNS; col++) {
       const newGrid = JSON.parse(JSON.stringify(grid));
-      this.gridUtil.setGrid(newGrid);
+      this.gridUtil.clone(newGrid);
       if (this.gridUtil.canPlay(col)) {
         const currentMove = { row: this.gridUtil.height[col], col };
         const score = this.alphabeta(currentMove, DEPTH, -INF, INF, true);
@@ -161,7 +161,7 @@ export class AlphabetaSolver implements GameSolver {
     return bestMove;
   }
 
-  setGridUtil(gridUtil: GridUtil) {
+  setGridUtil(gridUtil: Board) {
     this.gridUtil = gridUtil;
   }
 

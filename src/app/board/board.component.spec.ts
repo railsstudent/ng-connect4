@@ -8,6 +8,7 @@ import { AppState, reducers } from "../reducers";
 import * as connectActions from "../reducers/connect.actions";
 import { ROWS, COLUMNS, Player, Mode, Outcome, Pos, Direction } from "../models";
 import { AlphabetaSolver } from "../solvers/alphabeta-solver";
+import { Board } from "../util/board";
 
 describe("BoardComponent", () => {
   let component: BoardComponent;
@@ -136,9 +137,7 @@ describe("BoardComponent", () => {
         })
       );
 
-      component.moveLefts$.subscribe(moveLefts => {
-        expect(moveLefts).toBe(ROWS * COLUMNS - 4);
-      });
+      component.moveLefts$.subscribe(moveLefts => expect(moveLefts).toBe(ROWS * COLUMNS - 4));
     });
 
     it("should hide column when it is full in human vs human mode", () => {
@@ -159,22 +158,25 @@ describe("BoardComponent", () => {
           expectedResults.push(true);
         }
         expectedResults[0] = false;
-        console.log("columnAvailable", columnAvailable);
         columnAvailable.forEach((c, i) => {
           expect(c).toBe(expectedResults[i]);
         });
       });
 
       component.grid$.subscribe(({ grid }) => {
-        expect(grid[0]).toBe(Player.PLAYER1);
-        expect(grid[14]).toBe(Player.PLAYER1);
-        expect(grid[28]).toBe(Player.PLAYER1);
+        expect(grid.isSamePlayer(0, 0, Player.PLAYER1)).toBe(true);
+        expect(grid.isSamePlayer(2, 0, Player.PLAYER1)).toBe(true);
+        expect(grid.isSamePlayer(4, 0, Player.PLAYER1)).toBe(true);
 
-        expect(grid[7]).toBe(Player.PLAYER2);
-        expect(grid[21]).toBe(Player.PLAYER2);
-        expect(grid[35]).toBe(Player.PLAYER2);
+        expect(grid.isSamePlayer(1, 0, Player.PLAYER2)).toBe(true);
+        expect(grid.isSamePlayer(3, 0, Player.PLAYER2)).toBe(true);
+        expect(grid.isSamePlayer(5, 0, Player.PLAYER2)).toBe(true);
       });
+
+      component.moveLefts$.subscribe(moveLefts => expect(moveLefts).toBe(ROWS * COLUMNS - 6));
+
       component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.DEFAULT));
+
       component.winningSequence$.subscribe(sequence =>
         expect(sequence).toEqual({
           direction: null,
@@ -341,7 +343,10 @@ describe("BoardComponent", () => {
       expectedGrid.push(Player.PLAYER1);
       expectedGrid.push(Player.PLAYER2);
 
-      component.grid$.subscribe(({ grid }) => expect(grid).toEqual(expectedGrid));
+      const nextBoard = new Board();
+      nextBoard.clone(expectedGrid);
+
+      component.grid$.subscribe(({ grid }) => expect(grid).toEqual(nextBoard));
       component.moveLefts$.subscribe(movesLeft => expect(movesLeft).toBe(0));
       component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.DRAW));
       component.resetGame$.subscribe(resetGame => expect(resetGame).toBe(true));
@@ -414,13 +419,13 @@ describe("BoardComponent", () => {
       });
 
       component.grid$.subscribe(({ grid }) => {
-        expect(grid[0]).toBe(Player.PLAYER1);
-        expect(grid[14]).toBe(Player.PLAYER1);
-        expect(grid[28]).toBe(Player.PLAYER1);
+        expect(grid.isSamePlayer(0, 0, Player.PLAYER1)).toBe(true);
+        expect(grid.isSamePlayer(2, 0, Player.PLAYER1)).toBe(true);
+        expect(grid.isSamePlayer(4, 0, Player.PLAYER1)).toBe(true);
 
-        expect(grid[7]).toBe(Player.COMPUTER);
-        expect(grid[21]).toBe(Player.COMPUTER);
-        expect(grid[35]).toBe(Player.COMPUTER);
+        expect(grid.isSamePlayer(1, 0, Player.COMPUTER)).toBe(true);
+        expect(grid.isSamePlayer(3, 0, Player.COMPUTER)).toBe(true);
+        expect(grid.isSamePlayer(5, 0, Player.COMPUTER)).toBe(true);
       });
 
       component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.DEFAULT));
@@ -454,14 +459,14 @@ describe("BoardComponent", () => {
         }
       });
       component.grid$.subscribe(({ grid }) => {
-        expect(grid[0]).toBe(Player.PLAYER1);
-        expect(grid[7]).toBe(Player.PLAYER1);
-        expect(grid[14]).toBe(Player.PLAYER1);
-        expect(grid[21]).toBe(Player.PLAYER1);
+        expect(grid.isSamePlayer(0, 0, Player.PLAYER1)).toBe(true);
+        expect(grid.isSamePlayer(1, 0, Player.PLAYER1)).toBe(true);
+        expect(grid.isSamePlayer(2, 0, Player.PLAYER1)).toBe(true);
+        expect(grid.isSamePlayer(3, 0, Player.PLAYER1)).toBe(true);
 
-        expect(grid[1]).toBe(Player.COMPUTER);
-        expect(grid[8]).toBe(Player.COMPUTER);
-        expect(grid[15]).toBe(Player.COMPUTER);
+        expect(grid.isSamePlayer(0, 1, Player.COMPUTER)).toBe(true);
+        expect(grid.isSamePlayer(1, 1, Player.COMPUTER)).toBe(true);
+        expect(grid.isSamePlayer(2, 1, Player.COMPUTER)).toBe(true);
       });
 
       component.winningSequence$.subscribe(sequence => {
@@ -491,18 +496,18 @@ describe("BoardComponent", () => {
         expect(columns).toEqual([false, false, false, false, false, false, false])
       );
       component.grid$.subscribe(({ grid }) => {
-        expect(grid[0]).toBe(Player.PLAYER1);
-        expect(grid[7]).toBe(Player.PLAYER1);
-        expect(grid[8]).toBe(Player.PLAYER1);
-        expect(grid[9]).toBe(Player.PLAYER1);
+        expect(grid.isSamePlayer(0, 0, Player.PLAYER1)).toBe(true);
+        expect(grid.isSamePlayer(1, 0, Player.PLAYER1)).toBe(true);
+        expect(grid.isSamePlayer(1, 1, Player.PLAYER1)).toBe(true);
+        expect(grid.isSamePlayer(1, 2, Player.PLAYER1)).toBe(true);
 
-        expect(grid[1]).toBe(Player.COMPUTER);
-        expect(grid[2]).toBe(Player.COMPUTER);
-        expect(grid[3]).toBe(Player.COMPUTER);
-        expect(grid[4]).toBe(Player.COMPUTER);
+        expect(grid.isSamePlayer(0, 1, Player.COMPUTER)).toBe(true);
+        expect(grid.isSamePlayer(0, 2, Player.COMPUTER)).toBe(true);
+        expect(grid.isSamePlayer(0, 3, Player.COMPUTER)).toBe(true);
+        expect(grid.isSamePlayer(0, 4, Player.COMPUTER)).toBe(true);
       });
+
       component.winningSequence$.subscribe(sequence => {
-        console.log("1", sequence);
         expect(sequence).toEqual({
           direction: Direction.HORIZONTAL,
           sequence: [1, 2, 3, 4],
@@ -606,8 +611,11 @@ describe("BoardComponent", () => {
       expectedGrid.push(Player.PLAYER1);
       expectedGrid.push(Player.COMPUTER);
 
+      const nextBoard = new Board();
+      nextBoard.clone(expectedGrid);
+
       component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.DRAW));
-      component.grid$.subscribe(({ grid }) => expect(grid).toEqual(expectedGrid));
+      component.grid$.subscribe(({ grid }) => expect(grid).toEqual(nextBoard));
       component.moveLefts$.subscribe(movesLeft => expect(movesLeft).toEqual(0));
       component.resetGame$.subscribe(resetGame => expect(resetGame).toEqual(true));
       component.columnAvailable$.subscribe(columns =>

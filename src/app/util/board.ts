@@ -1,18 +1,23 @@
 import { FREE_CELL, ROWS, COLUMNS, Player, ConnectSequence, Direction } from "../models";
+import { environment } from "../../environments/environment";
 
-const winning_points = 4;
+const winning_points = environment.winningPieces;
 
-export class GridUtil {
+export class Board {
   private _grid: string[];
   private _height: number[] = [];
 
   constructor() {
+    this._grid = [];
+    for (let i = 0; i < ROWS * COLUMNS; i++) {
+      this._grid.push(FREE_CELL);
+    }
     for (let i = 0; i < COLUMNS; i++) {
       this._height.push(0);
     }
   }
 
-  setGrid(grid: string[]) {
+  clone(grid: string[]) {
     const convertIdxToRowCol = idx => {
       const col = idx % COLUMNS;
       const row = (idx - col) / ROWS;
@@ -128,6 +133,14 @@ export class GridUtil {
     return this._grid.filter(c => c !== FREE_CELL).length;
   }
 
+  get remainingMoves(): number {
+    return ROWS * COLUMNS - this.numMoves;
+  }
+
+  numPieces(player: Player): number {
+    return this._grid.filter(c => c === player).length;
+  }
+
   get newGrid(): string[] {
     return JSON.parse(JSON.stringify(this._grid));
   }
@@ -145,5 +158,15 @@ export class GridUtil {
       str += "\n";
     }
     return str;
+  }
+
+  isFreeCell(row: number, column: number): boolean {
+    const idx = this.convertRowColToIdx(row, column);
+    return this._grid[idx] === FREE_CELL;
+  }
+
+  isSamePlayer(row: number, column: number, player: Player): boolean {
+    const idx = this.convertRowColToIdx(row, column);
+    return this._grid[idx] === player;
   }
 }

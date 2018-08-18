@@ -11,9 +11,9 @@ import {
   selectWinningSequence
 } from "../reducers";
 import * as connectActions from "../reducers/connect.actions";
-import { Player, Mode, ROWS, COLUMNS, FREE_CELL, Direction } from "../models";
+import { Player, Mode, ROWS, COLUMNS, Direction } from "../models";
 import { createSolver } from "../solvers";
-import { GridUtil } from "../util/grid.util";
+import { Board } from "../util/board";
 import { MinimaxSolver } from "../solvers/minimax-solver";
 import { AlphabetaSolver } from "../solvers/alphabeta-solver";
 
@@ -42,7 +42,7 @@ export class BoardComponent implements OnInit {
 
   // AI algorithm
   solver: MinimaxSolver | AlphabetaSolver;
-  gridUtil: GridUtil;
+  board: Board;
   grid: string[];
 
   rowRange = this.rangeHelper(ROWS, false);
@@ -57,12 +57,11 @@ export class BoardComponent implements OnInit {
     }
     this.store.dispatch(new connectActions.NewGameAction({ mode: this.mode }));
     this.grid$.subscribe(({ grid, reset, nextPlayer }) => {
-      this.gridUtil.setGrid(grid);
-      this.grid = grid;
+      this.board = grid;
       this.nextPlayer = nextPlayer;
       if (reset === false && this.nextPlayer === Player.COMPUTER) {
-        const totalHumanPieces = grid.filter(piece => piece === Player.PLAYER1).length;
-        const totalComputerPieces = grid.filter(piece => piece === Player.COMPUTER).length;
+        const totalHumanPieces = grid.numPieces(Player.PLAYER1);
+        const totalComputerPieces = grid.numPieces(Player.COMPUTER);
         if (totalComputerPieces >= totalHumanPieces) {
           console.log(
             "Do not make consecutive computer moves",
@@ -70,7 +69,7 @@ export class BoardComponent implements OnInit {
           );
           return;
         }
-        const { col } = this.solver.bestMove(this.gridUtil.newGrid);
+        const { col } = this.solver.bestMove(this.board.newGrid);
         console.log("dispatch computerMoveAction", col);
         this.store.dispatch(
           new connectActions.ComputerMoveAction({
@@ -85,15 +84,10 @@ export class BoardComponent implements OnInit {
 
   initSolver() {
     this.solver = createSolver();
-    this.gridUtil = new GridUtil();
+    this.board = new Board();
     this.solver.setMinimizePlayer(Player.PLAYER1);
     this.solver.setMaximizePlayer(Player.COMPUTER);
-    const grid: string[] = [];
-    for (let i = 0; i < ROWS * COLUMNS; i++) {
-      grid.push(FREE_CELL);
-    }
-    this.gridUtil.setGrid(grid);
-    this.solver.setGridUtil(this.gridUtil);
+    this.solver.setGridUtil(this.board);
   }
 
   select(column) {
@@ -149,16 +143,22 @@ export class BoardComponent implements OnInit {
   }
 
   isFreeCell(row: number, column: number) {
-    return this.grid[row * COLUMNS + column] === FREE_CELL;
+    return this.board.isFreeCell(row, column);
   }
 
   isSamePlayer(row: number, column: number, player: Player) {
-    return this.grid[row * COLUMNS + column] === player;
+    return this.board.isSamePlayer(row, column, player);
   }
 
   strikeThrough({ direction, sequence, winner }, row: number, column: number, delta: number) {
     const idx = row * COLUMNS + column;
-    if (direction == null || !sequence || !winner || this.grid[idx] !== winner || sequence.indexOf(idx) < 0) {
+    if (
+      direction == null ||
+      !sequence ||
+      !winner ||
+      !this.isSamePlayer(row, column, winner) ||
+      sequence.indexOf(idx) < 0
+    ) {
       return false;
     }
     switch (delta) {

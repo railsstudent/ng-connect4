@@ -1,16 +1,16 @@
 import { GameSolver, DEPTH, heuristicEvaluation } from "./game-solver";
-import { GridUtil } from "../util/grid.util";
+import { Board } from "../util/board";
 import { COLUMNS, Player, INF, Pos } from "../models";
 
 export class MinimaxSolver implements GameSolver {
-  private gridUtil: GridUtil;
+  private gridUtil: Board;
   private maximizePlayer: Player;
   private minimizePlayer: Player;
 
   // Generate a game tree and find the best score of the current move
   minimax(currentMove: Pos, depth: number, maximizingPlayer: boolean): number {
     const newGrid = this.gridUtil.newGrid;
-    this.gridUtil.setGrid(newGrid);
+    this.gridUtil.clone(newGrid);
 
     // terminate state of the game tree: a draw
     if (this.gridUtil.isDraw()) {
@@ -36,7 +36,7 @@ export class MinimaxSolver implements GameSolver {
       bestScore = -INF;
       for (let col = 0; col < COLUMNS; col++) {
         const maxmizeGrid = JSON.parse(JSON.stringify(nextStateGrid));
-        this.gridUtil.setGrid(maxmizeGrid);
+        this.gridUtil.clone(maxmizeGrid);
         // find opposite moves
         if (this.gridUtil.canPlay(col)) {
           const minScore = this.minimax({ row: this.gridUtil.height[col], col }, depth - 1, false);
@@ -49,7 +49,7 @@ export class MinimaxSolver implements GameSolver {
       bestScore = INF;
       for (let col = 0; col < COLUMNS; col++) {
         const minimizeGrid = JSON.parse(JSON.stringify(nextStateGrid));
-        this.gridUtil.setGrid(minimizeGrid);
+        this.gridUtil.clone(minimizeGrid);
         // find opposite moves
         if (this.gridUtil.canPlay(col)) {
           const maxScore = this.minimax({ row: this.gridUtil.height[col], col }, depth - 1, true);
@@ -67,7 +67,7 @@ export class MinimaxSolver implements GameSolver {
     for (let col = 0; col < COLUMNS; col++) {
       if (this.gridUtil.canPlay(col)) {
         const newGrid = JSON.parse(JSON.stringify(grid));
-        this.gridUtil.setGrid(newGrid);
+        this.gridUtil.clone(newGrid);
         const currentMove = { row: this.gridUtil.height[col], col };
         const score = this.minimax(currentMove, DEPTH, true);
         if (score > bestScore) {
@@ -84,7 +84,7 @@ export class MinimaxSolver implements GameSolver {
     let bestScore = -INF;
     for (let col = 0; col < COLUMNS; col++) {
       const newGrid = JSON.parse(JSON.stringify(grid));
-      this.gridUtil.setGrid(newGrid);
+      this.gridUtil.clone(newGrid);
       if (this.gridUtil.canPlay(col)) {
         const currentMove = { row: this.gridUtil.height[col], col };
         const score = this.minimax(currentMove, DEPTH, true);
@@ -99,7 +99,7 @@ export class MinimaxSolver implements GameSolver {
     return bestMove;
   }
 
-  setGridUtil(gridUtil: GridUtil) {
+  setGridUtil(gridUtil: Board) {
     this.gridUtil = gridUtil;
   }
 

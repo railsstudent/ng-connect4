@@ -1,11 +1,11 @@
 import { ConnectActionTypes, ConnectActions } from "./connect.actions";
-import { Player, Outcome, ROWS, COLUMNS, FREE_CELL, Mode, Direction } from "../models";
-import { GridUtil } from "../util/grid.util";
+import { Player, Outcome, COLUMNS, Mode, Direction } from "../models";
+import { Board } from "../util/board";
 import { createSelector, createFeatureSelector } from "@ngrx/store";
 import "es6-object-assign";
 
 export interface ConnectState {
-  grid: string[];
+  grid: Board;
   nextPlayer: Player;
   outcome: Outcome;
   winningSequence: number[];
@@ -14,14 +14,6 @@ export interface ConnectState {
   columnAvailable: boolean[];
   mode: Mode;
 }
-
-const initBoard = () => {
-  const grid = [];
-  for (let i = 0; i < ROWS * COLUMNS; i++) {
-    grid.push(FREE_CELL);
-  }
-  return grid;
-};
 
 const initColumns = () => {
   const columns = [];
@@ -32,7 +24,7 @@ const initColumns = () => {
 };
 
 export const initialState: ConnectState = {
-  grid: initBoard(),
+  grid: new Board(),
   nextPlayer: Player.PLAYER1,
   outcome: Outcome.DEFAULT,
   winningSequence: null,
@@ -42,13 +34,14 @@ export const initialState: ConnectState = {
   mode: Mode.UNKNOWN
 };
 
-const nextAction = (state: ConnectState, action, gridUtil: GridUtil): ConnectState => {
+const nextAction = (state: ConnectState, action): ConnectState => {
   const { mode = Mode.UNKNOWN, player, column } = action.payload;
-  gridUtil.setGrid(state.grid);
-  gridUtil.play(column, player);
-  const winning = gridUtil.isWinningMove(column, player);
+  const board = new Board();
+  board.clone(state.grid.newGrid);
+  board.play(column, player);
+  const winning = board.isWinningMove(column, player);
   const { win, direction, sequence: winningSequence } = winning;
-  const draw = gridUtil.isDraw();
+  const draw = board.isDraw();
   let outcome = Outcome.DEFAULT;
   if (player === Player.PLAYER1 && win === true) {
     outcome = Outcome.PLAYER1_WINS;
@@ -73,11 +66,11 @@ const nextAction = (state: ConnectState, action, gridUtil: GridUtil): ConnectSta
     }
   } else {
     for (let i = 0; i < COLUMNS; i++) {
-      columnAvailable.push(gridUtil.canPlay(i));
+      columnAvailable.push(board.canPlay(i));
     }
   }
   return {
-    grid: gridUtil.newGrid,
+    grid: board,
     nextPlayer,
     outcome,
     winningSequence,
@@ -89,13 +82,11 @@ const nextAction = (state: ConnectState, action, gridUtil: GridUtil): ConnectSta
 };
 
 export function connectReducer(state = initialState, action: ConnectActions): ConnectState {
-  const gridUtil = new GridUtil();
-
   switch (action.type) {
     case ConnectActionTypes.Player1Move:
     case ConnectActionTypes.Player2Move:
     case ConnectActionTypes.ComputerMove:
-      return nextAction(state, action, gridUtil);
+      return nextAction(state, action);
     case ConnectActionTypes.NewGame:
       const { mode } = action.payload;
       return Object.assign({}, initialState, { mode });
@@ -116,7 +107,7 @@ export const selectGrid = createSelector(selectConnect, (state: ConnectState) =>
 export const selectNextPlayer = createSelector(selectConnect, (state: ConnectState) => ({
   nextPlayer: state.nextPlayer
 }));
-export const selectMovesLeft = createSelector(selectGrid, ({ grid }) => grid.filter(g => g === FREE_CELL).length);
+export const selectMovesLeft = createSelector(selectGrid, ({ grid }) => grid.remainingMoves);
 export const selectOutcome = createSelector(selectConnect, (state: ConnectState) => state.outcome);
 export const selectColumnAvailable = createSelector(selectConnect, (state: ConnectState) => state.columnAvailable);
 export const selectResetGame = createSelector(selectConnect, (state: ConnectState) => state.reset);

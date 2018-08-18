@@ -1,17 +1,12 @@
-import { GridUtil } from "./grid.util";
+import { Board } from "./board";
 import { ROWS, COLUMNS, FREE_CELL, Player, Direction } from "../models";
 
 describe("GridUtil", () => {
-  const gridUtil = new GridUtil();
-  let grid = [];
+  let gridUtil: Board;
 
   describe("canPlay returns true for all columns in a new grid", () => {
     beforeAll(() => {
-      grid = [];
-      for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL);
-      }
-      gridUtil.setGrid(grid);
+      gridUtil = new Board();
     });
 
     it("all columns can play when grid is empty", () => {
@@ -32,10 +27,15 @@ describe("GridUtil", () => {
   });
 
   describe("canPlay returns true if the column has vacant cell", () => {
-    beforeAll(() => {
+    beforeEach(() => {
+      gridUtil = new Board();
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [0, 5, 8, 10, 19, 22, 24, 33, 36].forEach(i => (grid[i] = Player.PLAYER2));
       [1, 3, 4, 12, 15, 17, 26, 29].forEach(i => (grid[i] = Player.PLAYER1));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
     });
 
     it("columns can play", () => {
@@ -68,11 +68,7 @@ describe("GridUtil", () => {
 
   describe("play updates column height and grid cell with player's piece", () => {
     beforeEach(() => {
-      grid = [];
-      for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL);
-      }
-      gridUtil.setGrid(grid);
+      gridUtil = new Board();
     });
 
     it("Add a single piece to grid", () => {
@@ -128,11 +124,7 @@ describe("GridUtil", () => {
 
   describe("play updates column height and grid cell with player's piece", () => {
     beforeEach(() => {
-      grid = [];
-      for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL);
-      }
-      gridUtil.setGrid(grid);
+      gridUtil = new Board();
     });
 
     it("Add a single piece to grid", () => {
@@ -188,11 +180,7 @@ describe("GridUtil", () => {
 
   describe("isWinningMove return true if 4 pieces are connected together vertically", () => {
     beforeEach(() => {
-      grid = [];
-      for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL);
-      }
-      gridUtil.setGrid(grid);
+      gridUtil = new Board();
     });
 
     it("return true if it is vertically connected", () => {
@@ -246,17 +234,17 @@ describe("GridUtil", () => {
 
   describe("isWinningMove return true if 4 pieces are connected together horizontally", () => {
     beforeEach(() => {
-      grid = [];
-      for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL);
-      }
-      gridUtil.setGrid(grid);
+      gridUtil = new Board();
     });
 
     it("return true if it is horizontally connected and the winning piece is the second one of the connected 4", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [0, 2, 4, 5, 11].forEach(i => (grid[i] = Player.PLAYER1));
       [1, 3, 7, 8, 10, 9].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(2, Player.PLAYER2)).toEqual({
         win: true,
         direction: Direction.HORIZONTAL,
@@ -265,9 +253,13 @@ describe("GridUtil", () => {
     });
 
     it("return true if it is horizontally connected and the winning piece is the third one of the connected 4", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [1, 3, 5, 6, 13, 20].forEach(i => (grid[i] = Player.PLAYER1));
       [2, 4, 8, 9, 11, 10].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(3, Player.PLAYER2)).toEqual({
         win: true,
         direction: Direction.HORIZONTAL,
@@ -276,9 +268,13 @@ describe("GridUtil", () => {
     });
 
     it("return true if it is horizontally connected and the winning piece is the last one of the connected 4", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [3, 5, 10, 11, 12, 13].forEach(i => (grid[i] = Player.PLAYER1));
       [4, 6, 17, 18, 19].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(6, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.HORIZONTAL,
@@ -287,9 +283,13 @@ describe("GridUtil", () => {
     });
 
     it("return true if it is horizontally connected and the winning piece is the first one of the connected 4", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [1, 3, 4, 5, 12, 19].forEach(i => (grid[i] = Player.PLAYER1));
       [2, 6, 9, 10, 11, 8].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(1, Player.PLAYER2)).toEqual({
         win: true,
         direction: Direction.HORIZONTAL,
@@ -298,9 +298,13 @@ describe("GridUtil", () => {
     });
 
     it("return true if it is horizontally connected and it is actually connect 5", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [1, 3, 4, 5, 15, 19, 22].forEach(i => (grid[i] = Player.PLAYER1));
       [2, 8, 9, 11, 12, 18, 10].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(3, Player.PLAYER2)).toEqual({
         win: true,
         direction: Direction.HORIZONTAL,
@@ -311,17 +315,17 @@ describe("GridUtil", () => {
 
   describe("isWinningMove return true if 4 pieces are connected left diagonally", () => {
     beforeEach(() => {
-      grid = [];
-      for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL);
-      }
-      gridUtil.setGrid(grid);
+      gridUtil = new Board();
     });
 
     it("return true and the winning piece is the second one of the connected 4", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [0, 1, 2, 9, 14, 15, 17, 29].forEach(i => (grid[i] = Player.PLAYER1));
       [3, 7, 8, 10, 21, 22, 28, 16].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(2, Player.PLAYER2)).toEqual({
         win: true,
         direction: Direction.LEFT_DIAG,
@@ -330,9 +334,13 @@ describe("GridUtil", () => {
     });
 
     it("return true if it is left-diagonally connected and the winning piece is the third one of the connected 4", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [1, 2, 9, 11, 15, 17, 29, 23].forEach(i => (grid[i] = Player.PLAYER1));
       [3, 4, 5, 8, 10, 16, 22].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(2, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.LEFT_DIAG,
@@ -341,9 +349,13 @@ describe("GridUtil", () => {
     });
 
     it("return true if it is left-diagonally connected and the winning piece is the last one of the connected 4", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [0, 1, 3, 4, 8, 14, 17, 23, 29, 35].forEach(i => (grid[i] = Player.PLAYER1));
       [2, 7, 9, 10, 15, 16, 21, 22, 28].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(0, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.LEFT_DIAG,
@@ -352,9 +364,13 @@ describe("GridUtil", () => {
     });
 
     it("return true if it is left-diagonally connected and the winning piece is the first one of the connected 4", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [2, 4, 8, 9, 10, 22, 24, 30, 36, 18].forEach(i => (grid[i] = Player.PLAYER1));
       [1, 3, 5, 11, 15, 16, 17, 23, 29].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(4, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.LEFT_DIAG,
@@ -365,17 +381,17 @@ describe("GridUtil", () => {
 
   describe("isWinningMove return true if 4 pieces are connected right diagonally", () => {
     beforeEach(() => {
-      grid = [];
-      for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL);
-      }
-      gridUtil.setGrid(grid);
+      gridUtil = new Board();
     });
 
     it("return true and the winning piece is the second one of the connected 4", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [2, 6, 9, 11, 12, 16, 17, 26, 33, 25].forEach(i => (grid[i] = Player.PLAYER1));
       [1, 3, 4, 5, 8, 10, 18, 19, 23].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(4, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.RIGHT_DIAG,
@@ -384,9 +400,13 @@ describe("GridUtil", () => {
     });
 
     it("return true and the winning piece is the third one of the connected 4", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [0, 2, 3, 7, 10, 11, 14, 15, 18, 31].forEach(i => (grid[i] = Player.PLAYER1));
       [1, 4, 8, 9, 17, 21, 24, 25, 32, 16].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(2, Player.PLAYER2)).toEqual({
         win: true,
         direction: Direction.RIGHT_DIAG,
@@ -395,9 +415,13 @@ describe("GridUtil", () => {
     });
 
     it("return true and the winning piece is the last one of the connected 4", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [0, 4, 5, 8, 9, 16, 23, 24, 31, 32, 39, 15].forEach(i => (grid[i] = Player.PLAYER1));
       [1, 2, 3, 10, 11, 12, 17, 18, 19, 25, 30].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(1, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.RIGHT_DIAG,
@@ -406,9 +430,13 @@ describe("GridUtil", () => {
     });
 
     it("return true and the winning piece is the first one of the connected 4", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [2, 5, 10, 18, 19, 26].forEach(i => (grid[i] = Player.PLAYER1));
       [3, 4, 6, 11, 12].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(5, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.RIGHT_DIAG,
@@ -419,17 +447,17 @@ describe("GridUtil", () => {
 
   describe("isWinningMove return false if the game is not won", () => {
     beforeEach(() => {
-      grid = [];
-      for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL);
-      }
-      gridUtil.setGrid(grid);
+      gridUtil = new Board();
     });
 
     it("return false if column is out of range", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [0].forEach(i => (grid[i] = Player.PLAYER1));
       [1].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(-1, Player.PLAYER1)).toEqual({
         win: false,
         direction: null,
@@ -443,9 +471,13 @@ describe("GridUtil", () => {
     });
 
     it("return false if the game is not won", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [0, 2, 3].forEach(i => (grid[i] = Player.PLAYER1));
       [1, 9, 10].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(3, Player.PLAYER1)).toEqual({
         win: false,
         direction: null,
@@ -454,13 +486,17 @@ describe("GridUtil", () => {
     });
 
     it("return false if the game is a draw", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [0, 2, 3, 5, 6, 10, 11, 15, 19, 20, 22, 25, 27, 28, 29, 30, 32, 33, 37, 38, 41].forEach(
         i => (grid[i] = Player.PLAYER1)
       );
       [1, 4, 7, 8, 9, 12, 13, 14, 16, 17, 18, 21, 23, 24, 26, 31, 34, 36, 39, 40].forEach(
         i => (grid[i] = Player.PLAYER2)
       );
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isWinningMove(0, Player.PLAYER2)).toEqual({
         win: false,
         direction: null,
@@ -471,29 +507,95 @@ describe("GridUtil", () => {
 
   describe("isDraw returns true if the game is tied", () => {
     beforeEach(() => {
-      grid = [];
-      for (let i = 0; i < ROWS * COLUMNS; i++) {
-        grid.push(FREE_CELL);
-      }
-      gridUtil.setGrid(grid);
+      gridUtil = new Board();
     });
 
     it("return true if the game is a draw", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [0, 2, 3, 5, 6, 10, 11, 15, 19, 20, 22, 25, 27, 28, 29, 30, 32, 33, 37, 38, 41].forEach(
         i => (grid[i] = Player.PLAYER1)
       );
       [1, 4, 7, 8, 9, 12, 13, 14, 16, 17, 18, 21, 23, 24, 26, 31, 34, 36, 39, 40, 35].forEach(
         i => (grid[i] = Player.PLAYER2)
       );
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isDraw()).toBe(true);
     });
 
     it("return false if the game is not a draw", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
       [0, 2, 3].forEach(i => (grid[i] = Player.PLAYER1));
       [1, 9, 10].forEach(i => (grid[i] = Player.PLAYER2));
-      gridUtil.setGrid(grid);
+      gridUtil.clone(grid);
       expect(gridUtil.isDraw()).toBe(false);
+    });
+  });
+
+  describe("isFreeCell", () => {
+    beforeEach(() => {
+      gridUtil = new Board();
+    });
+
+    it("return true if the grid is a FREE_CELL", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
+      [0, 2, 3, 17].forEach(i => (grid[i] = Player.PLAYER1));
+      [1, 9, 10].forEach(i => (grid[i] = Player.PLAYER2));
+      gridUtil.clone(grid);
+
+      expect(gridUtil.isFreeCell(1, 4)).toBe(true);
+      expect(gridUtil.isFreeCell(2, 3)).toBe(false);
+      expect(gridUtil.isFreeCell(1, 2)).toBe(false);
+    });
+  });
+
+  describe("isSamePlayer", () => {
+    beforeEach(() => {
+      gridUtil = new Board();
+    });
+
+    it("return true if the grid is a FREE_CELL", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
+      [0, 2, 3, 17].forEach(i => (grid[i] = Player.PLAYER1));
+      [1, 9, 10].forEach(i => (grid[i] = Player.PLAYER2));
+      gridUtil.clone(grid);
+
+      expect(gridUtil.isSamePlayer(1, 4, Player.PLAYER1)).toBe(false);
+      expect(gridUtil.isSamePlayer(2, 3, Player.PLAYER1)).toBe(true);
+      expect(gridUtil.isSamePlayer(1, 2, Player.PLAYER2)).toBe(true);
+      expect(gridUtil.isSamePlayer(2, 3, Player.PLAYER2)).toBe(false);
+      expect(gridUtil.isSamePlayer(1, 2, Player.PLAYER1)).toBe(false);
+    });
+  });
+
+  describe("numPieces", () => {
+    beforeEach(() => {
+      gridUtil = new Board();
+    });
+
+    it("return true if the grid is a FREE_CELL", () => {
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
+      [0, 2, 3, 17].forEach(i => (grid[i] = Player.PLAYER1));
+      [1, 9, 10].forEach(i => (grid[i] = Player.PLAYER2));
+      gridUtil.clone(grid);
+
+      expect(gridUtil.numPieces(Player.PLAYER1)).toBe(4);
+      expect(gridUtil.numPieces(Player.PLAYER2)).toBe(3);
+      expect(gridUtil.numPieces(Player.COMPUTER)).toBe(0);
     });
   });
 });
