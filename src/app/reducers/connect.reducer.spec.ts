@@ -19,6 +19,14 @@ import * as connectActions from "./connect.actions";
 let grid: string[] = [];
 let board: Board;
 
+const initColumnsAvailable = (len, flag) => {
+  const values = [];
+  for (let i = 0; i < len; i++) {
+    values.push(flag);
+  }
+  return values;
+};
+
 describe("Connect Reducer", () => {
   describe("unknown action", () => {
     it("should return the initial state", () => {
@@ -44,7 +52,7 @@ describe("Connect Reducer", () => {
           winningSequence: [1, 8, 15, 22],
           direction: Direction.VERTICAL,
           reset: true,
-          columnAvailable: [false, false, false, false, false, false, false],
+          columnAvailable: initColumnsAvailable(COLUMNS, false),
           mode: Mode.HUMAN_VS_HUMAN
         },
         action
@@ -75,7 +83,7 @@ describe("Connect Reducer", () => {
         winningSequence: null,
         direction: null,
         reset: false,
-        columnAvailable: [true, true, true, true, true, true, true],
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_HUMAN
       };
       const action = new connectActions.PlayerOneMoveAction({
@@ -101,7 +109,7 @@ describe("Connect Reducer", () => {
       expect(state.nextPlayer).toEqual(Player.PLAYER2);
       expect(state.winningSequence).toEqual(null);
       expect(state.direction).toEqual(null);
-      expect(state.columnAvailable).toEqual([true, true, true, true, true, true, true]);
+      expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, true));
       expect(state.mode).toEqual(Mode.HUMAN_VS_HUMAN);
     });
 
@@ -121,7 +129,7 @@ describe("Connect Reducer", () => {
         reset: false,
         winningSequence: null,
         direction: null,
-        columnAvailable: [true, true, true, true, true, true, true],
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER
       };
       const action = new connectActions.PlayerOneMoveAction({
@@ -151,7 +159,12 @@ describe("Connect Reducer", () => {
       expect(state.nextPlayer).toEqual(Player.COMPUTER);
       expect(state.winningSequence).toEqual(null);
       expect(state.direction).toEqual(null);
-      expect(state.columnAvailable).toEqual([false, false, false, false, false, false, false]);
+      const expected = [];
+      expected.push(false);
+      for (let i = 1; i < COLUMNS; i++) {
+        expected.push(true);
+      }
+      expect(state.columnAvailable).toEqual(expected);
       expect(state.mode).toEqual(Mode.HUMAN_VS_COMPUTER);
     });
 
@@ -175,7 +188,7 @@ describe("Connect Reducer", () => {
         winningSequence: null,
         direction: null,
         reset: false,
-        columnAvailable: [true, true, true, true, true, true, true],
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER
       };
       const action = new connectActions.PlayerOneMoveAction({
@@ -209,7 +222,7 @@ describe("Connect Reducer", () => {
       expect(state.nextPlayer).toEqual(Player.COMPUTER);
       expect(state.winningSequence).toEqual([2, 10, 18, 26]);
       expect(state.direction).toEqual(Direction.RIGHT_DIAG);
-      expect(state.columnAvailable).toEqual([false, false, false, false, false, false, false]);
+      expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, false));
       expect(state.mode).toEqual(Mode.HUMAN_VS_COMPUTER);
     });
   });
@@ -236,7 +249,7 @@ describe("Connect Reducer", () => {
         winningSequence: null,
         direction: null,
         reset: false,
-        columnAvailable: [true, true, true, true, true, true, true],
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_HUMAN
       };
       const action = new connectActions.PlayerTwoMoveAction({
@@ -262,7 +275,7 @@ describe("Connect Reducer", () => {
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
       expect(state.winningSequence).toEqual(null);
       expect(state.direction).toEqual(null);
-      expect(state.columnAvailable).toEqual([true, true, true, true, true, true, true]);
+      expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, true));
       expect(state.mode).toEqual(Mode.HUMAN_VS_HUMAN);
     });
 
@@ -283,7 +296,7 @@ describe("Connect Reducer", () => {
         winningSequence: null,
         direction: null,
         reset: false,
-        columnAvailable: [true, true, true, true, true, true, true],
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_HUMAN
       };
       const action = new connectActions.PlayerTwoMoveAction({
@@ -313,7 +326,9 @@ describe("Connect Reducer", () => {
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
       expect(state.winningSequence).toEqual(null);
       expect(state.direction).toEqual(null);
-      expect(state.columnAvailable).toEqual([true, false, true, true, true, true, true]);
+      const expected = initColumnsAvailable(COLUMNS, true);
+      expected[1] = false;
+      expect(state.columnAvailable).toEqual(expected);
       expect(state.mode).toEqual(Mode.HUMAN_VS_HUMAN);
     });
 
@@ -329,7 +344,7 @@ describe("Connect Reducer", () => {
         winningSequence: null,
         direction: null,
         reset: false,
-        columnAvailable: [true, true, true, true, true, true, true],
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_HUMAN
       };
       const action = new connectActions.PlayerTwoMoveAction({
@@ -353,7 +368,7 @@ describe("Connect Reducer", () => {
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
       expect(state.winningSequence).toEqual([5, 11, 17, 23]);
       expect(state.direction).toEqual(Direction.LEFT_DIAG);
-      expect(state.columnAvailable).toEqual([false, false, false, false, false, false, false]);
+      expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, false));
       expect(state.mode).toEqual(Mode.HUMAN_VS_HUMAN);
     });
 
@@ -373,7 +388,7 @@ describe("Connect Reducer", () => {
         winningSequence: null,
         direction: null,
         reset: false,
-        columnAvailable: [true, true, true, true, true, true, true],
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_HUMAN
       };
       const action = new connectActions.PlayerTwoMoveAction({
@@ -401,7 +416,7 @@ describe("Connect Reducer", () => {
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
       expect(state.winningSequence).toEqual([38, 39, 40, 41]);
       expect(state.direction).toEqual(Direction.HORIZONTAL);
-      expect(state.columnAvailable).toEqual([false, false, false, false, false, false, false]);
+      expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, false));
       expect(state.mode).toEqual(Mode.HUMAN_VS_HUMAN);
     });
 
@@ -421,7 +436,7 @@ describe("Connect Reducer", () => {
         winningSequence: null,
         direction: null,
         reset: false,
-        columnAvailable: [false, true, false, false, false, false, false],
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_HUMAN
       };
       const action = new connectActions.PlayerTwoMoveAction({
@@ -448,7 +463,7 @@ describe("Connect Reducer", () => {
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
       expect(state.winningSequence).toEqual(null);
-      expect(state.columnAvailable).toEqual([false, false, false, false, false, false, false]);
+      expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, false));
       expect(state.mode).toEqual(Mode.HUMAN_VS_HUMAN);
     });
   });
@@ -475,7 +490,7 @@ describe("Connect Reducer", () => {
         winningSequence: null,
         direction: null,
         reset: false,
-        columnAvailable: [true, true, true, true, true, true, true],
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER
       };
       const action = new connectActions.ComputerMoveAction({
@@ -501,7 +516,7 @@ describe("Connect Reducer", () => {
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
       expect(state.winningSequence).toEqual(null);
       expect(state.direction).toEqual(null);
-      expect(state.columnAvailable).toEqual([true, true, true, true, true, true, true]);
+      expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, true));
       expect(state.mode).toEqual(Mode.HUMAN_VS_COMPUTER);
     });
 
@@ -522,7 +537,7 @@ describe("Connect Reducer", () => {
         winningSequence: null,
         direction: null,
         reset: false,
-        columnAvailable: [true, true, true, true, true, true, true],
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER
       };
       const action = new connectActions.ComputerMoveAction({
@@ -552,7 +567,10 @@ describe("Connect Reducer", () => {
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
       expect(state.winningSequence).toEqual(null);
       expect(state.direction).toEqual(null);
-      expect(state.columnAvailable).toEqual([true, false, true, true, true, true, true]);
+
+      const expected = initColumnsAvailable(COLUMNS, true);
+      expected[1] = false;
+      expect(state.columnAvailable).toEqual(expected);
       expect(state.mode).toEqual(Mode.HUMAN_VS_COMPUTER);
     });
 
@@ -568,7 +586,7 @@ describe("Connect Reducer", () => {
         winningSequence: null,
         direction: null,
         reset: false,
-        columnAvailable: [true, true, true, true, true, true, true],
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER
       };
       const action = new connectActions.ComputerMoveAction({
@@ -593,7 +611,7 @@ describe("Connect Reducer", () => {
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
       expect(state.winningSequence).toEqual([5, 11, 17, 23]);
       expect(state.direction).toEqual(Direction.LEFT_DIAG);
-      expect(state.columnAvailable).toEqual([false, false, false, false, false, false, false]);
+      expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, false));
       expect(state.mode).toEqual(Mode.HUMAN_VS_COMPUTER);
     });
 
@@ -613,7 +631,7 @@ describe("Connect Reducer", () => {
         winningSequence: null,
         direction: null,
         reset: false,
-        columnAvailable: [true, true, true, true, true, true, true],
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER
       };
       const action = new connectActions.ComputerMoveAction({
@@ -641,7 +659,7 @@ describe("Connect Reducer", () => {
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
       expect(state.winningSequence).toEqual([38, 39, 40, 41]);
       expect(state.direction).toEqual(Direction.HORIZONTAL);
-      expect(state.columnAvailable).toEqual([false, false, false, false, false, false, false]);
+      expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, false));
       expect(state.mode).toEqual(Mode.HUMAN_VS_COMPUTER);
     });
 
@@ -661,7 +679,7 @@ describe("Connect Reducer", () => {
         winningSequence: null,
         direction: null,
         reset: false,
-        columnAvailable: [false, true, false, false, false, false, false],
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER
       };
       const action = new connectActions.ComputerMoveAction({
@@ -689,7 +707,7 @@ describe("Connect Reducer", () => {
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
       expect(state.winningSequence).toEqual(null);
       expect(state.direction).toEqual(null);
-      expect(state.columnAvailable).toEqual([false, false, false, false, false, false, false]);
+      expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, false));
       expect(state.mode).toEqual(Mode.HUMAN_VS_COMPUTER);
     });
   });
@@ -718,7 +736,7 @@ describe("Connect Reducer", () => {
         winningSequence: [0, 7, 14, 21],
         direction: Direction.VERTICAL,
         reset: false,
-        columnAvailable: [false, true, true, true, false, true],
+        columnAvailable: [false, true, true, true, false, true, false],
         mode: Mode.HUMAN_VS_HUMAN
       };
     });
@@ -735,7 +753,7 @@ describe("Connect Reducer", () => {
 
     it("selectColumnAvailable should return column full status", () => {
       const result = selectColumnAvailable.projector(connectState);
-      const expected = [false, true, true, true, false, true];
+      const expected = [false, true, true, true, false, true, false];
       result.forEach((p, i) => {
         expect(p).toBe(expected[i]);
       });

@@ -68,14 +68,16 @@ export class BoardComponent implements OnInit {
           );
           return;
         }
-        const col = this.solver.bestMove(this.board);
-        console.log("dispatch computerMoveAction", col);
-        this.store.dispatch(
-          new connectActions.ComputerMoveAction({
-            player: this.nextPlayer,
-            column: col
-          })
-        );
+        setTimeout(() => {
+          const col = this.solver.bestMove(this.board);
+          console.log("dispatch computerMoveAction", col);
+          this.store.dispatch(
+            new connectActions.ComputerMoveAction({
+              player: this.nextPlayer,
+              column: col
+            })
+          );
+        }, 1);
       }
     });
     this.columnAvailable$.subscribe(columnsAvailable => (this.columnsAvailable = columnsAvailable));

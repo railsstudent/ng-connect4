@@ -60,7 +60,7 @@ const nextAction = (state: ConnectState, action): ConnectState => {
     nextPlayer = Player.PLAYER1;
   }
   const columnAvailable = [];
-  if (nextPlayer === Player.COMPUTER || reset === true) {
+  if (reset === true) {
     for (let i = 0; i < COLUMNS; i++) {
       columnAvailable.push(false);
     }
