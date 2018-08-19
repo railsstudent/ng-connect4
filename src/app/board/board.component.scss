@@ -112,12 +112,13 @@ $hover-color: goldenrod;
             padding: 0 8%;
 
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
         &-row {
+            width: 100%;
             flex: 1 1 auto;
             background: black;
 
