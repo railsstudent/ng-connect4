@@ -120,6 +120,18 @@ Production build
 
 The build artifacts will be stored in the `dist/ng-connect4` directory.
 
+## Run production build locally
+
+ ```javascript
+    # with npm
+    npm run start:prod
+
+    # or with yarn
+    yarn start:prod
+```
+
+Navigate to `http://localhost:8000/`.
+
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
