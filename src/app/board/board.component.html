@@ -19,10 +19,8 @@
     <div class="grid-row" *ngFor="let i of rowRange">
       <ng-container *ngFor="let j of columnRange">
         <div class="grid-cell">
-          <div class="grid-circle"
-            [ngClass]="{'free-cell': isFreeCell(i,j), player1: isSamePlayer(i, j, _Player.PLAYER1),
-              player2: isSamePlayer(i, j, _Player.PLAYER2), computer: isSamePlayer(i, j, _Player.COMPUTER) }">
-            <ng-container *ngIf="(winningSequence$ | async); let ws">
+          <div class="grid-circle free-cell" #circles>
+              <ng-container *ngIf="(winningSequence$ | async); let ws">
               <div *ngIf="ws.winner && isSamePlayer(i, j, ws.winner) && strikeThrough(ws, i, j, 1)"
                 class="line"
                 [ngClass]="{ player1: isSamePlayer(i, j, _Player.PLAYER1),

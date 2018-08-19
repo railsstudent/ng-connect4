@@ -11,9 +11,7 @@ export const reducers: ActionReducerMap<AppState> = {
   connect: connectReducer
 };
 
-export function debug(
-  reducer: ActionReducer<AppState>
-): ActionReducer<AppState> {
+export function debug(reducer: ActionReducer<AppState>): ActionReducer<AppState> {
   return function(state, action) {
     console.log("state", state);
     console.log("action", action);
@@ -22,9 +20,7 @@ export function debug(
   };
 }
 
-export const metaReducers: MetaReducer<AppState>[] = !environment.production
-  ? [debug]
-  : [];
+export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [debug] : [];
 
 export {
   selectConnect,
@@ -35,5 +31,6 @@ export {
   selectOutcome,
   selectResetGame,
   selectWinningSequence,
-  selectMode
+  selectMode,
+  selectLastMove
 } from "./connect.reducer";

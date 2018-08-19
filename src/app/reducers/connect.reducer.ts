@@ -1,5 +1,5 @@
 import { ConnectActionTypes, ConnectActions } from "./connect.actions";
-import { Player, Outcome, COLUMNS, Mode, Direction } from "../models";
+import { Player, Outcome, COLUMNS, Mode, Direction, Pos, ROWS } from "../models";
 import { Board } from "../util/board";
 import { createSelector, createFeatureSelector } from "@ngrx/store";
 import "es6-object-assign";
@@ -13,12 +13,13 @@ export interface ConnectState {
   reset: boolean;
   columnAvailable: boolean[];
   mode: Mode;
+  lastMove: Pos;
 }
 
-const initColumns = () => {
+const initColumns = (value: boolean) => {
   const columns = [];
   for (let i = 0; i < COLUMNS; i++) {
-    columns.push(true);
+    columns.push(value);
   }
   return columns;
 };
@@ -30,8 +31,9 @@ export const initialState: ConnectState = {
   winningSequence: null,
   direction: null,
   reset: false,
-  columnAvailable: initColumns(),
-  mode: Mode.UNKNOWN
+  columnAvailable: initColumns(true),
+  mode: Mode.UNKNOWN,
+  lastMove: null
 };
 
 const nextAction = (state: ConnectState, action): ConnectState => {
@@ -59,16 +61,18 @@ const nextAction = (state: ConnectState, action): ConnectState => {
   } else if (player === Player.PLAYER2 || player === Player.COMPUTER) {
     nextPlayer = Player.PLAYER1;
   }
-  const columnAvailable = [];
+  let columnAvailable = [];
   if (reset === true) {
-    for (let i = 0; i < COLUMNS; i++) {
-      columnAvailable.push(false);
-    }
+    columnAvailable = initColumns(false);
   } else {
     for (let i = 0; i < COLUMNS; i++) {
       columnAvailable.push(board.canPlay(i));
     }
   }
+  const lastMove = {
+    row: board.height[column] - 1,
+    col: column
+  };
   return {
     board,
     nextPlayer,
@@ -77,7 +81,8 @@ const nextAction = (state: ConnectState, action): ConnectState => {
     direction,
     reset,
     columnAvailable,
-    mode: state.mode
+    mode: state.mode,
+    lastMove
   };
 };
 
@@ -131,4 +136,12 @@ export const selectWinningSequence = createSelector(
     };
   }
 );
-export const selectMode = createSelector(selectConnect, (state: ConnectState) => state.mode);
+export const selectMode = createSelector(selectConnect, ({ mode }) => mode);
+export const selectLastMove = createSelector(selectConnect, ({ lastMove }) => {
+  if (lastMove) {
+    const row = ROWS - lastMove.row - 1;
+    const lastMoveIdx = lastMove ? row * COLUMNS + lastMove.col : null;
+    return { lastMove, lastMoveIdx };
+  }
+  return { lastMove: null, lastMoveIdx: null };
+});

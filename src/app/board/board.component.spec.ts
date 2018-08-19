@@ -63,9 +63,7 @@ describe("BoardComponent", () => {
     expect(store.dispatch).toHaveBeenCalledWith(action);
     expect(store.dispatch).toHaveBeenCalledTimes(1);
 
-    component.moveLefts$.subscribe(moveLefts => {
-      expect(moveLefts).toBe(ROWS * COLUMNS);
-    });
+    component.moveLefts$.subscribe(moveLefts => expect(moveLefts).toBe(ROWS * COLUMNS));
   });
 
   it("should update moves left after dispatch action", () => {
@@ -82,9 +80,7 @@ describe("BoardComponent", () => {
         column: 0
       })
     );
-    component.moveLefts$.subscribe(moveLefts => {
-      expect(moveLefts).toBe(ROWS * COLUMNS - 1);
-    });
+    component.moveLefts$.subscribe(moveLefts => expect(moveLefts).toBe(ROWS * COLUMNS - 1));
   });
 
   it("should show all columns are available when game just starts", () => {
@@ -138,6 +134,13 @@ describe("BoardComponent", () => {
       );
 
       component.moveLefts$.subscribe(moveLefts => expect(moveLefts).toBe(ROWS * COLUMNS - 4));
+      component.lastMove$.subscribe(o => {
+        expect(o.lastMove).toEqual({
+          row: 0,
+          col: 2
+        });
+        expect(o.lastMoveIdx).toEqual(37);
+      });
     });
 
     it("should hide column when it is full in human vs human mode", () => {
@@ -184,22 +187,30 @@ describe("BoardComponent", () => {
           winner: null
         })
       );
+
+      component.lastMove$.subscribe(o => {
+        expect(o.lastMove).toEqual({
+          row: 5,
+          col: 0
+        });
+        expect(o.lastMoveIdx).toEqual(0);
+      });
     });
 
     it("should show player 1 wins in human vs human mode", () => {
       expect(component.initSolver).toHaveBeenCalled();
       expect(component.initSolver).toHaveBeenCalledTimes(1);
 
-      const elFirstColumn = getColumnAvailable(0);
-      const elSecondColumn = getColumnAvailable(1);
+      const elFirstColumn = getColumnAvailable(1);
+      const elSecondColumn = getColumnAvailable(2);
 
-      elFirstColumn.triggerEventHandler("click", 0);
-      elSecondColumn.triggerEventHandler("click", 1);
-      elFirstColumn.triggerEventHandler("click", 0);
-      elSecondColumn.triggerEventHandler("click", 1);
-      elFirstColumn.triggerEventHandler("click", 0);
-      elSecondColumn.triggerEventHandler("click", 1);
-      elFirstColumn.triggerEventHandler("click", 0);
+      elFirstColumn.triggerEventHandler("click", 1);
+      elSecondColumn.triggerEventHandler("click", 2);
+      elFirstColumn.triggerEventHandler("click", 1);
+      elSecondColumn.triggerEventHandler("click", 2);
+      elFirstColumn.triggerEventHandler("click", 1);
+      elSecondColumn.triggerEventHandler("click", 2);
+      elFirstColumn.triggerEventHandler("click", 1);
 
       component.moveLefts$.subscribe(movesLeft => expect(movesLeft).toBe(ROWS * COLUMNS - 7));
       component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.PLAYER1_WINS));
@@ -209,13 +220,33 @@ describe("BoardComponent", () => {
           expect(columns[i]).toBe(false);
         }
       });
+
+      component.grid$.subscribe(({ board }) => {
+        expect(board.isSamePlayer(0, 1, Player.PLAYER1)).toBe(true);
+        expect(board.isSamePlayer(1, 1, Player.PLAYER1)).toBe(true);
+        expect(board.isSamePlayer(2, 1, Player.PLAYER1)).toBe(true);
+        expect(board.isSamePlayer(3, 1, Player.PLAYER1)).toBe(true);
+
+        expect(board.isSamePlayer(0, 2, Player.PLAYER2)).toBe(true);
+        expect(board.isSamePlayer(1, 2, Player.PLAYER2)).toBe(true);
+        expect(board.isSamePlayer(2, 2, Player.PLAYER2)).toBe(true);
+      });
+
       component.winningSequence$.subscribe(ws =>
         expect(ws).toEqual({
           direction: Direction.VERTICAL,
-          sequence: [0, 7, 14, 21],
+          sequence: [1, 8, 15, 22],
           winner: Player.PLAYER1
         })
       );
+
+      component.lastMove$.subscribe(o => {
+        expect(o.lastMove).toEqual({
+          row: 3,
+          col: 1
+        });
+        expect(o.lastMoveIdx).toEqual(15);
+      });
     });
 
     it("should show player 2 wins in human vs human mode", () => {
@@ -239,6 +270,19 @@ describe("BoardComponent", () => {
 
       component.moveLefts$.subscribe(movesLeft => expect(movesLeft).toBe(ROWS * COLUMNS - 8));
       component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.PLAYER2_WINS));
+
+      component.grid$.subscribe(({ board }) => {
+        expect(board.isSamePlayer(0, 0, Player.PLAYER1)).toBe(true);
+        expect(board.isSamePlayer(1, 0, Player.PLAYER1)).toBe(true);
+        expect(board.isSamePlayer(1, 1, Player.PLAYER1)).toBe(true);
+        expect(board.isSamePlayer(1, 2, Player.PLAYER1)).toBe(true);
+
+        expect(board.isSamePlayer(0, 1, Player.PLAYER2)).toBe(true);
+        expect(board.isSamePlayer(0, 2, Player.PLAYER2)).toBe(true);
+        expect(board.isSamePlayer(0, 3, Player.PLAYER2)).toBe(true);
+        expect(board.isSamePlayer(0, 4, Player.PLAYER2)).toBe(true);
+      });
+
       component.winningSequence$.subscribe(ws =>
         expect(ws).toEqual({
           direction: Direction.HORIZONTAL,
@@ -251,6 +295,14 @@ describe("BoardComponent", () => {
         for (let i = 0; i < COLUMNS; i++) {
           expect(columns[i]).toBe(false);
         }
+      });
+
+      component.lastMove$.subscribe(o => {
+        expect(o.lastMove).toEqual({
+          row: 0,
+          col: 4
+        });
+        expect(o.lastMoveIdx).toEqual(39);
       });
     });
 
@@ -362,6 +414,14 @@ describe("BoardComponent", () => {
           winner: null
         })
       );
+
+      component.lastMove$.subscribe(o => {
+        expect(o.lastMove).toEqual({
+          row: 5,
+          col: 6
+        });
+        expect(o.lastMoveIdx).toEqual(6);
+      });
     });
   });
 
@@ -438,6 +498,14 @@ describe("BoardComponent", () => {
           winner: null
         })
       );
+
+      component.lastMove$.subscribe(o => {
+        expect(o.lastMove).toEqual({
+          row: 5,
+          col: 0
+        });
+        expect(o.lastMoveIdx).toEqual(0);
+      });
     });
 
     it("should show player 1 wins in human vs computer mode", () => {
@@ -478,6 +546,14 @@ describe("BoardComponent", () => {
           sequence: [0, 7, 14, 21],
           winner: Player.PLAYER1
         });
+      });
+
+      component.lastMove$.subscribe(o => {
+        expect(o.lastMove).toEqual({
+          row: 3,
+          col: 0
+        });
+        expect(o.lastMoveIdx).toEqual(14);
       });
     });
 
@@ -520,6 +596,14 @@ describe("BoardComponent", () => {
           sequence: [1, 2, 3, 4],
           winner: Player.COMPUTER
         });
+      });
+
+      component.lastMove$.subscribe(o => {
+        expect(o.lastMove).toEqual({
+          row: 0,
+          col: 4
+        });
+        expect(o.lastMoveIdx).toEqual(39);
       });
     });
 
@@ -639,6 +723,14 @@ describe("BoardComponent", () => {
           winner: null
         })
       );
+
+      component.lastMove$.subscribe(o => {
+        expect(o.lastMove).toEqual({
+          row: 5,
+          col: 6
+        });
+        expect(o.lastMoveIdx).toEqual(6);
+      });
     });
   });
 });

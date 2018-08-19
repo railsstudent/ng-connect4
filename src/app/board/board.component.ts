@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Renderer2, ElementRef, ViewChildren, QueryList } from "@angular/core";
 import { Store, select } from "@ngrx/store";
 import {
   AppState,
@@ -8,7 +8,8 @@ import {
   selectGrid,
   selectOutcome,
   selectResetGame,
-  selectWinningSequence
+  selectWinningSequence,
+  selectLastMove
 } from "../reducers";
 import * as connectActions from "../reducers/connect.actions";
 import { Player, Mode, ROWS, COLUMNS, Direction } from "../models";
@@ -35,6 +36,7 @@ export class BoardComponent implements OnInit {
   outcome$ = this.store.pipe(select(selectOutcome));
   resetGame$ = this.store.pipe(select(selectResetGame));
   winningSequence$ = this.store.pipe(select(selectWinningSequence));
+  lastMove$ = this.store.pipe(select(selectLastMove));
   nextPlayer: Player;
   columnsAvailable: boolean[];
 
@@ -46,8 +48,12 @@ export class BoardComponent implements OnInit {
   rowRange = this.rangeHelper(ROWS, false);
   columnRange = this.rangeHelper(COLUMNS);
   totalColumns = COLUMNS;
+  computerFlag = false;
 
-  constructor(private store: Store<AppState>) {}
+  @ViewChildren("circles")
+  gridCells: QueryList<ElementRef>;
+
+  constructor(private store: Store<AppState>, private renderer: Renderer2) {}
 
   ngOnInit() {
     this.board = new Board();
@@ -58,29 +64,41 @@ export class BoardComponent implements OnInit {
     this.grid$.subscribe(({ board, reset, nextPlayer }) => {
       this.board = board;
       this.nextPlayer = nextPlayer;
-      if (reset === false && this.nextPlayer === Player.COMPUTER) {
-        const totalHumanPieces = board.numPieces(Player.PLAYER1);
-        const totalComputerPieces = board.numPieces(Player.COMPUTER);
-        if (totalComputerPieces >= totalHumanPieces) {
-          console.log(
-            "Do not make consecutive computer moves",
-            `human: ${totalHumanPieces}, computer: ${totalComputerPieces}`
-          );
-          return;
-        }
+      if (reset === false && this.nextPlayer === Player.COMPUTER && this.computerFlag === true) {
+        this.computerFlag = false;
         setTimeout(() => {
-          const col = this.solver.bestMove(this.board);
-          console.log("dispatch computerMoveAction", col);
-          this.store.dispatch(
-            new connectActions.ComputerMoveAction({
-              player: this.nextPlayer,
-              column: col
-            })
-          );
+          if (this.nextPlayer === Player.COMPUTER) {
+            const col = this.solver.bestMove(this.board);
+            this.store.dispatch(
+              new connectActions.ComputerMoveAction({
+                player: this.nextPlayer,
+                column: col
+              })
+            );
+          }
         }, 1);
       }
     });
     this.columnAvailable$.subscribe(columnsAvailable => (this.columnsAvailable = columnsAvailable));
+    this.lastMove$.subscribe(({ lastMove, lastMoveIdx }) => {
+      if (lastMove && this.gridCells) {
+        const { row, col } = lastMove;
+        const el = this.gridCells.toArray()[lastMoveIdx];
+        if (!el) {
+          return;
+        }
+        if (this.isSamePlayer(row, col, Player.PLAYER1)) {
+          this.renderer.removeClass(el.nativeElement, "free-cell");
+          this.renderer.addClass(el.nativeElement, "player1");
+        } else if (this.isSamePlayer(row, col, Player.PLAYER2)) {
+          this.renderer.removeClass(el.nativeElement, "free-cell");
+          this.renderer.addClass(el.nativeElement, "player2");
+        } else if (this.isSamePlayer(row, col, Player.COMPUTER)) {
+          this.renderer.removeClass(el.nativeElement, "free-cell");
+          this.renderer.addClass(el.nativeElement, "computer");
+        }
+      }
+    });
   }
 
   initSolver() {
@@ -94,6 +112,7 @@ export class BoardComponent implements OnInit {
       return;
     }
     if (this.nextPlayer === Player.PLAYER1) {
+      this.computerFlag = true;
       this.store.dispatch(
         new connectActions.PlayerOneMoveAction({
           mode: this.mode,
@@ -113,6 +132,14 @@ export class BoardComponent implements OnInit {
 
   clearState() {
     this.store.dispatch(new connectActions.NewGameAction({ mode: this.mode }));
+    if (this.gridCells) {
+      const gridCellsArray = this.gridCells.toArray();
+      gridCellsArray.forEach(g => {
+        if (g && g.nativeElement) {
+          this.renderer.setAttribute(g.nativeElement, "class", "grid-circle free-cell");
+        }
+      });
+    }
   }
 
   backToMode() {
@@ -139,10 +166,6 @@ export class BoardComponent implements OnInit {
       }
     }
     return arr;
-  }
-
-  isFreeCell(row: number, column: number) {
-    return this.board.isFreeCell(row, column);
   }
 
   isSamePlayer(row: number, column: number, player: Player) {
