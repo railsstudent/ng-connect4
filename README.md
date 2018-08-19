@@ -140,7 +140,12 @@ Run `ng e2e --port=4201` to execute the end-to-end tests in port 4201 via [Protr
 
 ## Swap different AI strategy
 1. Create new solver that implements `GameSolver` interface in `solvers/` folder
-2. Open `src/environments` folder to edit `environment.ts` and `environment.prod.ts` files
+2. Open `solvers/index.ts` and append new type to `SolverType`
+   ``` javascript
+    export type SolverType = AlphabetaSolver | MinimaxSolver | OtherSolver;
+
+   ```
+3. Open `src/environments` folder to edit `environment.ts` and `environment.prod.ts` files
     - Replace the value of solver property to a meaningful name
     ```javascript
     export const environment = {
@@ -149,14 +154,12 @@ Run `ng e2e --port=4201` to execute the end-to-end tests in port 4201 via [Protr
         ...
     };
     ```
-
-3. Update createSolver function in `solvers/index.ts` file. Add a new else-if clause to create the new solver (return new OtherSolver() in our example).
-
+4. Update createSolver function in `solvers/index.ts` file. Add a new else-if clause to create the new solver (return new OtherSolver() in our example).
     ```javascript
     export const createSolver = () => {
         if (environment.solver === 'xxxx') {
             return new DefaultSolver();
-        } else if (environment.silver === 'other solver') {
+        } else if (environment.solver === 'other solver') {
             return new OtherSolver();
         }
         return new DefaultSolver();
@@ -178,10 +181,11 @@ Run `ng e2e --port=4201` to execute the end-to-end tests in port 4201 via [Protr
 1. Netlify auto-deploy from Github to production site when new code is pushed to master branch in remote repository.
 
 # Area of Improvements
-1. The alpha beta pruning code is buggy and human player always wins the game.  I debugged the code for many days but any attempt to fix the algorithm resulted to failure.
-2. The name of players are hard-coded to 'Player 1', 'Player 2' and 'Computer', they can be customized if more effort is spent.
-3. Add a ranking table to list the top results of human players and computer. The collected data can be analysed to measure the performance of the AI search strategy and how tough to defeat the computer.
-4. The game can be further enhanced to play in different devices instead of the same device.  One way to do so is to set up a websocket server that sends messages to update NGRX store. When observable receives the new updates, they can notify Angular components to render their templates
+1. The alphabeta pruning search is slow when depth is increased to 4 and it is not nearly perfect and human player can win close to 50% of the time.
+2. There may be race condition in human vs computer game where computer makes two consecutive moves and the game stalls. If user refreshes browser to restart the game, the bug goes away.
+3. The name of players are hard-coded to 'Player 1', 'Player 2' and 'Computer', they can be customized if more effort is spent.
+4. Add a ranking table to list the top results of human players and computer. The collected data can be analysed to measure the performance of the AI search strategy and how tough to defeat the computer.
+5. The game can be further enhanced to play in different devices instead of the same device.  One way to do so is to set up a websocket server that sends messages to update NGRX store. When observable receives the new updates, they can notify Angular components to render their templates
 
 ## Open Source Project
 1. [Codebuddies Repo](https://github.com/railsstudent/codebuddies)
