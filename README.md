@@ -150,6 +150,25 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e --port=4201` to execute the end-to-end tests in port 4201 via [Protractor](http://www.protractortest.org/).
 
+## Running Code Coverage
+ ```javascript
+    # with npm
+    npm run code-coverage
+
+    # or with yarn
+    yarn code-coverage
+```
+Start local server to display code coverage results in html format
+
+ ```javascript
+    # with npm
+    npm run sr-tests
+
+    # or with yarn
+    yarn sr-tests
+```
+Navigate to `http://localhost:8001/`.
+
 ## Swap different AI strategy
 1. Create new solver that implements `GameSolver` interface in `solvers/` folder
 2. Open `solvers/index.ts` and append new type to `SolverType`
