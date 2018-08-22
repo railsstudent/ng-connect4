@@ -740,7 +740,239 @@ describe("Connect Reducer", () => {
     });
   });
 
-  describe("selectGrid returns grid", () => {
+  describe("ChooseMode action", () => {
+    beforeEach(() => {
+      board = new Board();
+      grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
+    });
+
+    it("should allow return initial state", () => {
+      grid[1] = Player.PLAYER1;
+      grid[2] = Player.COMPUTER;
+      grid[8] = Player.PLAYER1;
+      board.clone(grid);
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        board,
+        nextPlayer: Player.COMPUTER,
+        outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
+        reset: false,
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
+        mode: Mode.HUMAN_VS_COMPUTER,
+        lastMove: null
+      };
+      const action = new connectActions.ChooseModeAction();
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      expect(state).toEqual(initialState);
+    });
+
+    it("should make the column unavailable after computer makes a move", () => {
+      grid[1] = Player.PLAYER1;
+      grid[2] = Player.COMPUTER;
+      grid[8] = Player.PLAYER1;
+      grid[15] = Player.COMPUTER;
+      grid[3] = Player.PLAYER1;
+      grid[22] = Player.COMPUTER;
+      grid[29] = Player.PLAYER1;
+      board.clone(grid);
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        board,
+        nextPlayer: Player.COMPUTER,
+        outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
+        reset: false,
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
+        mode: Mode.HUMAN_VS_COMPUTER,
+        lastMove: null
+      };
+      const action = new connectActions.ComputerMoveAction({
+        player: Player.COMPUTER,
+        column: 1
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      cloneGrid[1] = Player.PLAYER1;
+      cloneGrid[2] = Player.COMPUTER;
+      cloneGrid[8] = Player.PLAYER1;
+      cloneGrid[15] = Player.COMPUTER;
+      cloneGrid[3] = Player.PLAYER1;
+      cloneGrid[22] = Player.COMPUTER;
+      cloneGrid[29] = Player.PLAYER1;
+      cloneGrid[36] = Player.COMPUTER;
+      const nextBoard = new Board();
+      nextBoard.clone(cloneGrid);
+
+      expect(state.board).toEqual(nextBoard);
+      expect(state.outcome).toEqual(Outcome.DEFAULT);
+      expect(state.reset).toEqual(false);
+      expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.winningSequence).toEqual(null);
+      expect(state.direction).toEqual(null);
+
+      const expected = initColumnsAvailable(COLUMNS, true);
+      expected[1] = false;
+      expect(state.columnAvailable).toEqual(expected);
+      expect(state.mode).toEqual(Mode.HUMAN_VS_COMPUTER);
+      expect(state.lastMove).toEqual({ row: 5, col: 1 });
+    });
+
+    it("should stop the game after computer wins the game", () => {
+      [1, 2, 4, 8, 9, 16, 24].forEach(i => (grid[i] = Player.PLAYER1));
+      [3, 5, 10, 17, 23].forEach(i => (grid[i] = Player.COMPUTER));
+      board.clone(grid);
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        board,
+        nextPlayer: Player.COMPUTER,
+        outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
+        reset: false,
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
+        mode: Mode.HUMAN_VS_COMPUTER,
+        lastMove: null
+      };
+      const action = new connectActions.ComputerMoveAction({
+        player: Player.COMPUTER,
+        column: 4
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      [1, 2, 4, 8, 9, 16, 24].forEach(i => (cloneGrid[i] = Player.PLAYER1));
+      [3, 5, 10, 17, 23, 11].forEach(i => (cloneGrid[i] = Player.COMPUTER));
+      const nextBoard = new Board();
+      nextBoard.clone(cloneGrid);
+
+      expect(state.board).toEqual(nextBoard);
+      expect(state.outcome).toEqual(Outcome.COMPUTER_WINS);
+      expect(state.winningSequence).toEqual([5, 11, 17, 23]);
+      expect(state.reset).toEqual(true);
+      expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.winningSequence).toEqual([5, 11, 17, 23]);
+      expect(state.direction).toEqual(Direction.LEFT_DIAG);
+      expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, false));
+      expect(state.mode).toEqual(Mode.HUMAN_VS_COMPUTER);
+      expect(state.lastMove).toEqual({ row: 1, col: 4 });
+    });
+
+    it("should stop the game after computer wins the game on the last move", () => {
+      [0, 1, 2, 4, 7, 9, 13, 14, 15, 18, 19, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37].forEach(
+        i => (grid[i] = Player.PLAYER1)
+      );
+      [3, 5, 6, 8, 10, 11, 12, 16, 17, 20, 21, 22, 26, 27, 31, 35, 36, 38, 39, 41].forEach(
+        i => (grid[i] = Player.COMPUTER)
+      );
+      board.clone(grid);
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        board,
+        nextPlayer: Player.COMPUTER,
+        outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
+        reset: false,
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
+        mode: Mode.HUMAN_VS_COMPUTER,
+        lastMove: null
+      };
+      const action = new connectActions.ComputerMoveAction({
+        player: Player.COMPUTER,
+        column: 5
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      [0, 1, 2, 4, 7, 9, 13, 14, 15, 18, 19, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37].forEach(
+        i => (cloneGrid[i] = Player.PLAYER1)
+      );
+      [3, 5, 6, 8, 10, 11, 12, 16, 17, 20, 21, 22, 26, 27, 31, 35, 36, 38, 39, 40, 41].forEach(
+        i => (cloneGrid[i] = Player.COMPUTER)
+      );
+      const nextBoard = new Board();
+      nextBoard.clone(cloneGrid);
+
+      expect(state.board).toEqual(nextBoard);
+      expect(state.outcome).toEqual(Outcome.COMPUTER_WINS);
+      expect(state.reset).toEqual(true);
+      expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.winningSequence).toEqual([38, 39, 40, 41]);
+      expect(state.direction).toEqual(Direction.HORIZONTAL);
+      expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, false));
+      expect(state.mode).toEqual(Mode.HUMAN_VS_COMPUTER);
+      expect(state.lastMove).toEqual({ row: 5, col: 5 });
+    });
+
+    it("should stop the game after computer draws the game", () => {
+      [1, 2, 5, 7, 8, 9, 11, 13, 15, 16, 17, 19, 24, 29, 30, 33, 34, 35, 37, 38, 39].forEach(
+        i => (grid[i] = Player.PLAYER1)
+      );
+      [0, 3, 4, 6, 10, 12, 14, 18, 20, 21, 22, 23, 25, 26, 27, 28, 31, 32, 40, 41].forEach(
+        i => (grid[i] = Player.COMPUTER)
+      );
+      board.clone(grid);
+
+      const TEST_INITIAL_STATE: ConnectState = {
+        board,
+        nextPlayer: Player.COMPUTER,
+        outcome: Outcome.DEFAULT,
+        winningSequence: null,
+        direction: null,
+        reset: false,
+        columnAvailable: initColumnsAvailable(COLUMNS, true),
+        mode: Mode.HUMAN_VS_COMPUTER,
+        lastMove: null
+      };
+      const action = new connectActions.ComputerMoveAction({
+        player: Player.COMPUTER,
+        column: 1
+      });
+      const state = connectReducer(TEST_INITIAL_STATE, action);
+
+      const cloneGrid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        cloneGrid.push(FREE_CELL);
+      }
+      [1, 2, 5, 7, 8, 9, 11, 13, 15, 16, 17, 19, 24, 29, 30, 33, 34, 35, 37, 38, 39].forEach(
+        i => (cloneGrid[i] = Player.PLAYER1)
+      );
+      [0, 3, 4, 6, 10, 12, 14, 18, 20, 21, 22, 23, 25, 26, 27, 28, 31, 32, 40, 41, 36].forEach(
+        i => (cloneGrid[i] = Player.COMPUTER)
+      );
+      const nextBoard = new Board();
+      nextBoard.clone(cloneGrid);
+
+      expect(state.board).toEqual(nextBoard);
+      expect(state.outcome).toEqual(Outcome.DRAW);
+      expect(state.reset).toEqual(true);
+      expect(state.nextPlayer).toEqual(Player.PLAYER1);
+      expect(state.winningSequence).toEqual(null);
+      expect(state.direction).toEqual(null);
+      expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, false));
+      expect(state.mode).toEqual(Mode.HUMAN_VS_COMPUTER);
+      expect(state.lastMove).toEqual({ row: 5, col: 1 });
+    });
+  });
+
+  describe("selectors", () => {
     let connectState: ConnectState;
     beforeEach(() => {
       board = new Board();

@@ -51,6 +51,11 @@ describe("Board", () => {
       expect(board.canPlay(1)).toBe(false);
     });
 
+    it("grid has correct number of moves", () => {
+      expect(board.canPlay(-1)).toBe(false);
+      expect(board.canPlay(COLUMNS)).toBe(false);
+    });
+
     it("columns have the correct height", () => {
       expect(board.height[0]).toBe(1);
       expect(board.height[1]).toBe(6);
@@ -674,6 +679,31 @@ describe("Board", () => {
         expect(childBoards[column].column).toEqual(column < 2 ? column : column + 1);
         expect(childBoards[column].board.newGrid).toEqual(grid);
       }
+    });
+  });
+
+  describe("print", () => {
+    let grid;
+    beforeEach(() => {
+      grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
+    });
+
+    it("print correct board", () => {
+      grid[1] = Player.PLAYER1;
+      grid[2] = Player.PLAYER2;
+      grid[8] = Player.PLAYER1;
+      grid[15] = Player.PLAYER2;
+      grid[9] = Player.PLAYER1;
+      grid[3] = Player.PLAYER2;
+      board = new Board();
+      board.clone(grid);
+
+      expect(board.print()).toEqual(
+        "- - - - - - - \n- - - - - - - \n- - - - - - - \n- x - - - - - \n- o o - - - - \n- o x x - - - \n"
+      );
     });
   });
 });

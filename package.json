@@ -10,7 +10,9 @@
     "e2e": "ng e2e",
     "sr-tests": "ng test --watch=false",
     "build-prod": "ng build --prod --build-optimizer false",
-    "start:prod": "http-server dist/ng-connect4 -p 8000"
+    "start:prod": "http-server dist/ng-connect4 -p 8000",
+    "code-coverage": "ng test --watch=false --code-coverage",
+    "start:coverage": "http-server coverage/ -p 8001"
   },
   "husky": {
     "hooks": {

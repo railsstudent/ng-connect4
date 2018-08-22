@@ -16,6 +16,41 @@ describe("MinimaxSolver", () => {
       board = new Board();
     });
 
+    it("bestMove returns null in draw", () => {
+      // c o c o c o c
+      // o c o c o c o
+      // c o c o c o c
+      // c o c o c o c
+      // o c o c o c o
+      // o c o c o c o
+      const grid = [];
+      for (let i = 0; i < ROWS * COLUMNS; i++) {
+        grid.push(FREE_CELL);
+      }
+      for (const i of [0, 1, 4]) {
+        grid[0 + i * COLUMNS] = Player.PLAYER1;
+        grid[1 + i * COLUMNS] = Player.PLAYER2;
+        grid[2 + i * COLUMNS] = Player.PLAYER1;
+        grid[3 + i * COLUMNS] = Player.PLAYER2;
+        grid[4 + i * COLUMNS] = Player.PLAYER1;
+        grid[5 + i * COLUMNS] = Player.PLAYER2;
+        grid[6 + i * COLUMNS] = Player.PLAYER1;
+      }
+      for (const i of [2, 3, 5]) {
+        grid[0 + i * COLUMNS] = Player.PLAYER2;
+        grid[1 + i * COLUMNS] = Player.PLAYER1;
+        grid[2 + i * COLUMNS] = Player.PLAYER2;
+        grid[3 + i * COLUMNS] = Player.PLAYER1;
+        grid[4 + i * COLUMNS] = Player.PLAYER2;
+        grid[5 + i * COLUMNS] = Player.PLAYER1;
+        grid[6 + i * COLUMNS] = Player.PLAYER2;
+      }
+      board.clone(grid);
+
+      const col = solver.bestMove(board);
+      expect(col).toBeNull();
+    });
+
     it("bestMove returns the best move that prevent human from winning", () => {
       board.play(2, Player.PLAYER1);
       board.play(3, Player.COMPUTER);
