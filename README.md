@@ -162,10 +162,10 @@ Start local server to display code coverage results in html format
 
  ```javascript
     # with npm
-    npm run sr-tests
+    npm run start:coverage
 
     # or with yarn
-    yarn sr-tests
+    yarn start:coverage
 ```
 Navigate to `http://localhost:8001/`.
 
