@@ -733,4 +733,22 @@ describe("BoardComponent", () => {
       });
     });
   });
+
+  fdescribe("backToMode", () => {
+    beforeEach(() => {
+      component.backToMode();
+      fixture.detectChanges();
+    });
+
+    it("store reset to intial state", () => {
+      component.lastMove$.subscribe(({ lastMove, lastMoveIdx }) => {
+        expect(lastMove).toEqual(null);
+        expect(lastMoveIdx).toEqual(null);
+      });
+
+      component.nextPlayer$.subscribe(({ nextPlayer }) => expect(nextPlayer).toEqual(Player.PLAYER1));
+
+      component.moveLefts$.subscribe(num => expect(num).toBe(ROWS * COLUMNS));
+    });
+  });
 });
