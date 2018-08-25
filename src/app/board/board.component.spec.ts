@@ -343,6 +343,7 @@ describe("BoardComponent", () => {
       elColumns[5].triggerEventHandler("click", 5);
       elColumns[6].triggerEventHandler("click", 6);
       elColumns[6].triggerEventHandler("click", 6);
+      elColumns[5].triggerEventHandler("click", 5);
       elColumns[6].triggerEventHandler("click", 6);
 
       const expectedGrid = [];
@@ -734,7 +735,7 @@ describe("BoardComponent", () => {
     });
   });
 
-  fdescribe("backToMode", () => {
+  describe("backToMode", () => {
     beforeEach(() => {
       component.backToMode();
       fixture.detectChanges();
@@ -745,10 +746,249 @@ describe("BoardComponent", () => {
         expect(lastMove).toEqual(null);
         expect(lastMoveIdx).toEqual(null);
       });
-
       component.nextPlayer$.subscribe(({ nextPlayer }) => expect(nextPlayer).toEqual(Player.PLAYER1));
-
+      component.winningSequence$.subscribe(({ direction, sequence, winner }) => {
+        expect(direction).toEqual(null);
+        expect(sequence).toEqual(null);
+        expect(winner).toEqual(null);
+      });
       component.moveLefts$.subscribe(num => expect(num).toBe(ROWS * COLUMNS));
+      component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.DEFAULT));
+      component.resetGame$.subscribe(reset => expect(reset).toEqual(false));
+      component.columnAvailable$.subscribe(c => {
+        const results = [];
+        for (let i = 0; i < COLUMNS; i++) {
+          results.push(true);
+        }
+        expect(c).toEqual(results);
+      });
+      component.grid$.subscribe(({ board, reset, nextPlayer }) => {
+        expect(board).toEqual(new Board());
+        expect(reset).toEqual(false);
+        expect(nextPlayer).toEqual(Player.PLAYER1);
+      });
+    });
+  });
+
+  describe("strikethrough", () => {
+    it("horizontal line", () => {
+      component.select(1);
+      component.select(0);
+      component.select(2);
+      component.select(0);
+      component.select(3);
+      component.select(0);
+      component.select(4);
+      fixture.detectChanges();
+
+      component.winningSequence$.subscribe(ws => {
+        expect(component.strikeThrough(ws, 0, 1, 1)).toEqual(true);
+        expect(component.strikeThrough(ws, 0, 2, 1)).toEqual(true);
+        expect(component.strikeThrough(ws, 0, 3, 1)).toEqual(true);
+        expect(component.strikeThrough(ws, 0, 4, 1)).toEqual(true);
+      });
+    });
+
+    it("vertical line", () => {
+      component.select(0);
+      component.select(0);
+      component.select(0);
+      component.select(1);
+      component.select(0);
+      component.select(2);
+      component.select(0);
+      component.select(3);
+      component.select(0);
+      fixture.detectChanges();
+
+      component.winningSequence$.subscribe(ws => {
+        expect(component.strikeThrough(ws, 2, 0, 7)).toEqual(true);
+        expect(component.strikeThrough(ws, 3, 0, 7)).toEqual(true);
+        expect(component.strikeThrough(ws, 4, 0, 7)).toEqual(true);
+        expect(component.strikeThrough(ws, 5, 0, 7)).toEqual(true);
+      });
+    });
+
+    it("left diagonal line", () => {
+      component.select(4);
+      component.select(3);
+      component.select(3);
+      component.select(2);
+      component.select(2);
+      component.select(1);
+      component.select(0);
+      component.select(0);
+      component.select(2);
+      component.select(0);
+      component.select(1);
+      component.select(1);
+      component.select(1);
+      fixture.detectChanges();
+
+      component.winningSequence$.subscribe(ws => {
+        expect(component.strikeThrough(ws, 3, 1, 6)).toEqual(true);
+        expect(component.strikeThrough(ws, 2, 2, 6)).toEqual(true);
+        expect(component.strikeThrough(ws, 1, 3, 6)).toEqual(true);
+        expect(component.strikeThrough(ws, 0, 4, 6)).toEqual(true);
+      });
+    });
+
+    it("right diagonal line", () => {
+      component.select(2);
+      component.select(3);
+      component.select(3);
+      component.select(4);
+      component.select(4);
+      component.select(5);
+      component.select(6);
+      component.select(6);
+      component.select(4);
+      component.select(6);
+      component.select(5);
+      component.select(5);
+      component.select(5);
+      fixture.detectChanges();
+
+      component.winningSequence$.subscribe(ws => {
+        expect(component.strikeThrough(ws, 0, 2, 8)).toEqual(true);
+        expect(component.strikeThrough(ws, 1, 3, 8)).toEqual(true);
+        expect(component.strikeThrough(ws, 2, 4, 8)).toEqual(true);
+        expect(component.strikeThrough(ws, 3, 5, 8)).toEqual(true);
+      });
+    });
+
+    it("not in winning sequence", () => {
+      component.select(2);
+      component.select(3);
+      component.select(3);
+      component.select(4);
+      component.select(4);
+      component.select(5);
+      component.select(6);
+      component.select(6);
+      component.select(4);
+      component.select(6);
+      component.select(5);
+      component.select(5);
+      component.select(5);
+      fixture.detectChanges();
+
+      component.winningSequence$.subscribe(ws => {
+        expect(component.strikeThrough(ws, 1, 4, 8)).toEqual(false);
+      });
+    });
+  });
+
+  describe("clearState in human vs human mode", () => {
+    it("reset store data in human vs human", () => {
+      component.select(2);
+      component.select(3);
+      component.select(3);
+      component.select(4);
+      component.select(4);
+      component.select(5);
+      component.select(6);
+      component.select(6);
+      component.select(4);
+      component.select(6);
+      component.select(5);
+      component.select(5);
+      component.select(5);
+
+      component.clearState();
+      fixture.detectChanges();
+
+      component.lastMove$.subscribe(({ lastMove, lastMoveIdx }) => {
+        expect(lastMove).toEqual(null);
+        expect(lastMoveIdx).toEqual(null);
+      });
+      component.nextPlayer$.subscribe(({ nextPlayer }) => expect(nextPlayer).toEqual(Player.PLAYER1));
+      component.winningSequence$.subscribe(({ direction, sequence, winner }) => {
+        expect(direction).toEqual(null);
+        expect(sequence).toEqual(null);
+        expect(winner).toEqual(null);
+      });
+      component.moveLefts$.subscribe(num => expect(num).toBe(ROWS * COLUMNS));
+      component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.DEFAULT));
+      component.resetGame$.subscribe(reset => expect(reset).toEqual(false));
+      component.columnAvailable$.subscribe(c => {
+        const results = [];
+        for (let i = 0; i < COLUMNS; i++) {
+          results.push(true);
+        }
+        expect(c).toEqual(results);
+      });
+      component.grid$.subscribe(({ board, reset, nextPlayer }) => {
+        expect(board).toEqual(new Board());
+        expect(reset).toEqual(false);
+        expect(nextPlayer).toEqual(Player.PLAYER1);
+      });
+    });
+  });
+
+  describe("clearState in human vs computer mode", () => {
+    class MockSolver extends AlphabetaSolver {
+      i = 0;
+      dummyMoves: number[];
+      constructor(dummyMoves: number[]) {
+        super();
+        this.dummyMoves = dummyMoves;
+      }
+      bestMove(board: Board): number {
+        const col = this.dummyMoves[this.i];
+        this.i++;
+        return col;
+      }
+    }
+
+    beforeEach(() => {
+      component.mode = Mode.HUMAN_VS_COMPUTER;
+      const mockSolver = new MockSolver([3, 4, 5, 6, 6, 5]);
+      component.setTestSolver(mockSolver);
+      fixture.detectChanges();
+      spyOn(window, "setTimeout").and.callFake(function(fn) {
+        fn.apply(null, [].slice.call(arguments, 2));
+        return +new Date();
+      });
+    });
+
+    it("reset store in human vs computer", () => {
+      component.select(2);
+      component.select(3);
+      component.select(4);
+      component.select(6);
+      component.select(4);
+      component.select(5);
+      component.select(5);
+
+      component.clearState();
+      fixture.detectChanges();
+
+      component.lastMove$.subscribe(({ lastMove, lastMoveIdx }) => {
+        expect(lastMove).toEqual(null);
+        expect(lastMoveIdx).toEqual(null);
+      });
+      component.nextPlayer$.subscribe(({ nextPlayer }) => expect(nextPlayer).toEqual(Player.PLAYER1));
+      component.winningSequence$.subscribe(({ direction, sequence, winner }) => {
+        expect(direction).toEqual(null);
+        expect(sequence).toEqual(null);
+        expect(winner).toEqual(null);
+      });
+      component.moveLefts$.subscribe(num => expect(num).toBe(ROWS * COLUMNS));
+      component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.DEFAULT));
+      component.resetGame$.subscribe(reset => expect(reset).toEqual(false));
+      component.columnAvailable$.subscribe(c => {
+        const results = [];
+        for (let i = 0; i < COLUMNS; i++) {
+          results.push(true);
+        }
+        expect(c).toEqual(results);
+      });
+      component.grid$.subscribe(({ board, reset, nextPlayer }) => {
+        expect(board).toEqual(new Board());
+        expect(reset).toEqual(false);
+        expect(nextPlayer).toEqual(Player.PLAYER1);
+      });
     });
   });
 });
