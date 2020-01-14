@@ -899,17 +899,20 @@
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.2.2"
 
-"@ngrx/schematics@^6.0.1":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@ngrx/schematics/-/schematics-6.1.0.tgz#4e784da5502829700895ca87d4cc5da93bf3ec84"
+"@ngrx/schematics@^8.6.0":
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/schematics/-/schematics-8.6.0.tgz#5387c0abc438768e4cb56c0b617082e0db2f00d7"
+  integrity sha512-d28FVsLWFJYxpMFnqzWvdbFSSPNlLUIezd0c4zlyf4CyNS/C8aw6Lio9xjOJHhgZuHvFuO9GwRrYV/GaS6wC7A==
 
-"@ngrx/store-devtools@6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-6.0.1.tgz#6049208d1ef8dc5f1f96ffc63373eab2d72f957c"
+"@ngrx/store-devtools@8.6.0":
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-8.6.0.tgz#ac287e4b094d099781cdc9f3281039c0e988296c"
+  integrity sha512-PWZmiOZE0J56GFfZpuzKLb7w0K2c6OXZSp/eWDeAvtdHFD4/Nas1i4TXtiWWMWWnSZeNs0hNIg4nFJXi2EddJQ==
 
-"@ngrx/store@6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-6.0.1.tgz#02c806ce20c698b997e81f5671e0edc07d32cf86"
+"@ngrx/store@8.6.0":
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-8.6.0.tgz#8540c5bd40b33fc2f443e7e86f47c0d801b8f413"
+  integrity sha512-K4cvCEa+5hw9qrETQWO+Cha3YbVCAT8yaIKJr/N35KntTL9mQMjoL+51JWLZfBwPV0e19CFgJIyrBnVUTxwr2A==
 
 "@ngtools/webpack@8.3.22":
   version "8.3.22"
