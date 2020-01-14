@@ -1,8 +1,8 @@
-import { ConnectActionTypes, ConnectActions } from "./connect.actions";
-import { Player, Outcome, COLUMNS, Mode, Direction, Pos, ROWS } from "../models";
-import { Board } from "../util/board";
-import { createSelector, createFeatureSelector } from "@ngrx/store";
+// import { ConnectActionTypes, ConnectActions } from "./connect.actions";
+import { Action, createFeatureSelector, createSelector } from "@ngrx/store";
 import "es6-object-assign";
+import { COLUMNS, Direction, Mode, Outcome, Player, Pos, ROWS } from "../models";
+import { Board } from "../util/board";
 
 export interface ConnectState {
   board: Board;
@@ -86,7 +86,7 @@ const nextAction = (state: ConnectState, action): ConnectState => {
   };
 };
 
-export function connectReducer(state = initialState, action: ConnectActions): ConnectState {
+export function connectReducer(state = initialState, action: Action): ConnectState {
   switch (action.type) {
     case ConnectActionTypes.Player1Move:
     case ConnectActionTypes.Player2Move:

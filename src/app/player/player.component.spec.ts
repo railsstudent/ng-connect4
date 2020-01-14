@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { StoreModule, Store } from "@ngrx/store";
-import { PlayerComponent } from "./player.component";
+import { Store, StoreModule } from "@ngrx/store";
+import { Mode, PieceColor, Player } from "../models";
 import { AppState, reducers } from "../reducers";
-import { Player, Mode, PieceColor } from "../models";
 import * as connectActions from "../reducers/connect.actions";
+import { PlayerComponent } from "./player.component";
 
 describe("PlayerComponent", () => {
   let component: PlayerComponent;
@@ -44,14 +44,14 @@ describe("PlayerComponent", () => {
   });
 
   it("should be player 1's turn when game starts", () => {
-    store.dispatch(new connectActions.NewGameAction({ mode: Mode.HUMAN_VS_HUMAN }));
+    store.dispatch(connectActions.NewGameAction({ mode: Mode.HUMAN_VS_HUMAN }));
 
     component.nextPlayer$.subscribe(nextPlayer => expect(nextPlayer).toEqual({ nextPlayer: Player.PLAYER1 }));
   });
 
   it("next move should be player 2 in human vs human", () => {
     store.dispatch(
-      new connectActions.PlayerOneMoveAction({
+      connectActions.PlayerOneMoveAction({
         mode: Mode.HUMAN_VS_HUMAN,
         player: Player.PLAYER1,
         column: 0
@@ -62,7 +62,7 @@ describe("PlayerComponent", () => {
 
   it("next move should be player 1 in human vs human", () => {
     store.dispatch(
-      new connectActions.PlayerTwoMoveAction({
+      connectActions.PlayerTwoMoveAction({
         player: Player.PLAYER2,
         column: 0
       })
@@ -72,7 +72,7 @@ describe("PlayerComponent", () => {
 
   it("next move should be computer in human vs computer", () => {
     store.dispatch(
-      new connectActions.PlayerOneMoveAction({
+      connectActions.PlayerOneMoveAction({
         mode: Mode.HUMAN_VS_COMPUTER,
         player: Player.PLAYER1,
         column: 0
@@ -83,7 +83,7 @@ describe("PlayerComponent", () => {
 
   it("next move should be player 1 in human vs computer", () => {
     store.dispatch(
-      new connectActions.ComputerMoveAction({
+      connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
         column: 0
       })

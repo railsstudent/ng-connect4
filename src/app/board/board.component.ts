@@ -1,18 +1,18 @@
-import { Component, OnInit, Input, Renderer2, ElementRef, ViewChildren, QueryList } from "@angular/core";
-import { Store, select } from "@ngrx/store";
+import { Component, ElementRef, Input, OnInit, QueryList, Renderer2, ViewChildren } from "@angular/core";
+import { select, Store } from "@ngrx/store";
+import { COLUMNS, Direction, Mode, Player, ROWS } from "../models";
 import {
   AppState,
-  selectMovesLeft,
   selectColumnAvailable,
-  selectNextPlayer,
   selectGrid,
+  selectLastMove,
+  selectMovesLeft,
+  selectNextPlayer,
   selectOutcome,
   selectResetGame,
-  selectWinningSequence,
-  selectLastMove
+  selectWinningSequence
 } from "../reducers";
 import * as connectActions from "../reducers/connect.actions";
-import { Player, Mode, ROWS, COLUMNS, Direction } from "../models";
 import { createSolver, SolverType } from "../solvers";
 import { Board } from "../util/board";
 
@@ -60,7 +60,7 @@ export class BoardComponent implements OnInit {
     if (!this.solver) {
       this.initSolver();
     }
-    this.store.dispatch(new connectActions.NewGameAction({ mode: this.mode }));
+    this.store.dispatch(connectActions.NewGameAction({ mode: this.mode }));
     this.grid$.subscribe(({ board, reset, nextPlayer }) => {
       this.board = board;
       this.nextPlayer = nextPlayer;
@@ -70,7 +70,7 @@ export class BoardComponent implements OnInit {
           if (this.nextPlayer === Player.COMPUTER) {
             const col = this.solver.bestMove(this.board);
             this.store.dispatch(
-              new connectActions.ComputerMoveAction({
+              connectActions.ComputerMoveAction({
                 player: this.nextPlayer,
                 column: col
               })
@@ -114,7 +114,7 @@ export class BoardComponent implements OnInit {
     if (this.nextPlayer === Player.PLAYER1) {
       this.computerFlag = true;
       this.store.dispatch(
-        new connectActions.PlayerOneMoveAction({
+        connectActions.PlayerOneMoveAction({
           mode: this.mode,
           player: this.nextPlayer,
           column
@@ -122,7 +122,7 @@ export class BoardComponent implements OnInit {
       );
     } else if (this.nextPlayer === Player.PLAYER2) {
       this.store.dispatch(
-        new connectActions.PlayerTwoMoveAction({
+        connectActions.PlayerTwoMoveAction({
           player: this.nextPlayer,
           column
         })
@@ -131,7 +131,7 @@ export class BoardComponent implements OnInit {
   }
 
   clearState() {
-    this.store.dispatch(new connectActions.NewGameAction({ mode: this.mode }));
+    this.store.dispatch(connectActions.NewGameAction({ mode: this.mode }));
     if (this.gridCells) {
       const gridCellsArray = this.gridCells.toArray();
       gridCellsArray.forEach(g => {
@@ -143,7 +143,7 @@ export class BoardComponent implements OnInit {
   }
 
   backToMode() {
-    this.store.dispatch(new connectActions.ChooseModeAction());
+    this.store.dispatch(connectActions.ChooseModeAction());
   }
 
   // for testing

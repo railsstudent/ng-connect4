@@ -1,14 +1,13 @@
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { StoreModule, Store } from "@ngrx/store";
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
-
-import { BoardComponent } from "./board.component";
+import { Store, StoreModule } from "@ngrx/store";
+import { COLUMNS, Direction, Mode, Outcome, Player, ROWS } from "../models";
 import { AppState, reducers } from "../reducers";
 import * as connectActions from "../reducers/connect.actions";
-import { ROWS, COLUMNS, Player, Mode, Outcome, Direction } from "../models";
 import { AlphabetaSolver } from "../solvers/alphabeta-solver";
 import { Board } from "../util/board";
+import { BoardComponent } from "./board.component";
 
 describe("BoardComponent", () => {
   let component: BoardComponent;
@@ -53,7 +52,7 @@ describe("BoardComponent", () => {
   });
 
   it("should dispatch action to initialize new game", () => {
-    const action = new connectActions.NewGameAction({
+    const action = connectActions.NewGameAction({
       mode: Mode.HUMAN_VS_HUMAN
     });
 
@@ -74,7 +73,7 @@ describe("BoardComponent", () => {
     expect(spanLabel.textContent).toBe("Remaining Moves:");
 
     store.dispatch(
-      new connectActions.PlayerOneMoveAction({
+      connectActions.PlayerOneMoveAction({
         mode: component.mode,
         player: Player.PLAYER1,
         column: 0
@@ -107,27 +106,27 @@ describe("BoardComponent", () => {
       expect(spanLabel.textContent).toBe("Remaining Moves:");
 
       store.dispatch(
-        new connectActions.PlayerOneMoveAction({
+        connectActions.PlayerOneMoveAction({
           mode: component.mode,
           player: Player.PLAYER1,
           column: 0
         })
       );
       store.dispatch(
-        new connectActions.PlayerTwoMoveAction({
+        connectActions.PlayerTwoMoveAction({
           player: Player.PLAYER2,
           column: 1
         })
       );
       store.dispatch(
-        new connectActions.PlayerOneMoveAction({
+        connectActions.PlayerOneMoveAction({
           mode: component.mode,
           player: Player.PLAYER1,
           column: 0
         })
       );
       store.dispatch(
-        new connectActions.PlayerTwoMoveAction({
+        connectActions.PlayerTwoMoveAction({
           player: Player.PLAYER2,
           column: 2
         })
@@ -455,7 +454,7 @@ describe("BoardComponent", () => {
       const elFirstColumn = getColumnAvailable(0);
       elFirstColumn.triggerEventHandler("click", 0);
 
-      const action = new connectActions.ComputerMoveAction({
+      const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
         column: 0
       });
