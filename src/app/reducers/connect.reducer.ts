@@ -1,7 +1,7 @@
-// import { ConnectActionTypes, ConnectActions } from "./connect.actions";
-import { Action, createFeatureSelector, createSelector } from "@ngrx/store";
+import * as connectActions from "./connect.actions";
+import { Action, createFeatureSelector, createSelector, createReducer, on } from "@ngrx/store";
 import "es6-object-assign";
-import { COLUMNS, Direction, Mode, Outcome, Player, Pos, ROWS } from "../models";
+import { COLUMNS, ConnectModeMoveModel, Direction, Mode, MoveModel, Outcome, Player, Pos, ROWS } from "../models";
 import { Board } from "../util/board";
 
 export interface ConnectState {
@@ -36,8 +36,10 @@ export const initialState: ConnectState = {
   lastMove: null
 };
 
-const nextAction = (state: ConnectState, action): ConnectState => {
-  const { mode = Mode.UNKNOWN, player, column } = action.payload;
+const nextAction = (state: ConnectState, move: MoveModel | ConnectModeMoveModel): ConnectState => {
+  const { player, column } = move;
+  const mode = (move as ConnectModeMoveModel).mode ? (move as ConnectModeMoveModel).mode : Mode.UNKNOWN;
+
   const board = new Board();
   board.clone(state.board.newGrid);
   board.play(column, player);
@@ -86,20 +88,17 @@ const nextAction = (state: ConnectState, action): ConnectState => {
   };
 };
 
-export function connectReducer(state = initialState, action: Action): ConnectState {
-  switch (action.type) {
-    case ConnectActionTypes.Player1Move:
-    case ConnectActionTypes.Player2Move:
-    case ConnectActionTypes.ComputerMove:
-      return nextAction(state, action);
-    case ConnectActionTypes.NewGame:
-      const { mode } = action.payload;
-      return Object.assign({}, initialState, { mode });
-    case ConnectActionTypes.ChooseMode:
-      return initialState;
-    default:
-      return state;
-  }
+const connectReducer = createReducer(
+  initialState,
+  on(connectActions.NewGameAction, (_, { mode }) => Object.assign({}, initialState, { mode })),
+  on(connectActions.PlayerOneMoveAction, (state, move) => nextAction(state, move)),
+  on(connectActions.PlayerTwoMoveAction, (state, move) => nextAction(state, move)),
+  on(connectActions.ComputerMoveAction, (state, move) => nextAction(state, move)),
+  on(connectActions.ChooseModeAction, () => initialState)
+);
+
+export function reducer(state: ConnectState | undefined, action: Action) /* : ConnectState*/ {
+  return connectReducer(state, action);
 }
 
 // connect selector

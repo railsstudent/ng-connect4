@@ -1,14 +1,13 @@
 import { ActionReducer, ActionReducerMap, MetaReducer } from "@ngrx/store";
 import { environment } from "../../environments/environment";
-
-import { ConnectState, connectReducer } from "./connect.reducer";
+import * as fromConnect from "./connect.reducer";
 
 export interface AppState {
-  connect: ConnectState;
+  connect: fromConnect.ConnectState;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
-  connect: connectReducer
+  connect: fromConnect.reducer
 };
 
 export function debug(reducer: ActionReducer<AppState>): ActionReducer<AppState> {

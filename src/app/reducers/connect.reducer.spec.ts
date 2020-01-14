@@ -1,6 +1,6 @@
 import "es6-object-assign";
 import {
-  connectReducer,
+  reducer as connectReducer,
   initialState,
   ConnectState,
   selectGrid,
@@ -41,7 +41,7 @@ describe("Connect Reducer", () => {
 
   describe("NewGame action", () => {
     it("should return the initial state", () => {
-      const action = new connectActions.NewGameAction({
+      const action = connectActions.NewGameAction({
         mode: Mode.HUMAN_VS_HUMAN
       });
       board = new Board();
@@ -89,7 +89,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_HUMAN,
         lastMove: null
       };
-      const action = new connectActions.PlayerOneMoveAction({
+      const action = connectActions.PlayerOneMoveAction({
         mode: Mode.HUMAN_VS_HUMAN,
         player: Player.PLAYER1,
         column: 2
@@ -137,7 +137,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_COMPUTER,
         lastMove: null
       };
-      const action = new connectActions.PlayerOneMoveAction({
+      const action = connectActions.PlayerOneMoveAction({
         mode: Mode.HUMAN_VS_COMPUTER,
         player: Player.PLAYER1,
         column: 0
@@ -198,7 +198,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_COMPUTER,
         lastMove: null
       };
-      const action = new connectActions.PlayerOneMoveAction({
+      const action = connectActions.PlayerOneMoveAction({
         mode: Mode.HUMAN_VS_COMPUTER,
         player: Player.PLAYER1,
         column: 5
@@ -261,7 +261,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_HUMAN,
         lastMove: null
       };
-      const action = new connectActions.PlayerTwoMoveAction({
+      const action = connectActions.PlayerTwoMoveAction({
         player: Player.PLAYER2,
         column: 1
       });
@@ -310,7 +310,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_HUMAN,
         lastMove: null
       };
-      const action = new connectActions.PlayerTwoMoveAction({
+      const action = connectActions.PlayerTwoMoveAction({
         player: Player.PLAYER2,
         column: 1
       });
@@ -360,7 +360,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_HUMAN,
         lastMove: null
       };
-      const action = new connectActions.PlayerTwoMoveAction({
+      const action = connectActions.PlayerTwoMoveAction({
         player: Player.PLAYER2,
         column: 4
       });
@@ -406,7 +406,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_HUMAN,
         lastMove: null
       };
-      const action = new connectActions.PlayerTwoMoveAction({
+      const action = connectActions.PlayerTwoMoveAction({
         player: Player.PLAYER2,
         column: 5
       });
@@ -456,7 +456,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_HUMAN,
         lastMove: null
       };
-      const action = new connectActions.PlayerTwoMoveAction({
+      const action = connectActions.PlayerTwoMoveAction({
         player: Player.PLAYER2,
         column: 1
       });
@@ -512,7 +512,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_COMPUTER,
         lastMove: null
       };
-      const action = new connectActions.ComputerMoveAction({
+      const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
         column: 1
       });
@@ -561,7 +561,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_COMPUTER,
         lastMove: null
       };
-      const action = new connectActions.ComputerMoveAction({
+      const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
         column: 1
       });
@@ -612,7 +612,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_COMPUTER,
         lastMove: null
       };
-      const action = new connectActions.ComputerMoveAction({
+      const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
         column: 4
       });
@@ -659,7 +659,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_COMPUTER,
         lastMove: null
       };
-      const action = new connectActions.ComputerMoveAction({
+      const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
         column: 5
       });
@@ -709,7 +709,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_COMPUTER,
         lastMove: null
       };
-      const action = new connectActions.ComputerMoveAction({
+      const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
         column: 1
       });
@@ -766,7 +766,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_COMPUTER,
         lastMove: null
       };
-      const action = new connectActions.ChooseModeAction();
+      const action = connectActions.ChooseModeAction();
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
       expect(state).toEqual(initialState);
@@ -793,7 +793,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_COMPUTER,
         lastMove: null
       };
-      const action = new connectActions.ComputerMoveAction({
+      const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
         column: 1
       });
@@ -844,7 +844,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_COMPUTER,
         lastMove: null
       };
-      const action = new connectActions.ComputerMoveAction({
+      const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
         column: 4
       });
@@ -891,7 +891,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_COMPUTER,
         lastMove: null
       };
-      const action = new connectActions.ComputerMoveAction({
+      const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
         column: 5
       });
@@ -941,7 +941,7 @@ describe("Connect Reducer", () => {
         mode: Mode.HUMAN_VS_COMPUTER,
         lastMove: null
       };
-      const action = new connectActions.ComputerMoveAction({
+      const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
         column: 1
       });
