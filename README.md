@@ -1,5 +1,7 @@
 # NgConnect4
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/6fc529e8-6c52-4f03-863a-56fee7be025b/deploy-status)](https://app.netlify.com/sites/thirsty-shockley-169e63/deploys)
+
 Reference:
 * [Wikipedia of MiniMax](https://en.wikipedia.org/wiki/Minimax)
 * [Wikipedia of Alpha Beta Pruning](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning)
