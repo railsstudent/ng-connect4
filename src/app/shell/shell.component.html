@@ -9,6 +9,10 @@
     <ng-container *ngIf="mode !== _Mode.UNKNOWN">
         <ng-container *ngIf="mode === _Mode.HUMAN_VS_HUMAN then twoPlayers else onePlayer"></ng-container>
     </ng-container>
+    <div class="spacer-1"></div>
+    <footer *ngIf="mode === _Mode.UNKNOWN">
+      Version: 1.0.0
+    </footer>
 </div>
 <ng-template #twoPlayers>
     <connect-player [name]="'Player 1'" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>

@@ -27,6 +27,17 @@ $primary-color: #007bff;
         margin-right: 10px;
         @include blueButton();
     }
+
+    .spacer-1 {
+      flex-grow: 1;
+    }
+
+    footer {
+      padding: 1rem;
+      width: 100%;
+      font-size: 1rem;
+      text-align: right;
+    }
 }
 
 .shell-selection {
