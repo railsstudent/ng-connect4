@@ -23,7 +23,7 @@
   "prettier": {
     "printWidth": 120,
     "semi": true,
-    "trailingComma": "none"
+    "trailingComma": "all"
   },
   "lint-staged": {
     "{src,test,e2e}/**/*.ts": [
