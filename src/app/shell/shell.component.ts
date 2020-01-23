@@ -6,7 +6,7 @@ import { AppState, selectMode } from "../reducers";
 @Component({
   selector: "connect-shell",
   templateUrl: "./shell.component.html",
-  styleUrls: ["./shell.component.scss"]
+  styleUrls: ["./shell.component.scss"],
 })
 export class ShellComponent implements OnInit {
   _Mode = Mode;
@@ -27,7 +27,7 @@ export class ShellComponent implements OnInit {
     });
   }
 
-  choose(mode) {
+  choose(mode: Mode) {
     this.mode = mode;
     this.isUnknown = this.mode === Mode.UNKNOWN;
   }

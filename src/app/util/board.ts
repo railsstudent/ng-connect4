@@ -9,7 +9,7 @@ export interface ChildBoard {
 }
 
 export class Board {
-  private _grid: string[];
+  private _grid: string[] = [];
   private _height: number[] = [];
 
   constructor(grid?: string[]) {
@@ -27,7 +27,7 @@ export class Board {
   }
 
   clone(grid: string[]) {
-    const convertIdxToRowCol = idx => {
+    const convertIdxToRowCol = (idx: number) => {
       const col = idx % COLUMNS;
       const row = (idx - col) / ROWS;
       return { row, col };
@@ -62,8 +62,8 @@ export class Board {
   }
 
   // Determins whether player wins the game if he inserts a new piece at column
-  isWinningMove(column: number, player): ConnectSequence {
-    const sortMoves = (a, b) => a - b;
+  isWinningMove(column: number, player: Player): ConnectSequence {
+    const sortMoves = (a: number, b: number) => a - b;
 
     // check vertical
     if (this.height[column] >= winning_points) {
@@ -75,7 +75,7 @@ export class Board {
         return {
           win: true,
           direction: Direction.VERTICAL,
-          sequence: idxs.sort(sortMoves)
+          sequence: idxs.sort(sortMoves),
         };
       }
     }
@@ -102,7 +102,7 @@ export class Board {
           }
         }
         if (pieces === winning_points) {
-          let sequenceDirection = null;
+          let sequenceDirection = Direction.NONE;
           if (direction === 0) {
             sequenceDirection = Direction.HORIZONTAL;
           } else if (direction === -1) {
@@ -113,12 +113,12 @@ export class Board {
           return {
             win: true,
             direction: sequenceDirection,
-            sequence: sequence.sort(sortMoves)
+            sequence: sequence.sort(sortMoves),
           };
         }
       }
     }
-    return { win: false, direction: null, sequence: null };
+    return { win: false, direction: Direction.NONE, sequence: [] };
   }
 
   play(column: number, player: Player) {

@@ -17,7 +17,7 @@ describe("BoardComponent", () => {
   const getBoardTitle = () => fixture.debugElement.query(By.css(".board-title"));
   const getMovesLeftLabel = () => fixture.debugElement.query(By.css(".moves-left-label"));
   const getColumnsAvailable = () => fixture.debugElement.queryAll(By.css(".select-column"));
-  const getColumnAvailable = i => {
+  const getColumnAvailable = (i: number) => {
     const allColumns = fixture.debugElement.queryAll(By.css(".select-column"));
     return allColumns[i];
   };
@@ -26,7 +26,7 @@ describe("BoardComponent", () => {
     TestBed.configureTestingModule({
       declarations: [BoardComponent],
       imports: [StoreModule.forRoot(reducers)],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
   }));
 
@@ -53,7 +53,7 @@ describe("BoardComponent", () => {
 
   it("should dispatch action to initialize new game", () => {
     const action = connectActions.NewGameAction({
-      mode: Mode.HUMAN_VS_HUMAN
+      mode: Mode.HUMAN_VS_HUMAN,
     });
 
     expect(component.initSolver).toHaveBeenCalled();
@@ -76,8 +76,8 @@ describe("BoardComponent", () => {
       connectActions.PlayerOneMoveAction({
         mode: component.mode,
         player: Player.PLAYER1,
-        column: 0
-      })
+        column: 0,
+      }),
     );
     component.moveLefts$.subscribe(moveLefts => expect(moveLefts).toBe(ROWS * COLUMNS - 1));
   });
@@ -109,34 +109,34 @@ describe("BoardComponent", () => {
         connectActions.PlayerOneMoveAction({
           mode: component.mode,
           player: Player.PLAYER1,
-          column: 0
-        })
+          column: 0,
+        }),
       );
       store.dispatch(
         connectActions.PlayerTwoMoveAction({
           player: Player.PLAYER2,
-          column: 1
-        })
+          column: 1,
+        }),
       );
       store.dispatch(
         connectActions.PlayerOneMoveAction({
           mode: component.mode,
           player: Player.PLAYER1,
-          column: 0
-        })
+          column: 0,
+        }),
       );
       store.dispatch(
         connectActions.PlayerTwoMoveAction({
           player: Player.PLAYER2,
-          column: 2
-        })
+          column: 2,
+        }),
       );
 
       component.moveLefts$.subscribe(moveLefts => expect(moveLefts).toBe(ROWS * COLUMNS - 4));
       component.lastMove$.subscribe(o => {
         expect(o.lastMove).toEqual({
           row: 0,
-          col: 2
+          col: 2,
         });
         expect(o.lastMoveIdx).toEqual(37);
       });
@@ -183,14 +183,14 @@ describe("BoardComponent", () => {
         expect(sequence).toEqual({
           direction: null,
           sequence: null,
-          winner: null
-        })
+          winner: null,
+        }),
       );
 
       component.lastMove$.subscribe(o => {
         expect(o.lastMove).toEqual({
           row: 5,
-          col: 0
+          col: 0,
         });
         expect(o.lastMoveIdx).toEqual(0);
       });
@@ -235,14 +235,14 @@ describe("BoardComponent", () => {
         expect(ws).toEqual({
           direction: Direction.VERTICAL,
           sequence: [1, 8, 15, 22],
-          winner: Player.PLAYER1
-        })
+          winner: Player.PLAYER1,
+        }),
       );
 
       component.lastMove$.subscribe(o => {
         expect(o.lastMove).toEqual({
           row: 3,
-          col: 1
+          col: 1,
         });
         expect(o.lastMoveIdx).toEqual(15);
       });
@@ -286,8 +286,8 @@ describe("BoardComponent", () => {
         expect(ws).toEqual({
           direction: Direction.HORIZONTAL,
           sequence: [1, 2, 3, 4],
-          winner: Player.PLAYER2
-        })
+          winner: Player.PLAYER2,
+        }),
       );
       component.resetGame$.subscribe(resetGame => expect(resetGame).toBe(true));
       component.columnAvailable$.subscribe(columns => {
@@ -299,7 +299,7 @@ describe("BoardComponent", () => {
       component.lastMove$.subscribe(o => {
         expect(o.lastMove).toEqual({
           row: 0,
-          col: 4
+          col: 4,
         });
         expect(o.lastMoveIdx).toEqual(39);
       });
@@ -411,14 +411,14 @@ describe("BoardComponent", () => {
         expect(sequence).toEqual({
           direction: null,
           sequence: null,
-          winner: null
-        })
+          winner: null,
+        }),
       );
 
       component.lastMove$.subscribe(o => {
         expect(o.lastMove).toEqual({
           row: 5,
-          col: 6
+          col: 6,
         });
         expect(o.lastMoveIdx).toEqual(6);
       });
@@ -456,7 +456,7 @@ describe("BoardComponent", () => {
 
       const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
-        column: 0
+        column: 0,
       });
 
       expect(store.dispatch).toHaveBeenCalledWith(action);
@@ -495,14 +495,14 @@ describe("BoardComponent", () => {
         expect(sequence).toEqual({
           direction: null,
           sequence: null,
-          winner: null
-        })
+          winner: null,
+        }),
       );
 
       component.lastMove$.subscribe(o => {
         expect(o.lastMove).toEqual({
           row: 5,
-          col: 0
+          col: 0,
         });
         expect(o.lastMoveIdx).toEqual(0);
       });
@@ -544,14 +544,14 @@ describe("BoardComponent", () => {
         expect(sequence).toEqual({
           direction: Direction.VERTICAL,
           sequence: [0, 7, 14, 21],
-          winner: Player.PLAYER1
+          winner: Player.PLAYER1,
         });
       });
 
       component.lastMove$.subscribe(o => {
         expect(o.lastMove).toEqual({
           row: 3,
-          col: 0
+          col: 0,
         });
         expect(o.lastMoveIdx).toEqual(14);
       });
@@ -594,14 +594,14 @@ describe("BoardComponent", () => {
         expect(sequence).toEqual({
           direction: Direction.HORIZONTAL,
           sequence: [1, 2, 3, 4],
-          winner: Player.COMPUTER
+          winner: Player.COMPUTER,
         });
       });
 
       component.lastMove$.subscribe(o => {
         expect(o.lastMove).toEqual({
           row: 0,
-          col: 4
+          col: 4,
         });
         expect(o.lastMoveIdx).toEqual(39);
       });
@@ -720,14 +720,14 @@ describe("BoardComponent", () => {
         expect(sequence).toEqual({
           direction: null,
           sequence: null,
-          winner: null
-        })
+          winner: null,
+        }),
       );
 
       component.lastMove$.subscribe(o => {
         expect(o.lastMove).toEqual({
           row: 5,
-          col: 6
+          col: 6,
         });
         expect(o.lastMoveIdx).toEqual(6);
       });

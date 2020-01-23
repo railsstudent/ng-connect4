@@ -12,7 +12,7 @@ const evaluationTable = [
   [5, 8, 11, 13, 11, 8, 5],
   [5, 8, 11, 13, 11, 8, 5],
   [4, 6, 8, 10, 8, 6, 4],
-  [3, 4, 5, 7, 5, 4, 3]
+  [3, 4, 5, 7, 5, 4, 3],
 ];
 
 export const heuristicEvaluation = (board: Board, column: number) => {
@@ -24,6 +24,6 @@ export const heuristicEvaluation = (board: Board, column: number) => {
 
 export interface GameSolver {
   bestMove(board: Board): number;
-  setMaximizePlayer(player: Player);
-  setMinimizePlayer(player: Player);
+  setMaximizePlayer(player: Player): void;
+  setMinimizePlayer(player: Player): void;
 }

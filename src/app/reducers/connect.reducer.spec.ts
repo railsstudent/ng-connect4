@@ -11,7 +11,7 @@ import {
   selectOutcome,
   selectWinningSequence,
   selectMode,
-  selectLastMove
+  selectLastMove,
 } from "./connect.reducer";
 import { Board } from "../util/board";
 import { ROWS, COLUMNS, FREE_CELL, Player, Outcome, Mode, Direction } from "../models";
@@ -20,7 +20,7 @@ import * as connectActions from "./connect.actions";
 let grid: string[] = [];
 let board: Board;
 
-const initColumnsAvailable = (len, flag) => {
+const initColumnsAvailable = (len: number, flag: boolean) => {
   const values = [];
   for (let i = 0; i < len; i++) {
     values.push(flag);
@@ -42,7 +42,7 @@ describe("Connect Reducer", () => {
   describe("NewGame action", () => {
     it("should return the initial state", () => {
       const action = connectActions.NewGameAction({
-        mode: Mode.HUMAN_VS_HUMAN
+        mode: Mode.HUMAN_VS_HUMAN,
       });
       board = new Board();
       const result = connectReducer(
@@ -55,9 +55,9 @@ describe("Connect Reducer", () => {
           reset: true,
           columnAvailable: initColumnsAvailable(COLUMNS, false),
           mode: Mode.HUMAN_VS_HUMAN,
-          lastMove: null
+          lastMove: null,
         },
-        action
+        action,
       );
 
       expect(result).toEqual(Object.assign({}, initialState, { mode: Mode.HUMAN_VS_HUMAN }));
@@ -87,12 +87,12 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_HUMAN,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.PlayerOneMoveAction({
         mode: Mode.HUMAN_VS_HUMAN,
         player: Player.PLAYER1,
-        column: 2
+        column: 2,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -135,12 +135,12 @@ describe("Connect Reducer", () => {
         direction: null,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.PlayerOneMoveAction({
         mode: Mode.HUMAN_VS_COMPUTER,
         player: Player.PLAYER1,
-        column: 0
+        column: 0,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -196,12 +196,12 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.PlayerOneMoveAction({
         mode: Mode.HUMAN_VS_COMPUTER,
         player: Player.PLAYER1,
-        column: 5
+        column: 5,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -259,11 +259,11 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_HUMAN,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.PlayerTwoMoveAction({
         player: Player.PLAYER2,
-        column: 1
+        column: 1,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -308,11 +308,11 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_HUMAN,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.PlayerTwoMoveAction({
         player: Player.PLAYER2,
-        column: 1
+        column: 1,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -358,11 +358,11 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_HUMAN,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.PlayerTwoMoveAction({
         player: Player.PLAYER2,
-        column: 4
+        column: 4,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -388,10 +388,10 @@ describe("Connect Reducer", () => {
 
     it("should stop the game after player 2 wins the game on the last move", () => {
       [0, 1, 2, 4, 7, 9, 13, 14, 15, 18, 19, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37].forEach(
-        i => (grid[i] = Player.PLAYER1)
+        i => (grid[i] = Player.PLAYER1),
       );
       [3, 5, 6, 8, 10, 11, 12, 16, 17, 20, 21, 22, 26, 27, 31, 35, 36, 38, 39, 41].forEach(
-        i => (grid[i] = Player.PLAYER2)
+        i => (grid[i] = Player.PLAYER2),
       );
       board.clone(grid);
 
@@ -404,11 +404,11 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_HUMAN,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.PlayerTwoMoveAction({
         player: Player.PLAYER2,
-        column: 5
+        column: 5,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -417,10 +417,10 @@ describe("Connect Reducer", () => {
         cloneGrid.push(FREE_CELL);
       }
       [0, 1, 2, 4, 7, 9, 13, 14, 15, 18, 19, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37].forEach(
-        i => (cloneGrid[i] = Player.PLAYER1)
+        i => (cloneGrid[i] = Player.PLAYER1),
       );
       [3, 5, 6, 8, 10, 11, 12, 16, 17, 20, 21, 22, 26, 27, 31, 35, 36, 38, 39, 40, 41].forEach(
-        i => (cloneGrid[i] = Player.PLAYER2)
+        i => (cloneGrid[i] = Player.PLAYER2),
       );
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
@@ -438,10 +438,10 @@ describe("Connect Reducer", () => {
 
     it("should stop the game after player 2 draw the game", () => {
       [1, 2, 5, 7, 8, 9, 11, 13, 15, 16, 17, 19, 24, 29, 30, 33, 34, 35, 37, 38, 39].forEach(
-        i => (grid[i] = Player.PLAYER1)
+        i => (grid[i] = Player.PLAYER1),
       );
       [0, 3, 4, 6, 10, 12, 14, 18, 20, 21, 22, 23, 25, 26, 27, 28, 31, 32, 40, 41].forEach(
-        i => (grid[i] = Player.PLAYER2)
+        i => (grid[i] = Player.PLAYER2),
       );
       board.clone(grid);
 
@@ -454,11 +454,11 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_HUMAN,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.PlayerTwoMoveAction({
         player: Player.PLAYER2,
-        column: 1
+        column: 1,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -467,10 +467,10 @@ describe("Connect Reducer", () => {
         cloneGrid.push(FREE_CELL);
       }
       [1, 2, 5, 7, 8, 9, 11, 13, 15, 16, 17, 19, 24, 29, 30, 33, 34, 35, 37, 38, 39].forEach(
-        i => (cloneGrid[i] = Player.PLAYER1)
+        i => (cloneGrid[i] = Player.PLAYER1),
       );
       [0, 3, 4, 6, 10, 12, 14, 18, 20, 21, 22, 23, 25, 26, 27, 28, 31, 32, 40, 41, 36].forEach(
-        i => (cloneGrid[i] = Player.PLAYER2)
+        i => (cloneGrid[i] = Player.PLAYER2),
       );
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
@@ -510,11 +510,11 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
-        column: 1
+        column: 1,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -559,11 +559,11 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
-        column: 1
+        column: 1,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -610,11 +610,11 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
-        column: 4
+        column: 4,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -641,10 +641,10 @@ describe("Connect Reducer", () => {
 
     it("should stop the game after computer wins the game on the last move", () => {
       [0, 1, 2, 4, 7, 9, 13, 14, 15, 18, 19, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37].forEach(
-        i => (grid[i] = Player.PLAYER1)
+        i => (grid[i] = Player.PLAYER1),
       );
       [3, 5, 6, 8, 10, 11, 12, 16, 17, 20, 21, 22, 26, 27, 31, 35, 36, 38, 39, 41].forEach(
-        i => (grid[i] = Player.COMPUTER)
+        i => (grid[i] = Player.COMPUTER),
       );
       board.clone(grid);
 
@@ -657,11 +657,11 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
-        column: 5
+        column: 5,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -670,10 +670,10 @@ describe("Connect Reducer", () => {
         cloneGrid.push(FREE_CELL);
       }
       [0, 1, 2, 4, 7, 9, 13, 14, 15, 18, 19, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37].forEach(
-        i => (cloneGrid[i] = Player.PLAYER1)
+        i => (cloneGrid[i] = Player.PLAYER1),
       );
       [3, 5, 6, 8, 10, 11, 12, 16, 17, 20, 21, 22, 26, 27, 31, 35, 36, 38, 39, 40, 41].forEach(
-        i => (cloneGrid[i] = Player.COMPUTER)
+        i => (cloneGrid[i] = Player.COMPUTER),
       );
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
@@ -691,10 +691,10 @@ describe("Connect Reducer", () => {
 
     it("should stop the game after computer draws the game", () => {
       [1, 2, 5, 7, 8, 9, 11, 13, 15, 16, 17, 19, 24, 29, 30, 33, 34, 35, 37, 38, 39].forEach(
-        i => (grid[i] = Player.PLAYER1)
+        i => (grid[i] = Player.PLAYER1),
       );
       [0, 3, 4, 6, 10, 12, 14, 18, 20, 21, 22, 23, 25, 26, 27, 28, 31, 32, 40, 41].forEach(
-        i => (grid[i] = Player.COMPUTER)
+        i => (grid[i] = Player.COMPUTER),
       );
       board.clone(grid);
 
@@ -707,11 +707,11 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
-        column: 1
+        column: 1,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -720,10 +720,10 @@ describe("Connect Reducer", () => {
         cloneGrid.push(FREE_CELL);
       }
       [1, 2, 5, 7, 8, 9, 11, 13, 15, 16, 17, 19, 24, 29, 30, 33, 34, 35, 37, 38, 39].forEach(
-        i => (cloneGrid[i] = Player.PLAYER1)
+        i => (cloneGrid[i] = Player.PLAYER1),
       );
       [0, 3, 4, 6, 10, 12, 14, 18, 20, 21, 22, 23, 25, 26, 27, 28, 31, 32, 40, 41, 36].forEach(
-        i => (cloneGrid[i] = Player.COMPUTER)
+        i => (cloneGrid[i] = Player.COMPUTER),
       );
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
@@ -764,7 +764,7 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.ChooseModeAction();
       const state = connectReducer(TEST_INITIAL_STATE, action);
@@ -791,11 +791,11 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
-        column: 1
+        column: 1,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -842,11 +842,11 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
-        column: 4
+        column: 4,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -873,10 +873,10 @@ describe("Connect Reducer", () => {
 
     it("should stop the game after computer wins the game on the last move", () => {
       [0, 1, 2, 4, 7, 9, 13, 14, 15, 18, 19, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37].forEach(
-        i => (grid[i] = Player.PLAYER1)
+        i => (grid[i] = Player.PLAYER1),
       );
       [3, 5, 6, 8, 10, 11, 12, 16, 17, 20, 21, 22, 26, 27, 31, 35, 36, 38, 39, 41].forEach(
-        i => (grid[i] = Player.COMPUTER)
+        i => (grid[i] = Player.COMPUTER),
       );
       board.clone(grid);
 
@@ -889,11 +889,11 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
-        column: 5
+        column: 5,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -902,10 +902,10 @@ describe("Connect Reducer", () => {
         cloneGrid.push(FREE_CELL);
       }
       [0, 1, 2, 4, 7, 9, 13, 14, 15, 18, 19, 23, 24, 25, 28, 29, 30, 32, 33, 34, 37].forEach(
-        i => (cloneGrid[i] = Player.PLAYER1)
+        i => (cloneGrid[i] = Player.PLAYER1),
       );
       [3, 5, 6, 8, 10, 11, 12, 16, 17, 20, 21, 22, 26, 27, 31, 35, 36, 38, 39, 40, 41].forEach(
-        i => (cloneGrid[i] = Player.COMPUTER)
+        i => (cloneGrid[i] = Player.COMPUTER),
       );
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
@@ -923,10 +923,10 @@ describe("Connect Reducer", () => {
 
     it("should stop the game after computer draws the game", () => {
       [1, 2, 5, 7, 8, 9, 11, 13, 15, 16, 17, 19, 24, 29, 30, 33, 34, 35, 37, 38, 39].forEach(
-        i => (grid[i] = Player.PLAYER1)
+        i => (grid[i] = Player.PLAYER1),
       );
       [0, 3, 4, 6, 10, 12, 14, 18, 20, 21, 22, 23, 25, 26, 27, 28, 31, 32, 40, 41].forEach(
-        i => (grid[i] = Player.COMPUTER)
+        i => (grid[i] = Player.COMPUTER),
       );
       board.clone(grid);
 
@@ -939,11 +939,11 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: initColumnsAvailable(COLUMNS, true),
         mode: Mode.HUMAN_VS_COMPUTER,
-        lastMove: null
+        lastMove: null,
       };
       const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
-        column: 1
+        column: 1,
       });
       const state = connectReducer(TEST_INITIAL_STATE, action);
 
@@ -952,10 +952,10 @@ describe("Connect Reducer", () => {
         cloneGrid.push(FREE_CELL);
       }
       [1, 2, 5, 7, 8, 9, 11, 13, 15, 16, 17, 19, 24, 29, 30, 33, 34, 35, 37, 38, 39].forEach(
-        i => (cloneGrid[i] = Player.PLAYER1)
+        i => (cloneGrid[i] = Player.PLAYER1),
       );
       [0, 3, 4, 6, 10, 12, 14, 18, 20, 21, 22, 23, 25, 26, 27, 28, 31, 32, 40, 41, 36].forEach(
-        i => (cloneGrid[i] = Player.COMPUTER)
+        i => (cloneGrid[i] = Player.COMPUTER),
       );
       const nextBoard = new Board();
       nextBoard.clone(cloneGrid);
@@ -998,7 +998,7 @@ describe("Connect Reducer", () => {
         reset: false,
         columnAvailable: [false, true, true, true, false, true, false],
         mode: Mode.HUMAN_VS_HUMAN,
-        lastMove: { row: 0, col: 3 }
+        lastMove: { row: 0, col: 3 },
       };
     });
 
@@ -1008,7 +1008,7 @@ describe("Connect Reducer", () => {
       expect(result).toEqual({
         board: expected,
         reset: false,
-        nextPlayer: Player.COMPUTER
+        nextPlayer: Player.COMPUTER,
       });
     });
 
@@ -1034,7 +1034,7 @@ describe("Connect Reducer", () => {
 
     it("selectNextPlayer should return reset and next player", () => {
       expect(selectNextPlayer.projector(connectState)).toEqual({
-        nextPlayer: Player.COMPUTER
+        nextPlayer: Player.COMPUTER,
       });
     });
 
@@ -1042,7 +1042,7 @@ describe("Connect Reducer", () => {
       expect(selectWinningSequence.projector(connectState)).toEqual({
         direction: Direction.VERTICAL,
         sequence: [0, 7, 14, 21],
-        winner: Player.PLAYER1
+        winner: Player.PLAYER1,
       }));
 
     it("selectMode should return connect game mode", () =>
@@ -1052,9 +1052,9 @@ describe("Connect Reducer", () => {
       const result = {
         lastMove: {
           row: 0,
-          col: 3
+          col: 3,
         },
-        lastMoveIdx: 38
+        lastMoveIdx: 38,
       };
       expect(selectLastMove.projector(connectState)).toEqual(result);
     });

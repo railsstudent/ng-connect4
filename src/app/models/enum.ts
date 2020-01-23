@@ -1,7 +1,7 @@
 export enum Player {
   PLAYER1 = "o",
   PLAYER2 = "x",
-  COMPUTER = "c"
+  COMPUTER = "c",
 }
 
 export enum Outcome {
@@ -9,24 +9,25 @@ export enum Outcome {
   PLAYER2_WINS = "Player 2 wins!!!",
   COMPUTER_WINS = "Computer wins!!!",
   DRAW = "Draw!!!",
-  DEFAULT = ""
+  DEFAULT = "",
 }
 
 export enum Mode {
   UNKNOWN,
   HUMAN_VS_HUMAN,
-  HUMAN_VS_COMPUTER
+  HUMAN_VS_COMPUTER,
 }
 
 export enum Direction {
   HORIZONTAL,
   VERTICAL,
   LEFT_DIAG,
-  RIGHT_DIAG
+  RIGHT_DIAG,
+  NONE,
 }
 
 export enum PieceColor {
   RED = "red",
   YELLOW = "yellow",
-  MAGENTA = "magenta"
+  MAGENTA = "magenta",
 }

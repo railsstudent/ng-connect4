@@ -199,7 +199,7 @@ describe("Board", () => {
       expect(board.isWinningMove(0, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.VERTICAL,
-        sequence: [0, 7, 14, 21]
+        sequence: [0, 7, 14, 21],
       });
     });
 
@@ -216,7 +216,7 @@ describe("Board", () => {
       expect(board.isWinningMove(0, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.VERTICAL,
-        sequence: [14, 21, 28, 35]
+        sequence: [14, 21, 28, 35],
       });
     });
 
@@ -232,7 +232,7 @@ describe("Board", () => {
       expect(board.isWinningMove(4, Player.PLAYER2)).toEqual({
         win: true,
         direction: Direction.VERTICAL,
-        sequence: [11, 18, 25, 32]
+        sequence: [11, 18, 25, 32],
       });
     });
   });
@@ -253,7 +253,7 @@ describe("Board", () => {
       expect(board.isWinningMove(2, Player.PLAYER2)).toEqual({
         win: true,
         direction: Direction.HORIZONTAL,
-        sequence: [7, 8, 9, 10]
+        sequence: [7, 8, 9, 10],
       });
     });
 
@@ -268,7 +268,7 @@ describe("Board", () => {
       expect(board.isWinningMove(3, Player.PLAYER2)).toEqual({
         win: true,
         direction: Direction.HORIZONTAL,
-        sequence: [8, 9, 10, 11]
+        sequence: [8, 9, 10, 11],
       });
     });
 
@@ -283,7 +283,7 @@ describe("Board", () => {
       expect(board.isWinningMove(6, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.HORIZONTAL,
-        sequence: [10, 11, 12, 13]
+        sequence: [10, 11, 12, 13],
       });
     });
 
@@ -298,7 +298,7 @@ describe("Board", () => {
       expect(board.isWinningMove(1, Player.PLAYER2)).toEqual({
         win: true,
         direction: Direction.HORIZONTAL,
-        sequence: [8, 9, 10, 11]
+        sequence: [8, 9, 10, 11],
       });
     });
 
@@ -313,7 +313,7 @@ describe("Board", () => {
       expect(board.isWinningMove(3, Player.PLAYER2)).toEqual({
         win: true,
         direction: Direction.HORIZONTAL,
-        sequence: [9, 10, 11, 12]
+        sequence: [9, 10, 11, 12],
       });
     });
   });
@@ -334,7 +334,7 @@ describe("Board", () => {
       expect(board.isWinningMove(2, Player.PLAYER2)).toEqual({
         win: true,
         direction: Direction.LEFT_DIAG,
-        sequence: [10, 16, 22, 28]
+        sequence: [10, 16, 22, 28],
       });
     });
 
@@ -349,7 +349,7 @@ describe("Board", () => {
       expect(board.isWinningMove(2, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.LEFT_DIAG,
-        sequence: [11, 17, 23, 29]
+        sequence: [11, 17, 23, 29],
       });
     });
 
@@ -364,7 +364,7 @@ describe("Board", () => {
       expect(board.isWinningMove(0, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.LEFT_DIAG,
-        sequence: [17, 23, 29, 35]
+        sequence: [17, 23, 29, 35],
       });
     });
 
@@ -379,7 +379,7 @@ describe("Board", () => {
       expect(board.isWinningMove(4, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.LEFT_DIAG,
-        sequence: [18, 24, 30, 36]
+        sequence: [18, 24, 30, 36],
       });
     });
   });
@@ -400,7 +400,7 @@ describe("Board", () => {
       expect(board.isWinningMove(4, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.RIGHT_DIAG,
-        sequence: [9, 17, 25, 33]
+        sequence: [9, 17, 25, 33],
       });
     });
 
@@ -415,7 +415,7 @@ describe("Board", () => {
       expect(board.isWinningMove(2, Player.PLAYER2)).toEqual({
         win: true,
         direction: Direction.RIGHT_DIAG,
-        sequence: [8, 16, 24, 32]
+        sequence: [8, 16, 24, 32],
       });
     });
 
@@ -430,7 +430,7 @@ describe("Board", () => {
       expect(board.isWinningMove(1, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.RIGHT_DIAG,
-        sequence: [15, 23, 31, 39]
+        sequence: [15, 23, 31, 39],
       });
     });
 
@@ -445,7 +445,7 @@ describe("Board", () => {
       expect(board.isWinningMove(5, Player.PLAYER1)).toEqual({
         win: true,
         direction: Direction.RIGHT_DIAG,
-        sequence: [2, 10, 18, 26]
+        sequence: [2, 10, 18, 26],
       });
     });
   });
@@ -466,12 +466,12 @@ describe("Board", () => {
       expect(board.isWinningMove(-1, Player.PLAYER1)).toEqual({
         win: false,
         direction: null,
-        sequence: null
+        sequence: null,
       });
       expect(board.isWinningMove(7, Player.PLAYER1)).toEqual({
         win: false,
         direction: null,
-        sequence: null
+        sequence: null,
       });
     });
 
@@ -486,7 +486,7 @@ describe("Board", () => {
       expect(board.isWinningMove(3, Player.PLAYER1)).toEqual({
         win: false,
         direction: null,
-        sequence: null
+        sequence: null,
       });
     });
 
@@ -496,16 +496,16 @@ describe("Board", () => {
         grid.push(FREE_CELL);
       }
       [0, 2, 3, 5, 6, 10, 11, 15, 19, 20, 22, 25, 27, 28, 29, 30, 32, 33, 37, 38, 41].forEach(
-        i => (grid[i] = Player.PLAYER1)
+        i => (grid[i] = Player.PLAYER1),
       );
       [1, 4, 7, 8, 9, 12, 13, 14, 16, 17, 18, 21, 23, 24, 26, 31, 34, 36, 39, 40].forEach(
-        i => (grid[i] = Player.PLAYER2)
+        i => (grid[i] = Player.PLAYER2),
       );
       board.clone(grid);
       expect(board.isWinningMove(0, Player.PLAYER2)).toEqual({
         win: false,
         direction: null,
-        sequence: null
+        sequence: null,
       });
     });
   });
@@ -521,10 +521,10 @@ describe("Board", () => {
         grid.push(FREE_CELL);
       }
       [0, 2, 3, 5, 6, 10, 11, 15, 19, 20, 22, 25, 27, 28, 29, 30, 32, 33, 37, 38, 41].forEach(
-        i => (grid[i] = Player.PLAYER1)
+        i => (grid[i] = Player.PLAYER1),
       );
       [1, 4, 7, 8, 9, 12, 13, 14, 16, 17, 18, 21, 23, 24, 26, 31, 34, 36, 39, 40, 35].forEach(
-        i => (grid[i] = Player.PLAYER2)
+        i => (grid[i] = Player.PLAYER2),
       );
       board.clone(grid);
       expect(board.isDraw()).toBe(true);
@@ -605,7 +605,7 @@ describe("Board", () => {
   });
 
   describe("generateChildBoards", () => {
-    let grid = [];
+    let grid: string[] = [];
 
     beforeEach(() => {
       grid = [];
@@ -683,7 +683,7 @@ describe("Board", () => {
   });
 
   describe("print", () => {
-    let grid;
+    let grid: string[] = [];
     beforeEach(() => {
       grid = [];
       for (let i = 0; i < ROWS * COLUMNS; i++) {
@@ -702,7 +702,7 @@ describe("Board", () => {
       board.clone(grid);
 
       expect(board.print()).toEqual(
-        "- - - - - - - \n- - - - - - - \n- - - - - - - \n- x - - - - - \n- o o - - - - \n- o x x - - - \n"
+        "- - - - - - - \n- - - - - - - \n- - - - - - - \n- x - - - - - \n- o o - - - - \n- o x x - - - \n",
       );
     });
   });

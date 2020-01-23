@@ -8,33 +8,33 @@ export class MinimaxSolver implements GameSolver {
 
   private hasHeuristicValue(board: Board, column: number, depth: number) {
     if (board.isDraw()) {
-      return [null, 0];
+      return [-INF, 0];
     }
 
     // terminate state of the game tree: reach depth or player wins the game
     if (column != null && board.isWinningMove(column, this.maximizePlayer).win === true) {
-      return [null, INF];
+      return [-INF, INF];
     }
 
     if (column != null && board.isWinningMove(column, this.minimizePlayer).win === true) {
-      return [null, -INF];
+      return [-INF, -INF];
     }
 
     if (depth === 0) {
       const score = heuristicEvaluation(board, column);
-      return [null, score];
+      return [-INF, score];
     }
 
     return null;
   }
 
-  maximizePlay(board: Board, column: number, depth: number) {
+  maximizePlay(board: Board, column: number, depth: number): number[] {
     const hValue = this.hasHeuristicValue(board, column, depth);
     if (hValue) {
       return hValue;
     }
 
-    let max = [null, -INF];
+    let max = [-INF, -INF];
     const childBoards = board.generateChildBoards(this.maximizePlayer);
     for (const cb of childBoards) {
       const { column: childColumn, board: childBoard } = cb;
@@ -42,20 +42,20 @@ export class MinimaxSolver implements GameSolver {
       console.log("maximizePlay - ", "nextMove", nextMove);
 
       // Evaluate new move
-      if (max[0] === null || nextMove[1] > max[1]) {
+      if (max[0] === -INF || nextMove[1] > max[1]) {
         max = [childColumn, nextMove[1]];
       }
     }
     return max;
   }
 
-  minimizePlay(board: Board, column: number, depth: number) {
+  minimizePlay(board: Board, column: number, depth: number): number[] {
     const hValue = this.hasHeuristicValue(board, column, depth);
     if (hValue) {
       return hValue;
     }
 
-    let min = [null, INF];
+    let min = [-INF, INF];
     const childBoards = board.generateChildBoards(this.minimizePlayer);
     for (const cb of childBoards) {
       const { column: childColumn, board: childBoard } = cb;
@@ -63,7 +63,7 @@ export class MinimaxSolver implements GameSolver {
       console.log("minimizePlay - ", "nextMove", nextMove);
 
       // Evaluate new move
-      if (min[0] === null || nextMove[1] < min[1]) {
+      if (min[0] === -INF || nextMove[1] < min[1]) {
         min = [childColumn, nextMove[1]];
       }
     }
@@ -71,7 +71,7 @@ export class MinimaxSolver implements GameSolver {
   }
 
   bestMove(board: Board): number {
-    const aiMove = this.maximizePlay(board, null, DEPTH);
+    const aiMove = this.maximizePlay(board, -INF, DEPTH);
     const column = aiMove[0];
     const score = aiMove[1];
     console.log(`----- MinimaxSolver bestMove: column: ${column}, score: ${score} ----`);

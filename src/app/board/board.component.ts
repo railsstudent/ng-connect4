@@ -10,7 +10,7 @@ import {
   selectNextPlayer,
   selectOutcome,
   selectResetGame,
-  selectWinningSequence
+  selectWinningSequence,
 } from "../reducers";
 import * as connectActions from "../reducers/connect.actions";
 import { createSolver, SolverType } from "../solvers";
@@ -19,7 +19,7 @@ import { Board } from "../util/board";
 @Component({
   selector: "connect-board",
   templateUrl: "./board.component.html",
-  styleUrls: ["./board.component.scss"]
+  styleUrls: ["./board.component.scss"],
 })
 export class BoardComponent implements OnInit {
   _Mode = Mode;
@@ -38,12 +38,12 @@ export class BoardComponent implements OnInit {
   winningSequence$ = this.store.pipe(select(selectWinningSequence));
   lastMove$ = this.store.pipe(select(selectLastMove));
   nextPlayer: Player;
-  columnsAvailable: boolean[];
+  columnsAvailable: boolean[] = [];
 
   // AI algorithm
   solver: SolverType;
   board: Board;
-  grid: string[];
+  grid: string[] = [];
 
   rowRange = this.rangeHelper(ROWS, false);
   columnRange = this.rangeHelper(COLUMNS);
@@ -72,8 +72,8 @@ export class BoardComponent implements OnInit {
             this.store.dispatch(
               connectActions.ComputerMoveAction({
                 player: this.nextPlayer,
-                column: col
-              })
+                column: col,
+              }),
             );
           }
         }, 1);
@@ -81,7 +81,7 @@ export class BoardComponent implements OnInit {
     });
     this.columnAvailable$.subscribe(columnsAvailable => (this.columnsAvailable = columnsAvailable));
     this.lastMove$.subscribe(({ lastMove, lastMoveIdx }) => {
-      if (lastMove && this.gridCells) {
+      if (lastMove && this.gridCells && lastMoveIdx) {
         const { row, col } = lastMove;
         const el = this.gridCells.toArray()[lastMoveIdx];
         if (!el) {
@@ -107,7 +107,7 @@ export class BoardComponent implements OnInit {
     this.solver.setMaximizePlayer(Player.COMPUTER);
   }
 
-  select(column) {
+  select(column: number) {
     if (this.columnsAvailable[column] === false) {
       return;
     }
@@ -117,15 +117,15 @@ export class BoardComponent implements OnInit {
         connectActions.PlayerOneMoveAction({
           mode: this.mode,
           player: this.nextPlayer,
-          column
-        })
+          column,
+        }),
       );
     } else if (this.nextPlayer === Player.PLAYER2) {
       this.store.dispatch(
         connectActions.PlayerTwoMoveAction({
           player: this.nextPlayer,
-          column
-        })
+          column,
+        }),
       );
     }
   }
@@ -172,8 +172,15 @@ export class BoardComponent implements OnInit {
     return this.board.isSamePlayer(row, column, player);
   }
 
-  strikeThrough({ direction, sequence, winner }, row: number, column: number, delta: number) {
+  strikeThrough(
+    winningBoard: { direction: Direction; sequence: number[]; winner: Player },
+    row: number,
+    column: number,
+    delta: number,
+  ) {
+    const { direction, sequence, winner } = winningBoard;
     const idx = row * COLUMNS + column;
+
     if (
       direction == null ||
       !sequence ||
