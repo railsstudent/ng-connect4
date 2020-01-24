@@ -81,7 +81,13 @@ export class BoardComponent implements OnInit {
     });
     this.columnAvailable$.subscribe(columnsAvailable => (this.columnsAvailable = columnsAvailable));
     this.lastMove$.subscribe(({ lastMove, lastMoveIdx }) => {
-      if (lastMove && this.gridCells && lastMoveIdx) {
+      if (
+        lastMove &&
+        this.gridCells &&
+        typeof lastMoveIdx !== "undefined" &&
+        lastMoveIdx !== null &&
+        lastMoveIdx >= 0
+      ) {
         const { row, col } = lastMove;
         const el = this.gridCells.toArray()[lastMoveIdx];
         if (!el) {
@@ -173,7 +179,7 @@ export class BoardComponent implements OnInit {
   }
 
   strikeThrough(
-    winningBoard: { direction: Direction; sequence: number[]; winner: Player },
+    winningBoard: { direction: Direction | null; sequence: number[] | null; winner: Player | null },
     row: number,
     column: number,
     delta: number,

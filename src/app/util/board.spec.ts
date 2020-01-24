@@ -465,13 +465,13 @@ describe("Board", () => {
       board.clone(grid);
       expect(board.isWinningMove(-1, Player.PLAYER1)).toEqual({
         win: false,
-        direction: null,
-        sequence: null,
+        direction: Direction.NONE,
+        sequence: [],
       });
       expect(board.isWinningMove(7, Player.PLAYER1)).toEqual({
         win: false,
-        direction: null,
-        sequence: null,
+        direction: Direction.NONE,
+        sequence: [],
       });
     });
 
@@ -485,8 +485,8 @@ describe("Board", () => {
       board.clone(grid);
       expect(board.isWinningMove(3, Player.PLAYER1)).toEqual({
         win: false,
-        direction: null,
-        sequence: null,
+        direction: Direction.NONE,
+        sequence: [],
       });
     });
 
@@ -504,8 +504,8 @@ describe("Board", () => {
       board.clone(grid);
       expect(board.isWinningMove(0, Player.PLAYER2)).toEqual({
         win: false,
-        direction: null,
-        sequence: null,
+        direction: Direction.NONE,
+        sequence: [],
       });
     });
   });

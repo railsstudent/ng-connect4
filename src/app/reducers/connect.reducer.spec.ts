@@ -110,8 +110,8 @@ describe("Connect Reducer", () => {
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER2);
-      expect(state.winningSequence).toEqual(null);
-      expect(state.direction).toEqual(null);
+      expect(state.winningSequence).toEqual([]);
+      expect(state.direction).toEqual(Direction.NONE);
       expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, true));
       expect(state.mode).toEqual(Mode.HUMAN_VS_HUMAN);
       expect(state.lastMove).toEqual({ row: 0, col: 2 });
@@ -162,8 +162,8 @@ describe("Connect Reducer", () => {
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.COMPUTER);
-      expect(state.winningSequence).toEqual(null);
-      expect(state.direction).toEqual(null);
+      expect(state.winningSequence).toEqual([]);
+      expect(state.direction).toEqual(Direction.NONE);
       const expected = [];
       expected.push(false);
       for (let i = 1; i < COLUMNS; i++) {
@@ -282,8 +282,8 @@ describe("Connect Reducer", () => {
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
-      expect(state.winningSequence).toEqual(null);
-      expect(state.direction).toEqual(null);
+      expect(state.winningSequence).toEqual([]);
+      expect(state.direction).toEqual(Direction.NONE);
       expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, true));
       expect(state.mode).toEqual(Mode.HUMAN_VS_HUMAN);
       expect(state.lastMove).toEqual({ row: 2, col: 1 });
@@ -335,8 +335,8 @@ describe("Connect Reducer", () => {
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
-      expect(state.winningSequence).toEqual(null);
-      expect(state.direction).toEqual(null);
+      expect(state.winningSequence).toEqual([]);
+      expect(state.direction).toEqual(Direction.NONE);
       const expected = initColumnsAvailable(COLUMNS, true);
       expected[1] = false;
       expect(state.columnAvailable).toEqual(expected);
@@ -479,7 +479,7 @@ describe("Connect Reducer", () => {
       expect(state.outcome).toEqual(Outcome.DRAW);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
-      expect(state.winningSequence).toEqual(null);
+      expect(state.winningSequence).toEqual([]);
       expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, false));
       expect(state.mode).toEqual(Mode.HUMAN_VS_HUMAN);
       expect(state.lastMove).toEqual({ row: 5, col: 1 });
@@ -533,8 +533,8 @@ describe("Connect Reducer", () => {
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
-      expect(state.winningSequence).toEqual(null);
-      expect(state.direction).toEqual(null);
+      expect(state.winningSequence).toEqual([]);
+      expect(state.direction).toEqual(Direction.NONE);
       expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, true));
       expect(state.mode).toEqual(Mode.HUMAN_VS_COMPUTER);
       expect(state.lastMove).toEqual({ row: 2, col: 1 });
@@ -586,8 +586,8 @@ describe("Connect Reducer", () => {
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
-      expect(state.winningSequence).toEqual(null);
-      expect(state.direction).toEqual(null);
+      expect(state.winningSequence).toEqual([]);
+      expect(state.direction).toEqual(Direction.NONE);
 
       const expected = initColumnsAvailable(COLUMNS, true);
       expected[1] = false;
@@ -732,8 +732,8 @@ describe("Connect Reducer", () => {
       expect(state.outcome).toEqual(Outcome.DRAW);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
-      expect(state.winningSequence).toEqual(null);
-      expect(state.direction).toEqual(null);
+      expect(state.winningSequence).toEqual([]);
+      expect(state.direction).toEqual(Direction.NONE);
       expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, false));
       expect(state.mode).toEqual(Mode.HUMAN_VS_COMPUTER);
       expect(state.lastMove).toEqual({ row: 5, col: 1 });
@@ -818,8 +818,8 @@ describe("Connect Reducer", () => {
       expect(state.outcome).toEqual(Outcome.DEFAULT);
       expect(state.reset).toEqual(false);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
-      expect(state.winningSequence).toEqual(null);
-      expect(state.direction).toEqual(null);
+      expect(state.winningSequence).toEqual([]);
+      expect(state.direction).toEqual(Direction.NONE);
 
       const expected = initColumnsAvailable(COLUMNS, true);
       expected[1] = false;
@@ -964,8 +964,8 @@ describe("Connect Reducer", () => {
       expect(state.outcome).toEqual(Outcome.DRAW);
       expect(state.reset).toEqual(true);
       expect(state.nextPlayer).toEqual(Player.PLAYER1);
-      expect(state.winningSequence).toEqual(null);
-      expect(state.direction).toEqual(null);
+      expect(state.winningSequence).toEqual([]);
+      expect(state.direction).toEqual(Direction.NONE);
       expect(state.columnAvailable).toEqual(initColumnsAvailable(COLUMNS, false));
       expect(state.mode).toEqual(Mode.HUMAN_VS_COMPUTER);
       expect(state.lastMove).toEqual({ row: 5, col: 1 });

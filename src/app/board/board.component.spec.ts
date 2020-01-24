@@ -155,7 +155,7 @@ describe("BoardComponent", () => {
       elFirstColumn.triggerEventHandler("click", 0);
 
       component.columnAvailable$.subscribe(columnAvailable => {
-        const expectedResults = [];
+        const expectedResults: boolean[] = [];
         for (let i = 0; i < COLUMNS; i++) {
           expectedResults.push(true);
         }
@@ -181,8 +181,8 @@ describe("BoardComponent", () => {
 
       component.winningSequence$.subscribe(sequence =>
         expect(sequence).toEqual({
-          direction: null,
-          sequence: null,
+          direction: Direction.NONE,
+          sequence: [],
           winner: null,
         }),
       );
@@ -409,8 +409,8 @@ describe("BoardComponent", () => {
       });
       component.winningSequence$.subscribe(sequence =>
         expect(sequence).toEqual({
-          direction: null,
-          sequence: null,
+          direction: Direction.NONE,
+          sequence: [],
           winner: null,
         }),
       );
@@ -444,7 +444,7 @@ describe("BoardComponent", () => {
       component.setTestSolver(new MockSolver([0, 0, 0]));
       component.mode = Mode.HUMAN_VS_COMPUTER;
       fixture.detectChanges();
-      spyOn(window, "setTimeout").and.callFake(function(fn) {
+      spyOn(window, "setTimeout").and.callFake(function(fn: Function) {
         fn.apply(null, [].slice.call(arguments, 2));
         return +new Date();
       });
@@ -471,7 +471,7 @@ describe("BoardComponent", () => {
       elFirstColumn.triggerEventHandler("click", 0);
 
       component.columnAvailable$.subscribe(columnAvailable => {
-        const expectedResults = [];
+        const expectedResults: boolean[] = [];
         for (let i = 0; i < COLUMNS; i++) {
           expectedResults.push(true);
         }
@@ -493,8 +493,8 @@ describe("BoardComponent", () => {
       component.resetGame$.subscribe(reset => expect(reset).toEqual(false));
       component.winningSequence$.subscribe(sequence =>
         expect(sequence).toEqual({
-          direction: null,
-          sequence: null,
+          direction: Direction.NONE,
+          sequence: [],
           winner: null,
         }),
       );
@@ -718,8 +718,8 @@ describe("BoardComponent", () => {
       });
       component.winningSequence$.subscribe(sequence =>
         expect(sequence).toEqual({
-          direction: null,
-          sequence: null,
+          direction: Direction.NONE,
+          sequence: [],
           winner: null,
         }),
       );
@@ -945,7 +945,7 @@ describe("BoardComponent", () => {
       const mockSolver = new MockSolver([3, 4, 5, 6, 6, 5]);
       component.setTestSolver(mockSolver);
       fixture.detectChanges();
-      spyOn(window, "setTimeout").and.callFake(function(fn) {
+      spyOn(window, "setTimeout").and.callFake(function(fn: Function) {
         fn.apply(null, [].slice.call(arguments, 2));
         return +new Date();
       });

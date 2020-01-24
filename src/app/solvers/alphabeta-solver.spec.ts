@@ -1,5 +1,5 @@
 import { AlphabetaSolver } from "./alphabeta-solver";
-import { Player, ROWS, COLUMNS, FREE_CELL } from "../models";
+import { Player, ROWS, COLUMNS, FREE_CELL, INF } from "../models";
 import { Board } from "../util/board";
 
 let board = new Board();
@@ -59,7 +59,7 @@ describe("AlphabetaSolver", () => {
       board.clone(grid);
 
       const col = solver.bestMove(board);
-      expect(col).toBeNull();
+      expect(col).toEqual(-INF);
     });
 
     it("bestMove returns the best move that prevent human from winning 2", () => {
