@@ -1,36 +1,55 @@
 <div class="shell-container" [class.unknown]="isUnknown">
-    <div class="shell-selection" *ngIf="mode === _Mode.UNKNOWN">
-        <p class="shell-title">Enter game of Connect Four</p>
-        <div class="btn-group">
-            <button class="btn-human" (click)="choose(_Mode.HUMAN_VS_HUMAN)">Human vs Human</button>
-            <button class="btn-computer" (click)="choose(_Mode.HUMAN_VS_COMPUTER)">Human vs Computer</button>
-        </div>
+  <div class="shell-selection" *ngIf="mode === _Mode.UNKNOWN">
+    <p class="shell-title">Enter game of Connect Four</p>
+    <div class="btn-group">
+      <button class="btn-human" (click)="choose(_Mode.HUMAN_VS_HUMAN)">Human vs Human</button>
+      <button class="btn-computer" (click)="choose(_Mode.HUMAN_VS_COMPUTER)">Human vs Computer</button>
     </div>
-    <ng-container *ngIf="mode !== _Mode.UNKNOWN">
-        <ng-container *ngIf="mode === _Mode.HUMAN_VS_HUMAN then twoPlayers else onePlayer"></ng-container>
-    </ng-container>
-    <div class="spacer-1"></div>
-    <footer *ngIf="mode === _Mode.UNKNOWN">
-      Version: 1.0.0
-    </footer>
+  </div>
+  <ng-container *ngIf="mode !== _Mode.UNKNOWN">
+    <ng-container *ngIf="mode === _Mode.HUMAN_VS_HUMAN then twoPlayers else onePlayer"></ng-container>
+  </ng-container>
+  <div class="spacer-1"></div>
+  <footer *ngIf="mode === _Mode.UNKNOWN">
+    Version: 1.0.0
+  </footer>
 </div>
 
 <ng-template #twoPlayers>
-    <connect-player [name]="'Player 1'" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
-    <connect-board [mode]="_Mode.HUMAN_VS_HUMAN"></connect-board>
-    <connect-player [name]="'Player 2'" [piece]="_Player.PLAYER2" [color]="_PieceColor.YELLOW"></connect-player>
+  <connect-player [name]="'Player 1'" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
+  <connect-board [mode]="_Mode.HUMAN_VS_HUMAN"></connect-board>
+  <connect-player [name]="'Player 2'" [piece]="_Player.PLAYER2" [color]="_PieceColor.YELLOW"></connect-player>
 </ng-template>
 
 <ng-template #onePlayer>
-    <connect-player [name]="'Player 1'" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
-    <connect-board [mode]="_Mode.HUMAN_VS_COMPUTER"></connect-board>
-    <connect-player [name]="'Computer'" [piece]="_Player.COMPUTER" [color]="_PieceColor.MAGENTA"></connect-player>
+  <connect-player [name]="'Player 1'" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
+  <connect-board [mode]="_Mode.HUMAN_VS_COMPUTER"></connect-board>
+  <connect-player [name]="'Computer'" [piece]="_Player.COMPUTER" [color]="_PieceColor.MAGENTA"></connect-player>
 </ng-template>
 
 <connect-modal id="two-player-mode-dialog">
-  <div>
-    Hello world
-  </div>
+  <form [formGroup]="form" novalidate>
+    <p>Choose your names</p>
+    <div style="padding: 1rem;">
+      <label>
+        Player 1 name:
+      </label>
+      <input formControlName="playerOneName" required />
+    </div>
+
+    <div style="padding: 1rem;">
+      <label>
+        Player 2 name:
+      </label>
+      <input formControlName="playerTwoName" required />
+    </div>
+    <pre>
+          Player1Name Errors: {{ playOneName.errors | json  }}
+          Player2Name Errors: {{ playTwoName.errors | json }}
+          Values: {{ form.value | json }}
+        </pre>
+
+  </form>
 </connect-modal>
 
 <connect-modal id="one-player-mode-dialog">

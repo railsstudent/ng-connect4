@@ -8,6 +8,7 @@ import { BoardComponent } from "../board/board.component";
 import { reducers } from "../reducers";
 import { StoreModule } from "@ngrx/store";
 import { Player } from "../models";
+import { ReactiveFormsModule } from "@angular/forms";
 
 describe("ShellComponent", () => {
   let component: ShellComponent;
@@ -26,7 +27,7 @@ describe("ShellComponent", () => {
     TestBed.configureTestingModule({
       declarations: [ShellComponent, PlayerComponent, BoardComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      imports: [StoreModule.forRoot(reducers)]
+      imports: [StoreModule.forRoot(reducers), ReactiveFormsModule],
     }).compileComponents();
   }));
 
