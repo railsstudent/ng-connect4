@@ -30,22 +30,28 @@
 <connect-modal id="two-player-mode-dialog">
   <form [formGroup]="form" novalidate>
     <p>Choose your names</p>
-    <div style="padding: 1rem;">
+    <div style="padding: 0.75rem;">
       <label>
         Player 1 name:
       </label>
       <input formControlName="playerOneName" required />
+      <p class="connect-error" *ngIf="playerOneName && playerOneName.errors && playerOneName.errors['required']">
+        Player 1 is required
+      </p>
     </div>
 
-    <div style="padding: 1rem;">
+    <div style="padding: 0.75rem;">
       <label>
         Player 2 name:
       </label>
       <input formControlName="playerTwoName" required />
+      <p class="connect-error" *ngIf="playerTwoName && playerTwoName.errors && playerTwoName.errors['required']">
+        Player 2 is required
+      </p>
     </div>
     <pre>
-          Player1Name Errors: {{ playOneName.errors | json  }}
-          Player2Name Errors: {{ playTwoName.errors | json }}
+          Player1Name Errors: {{ playerOneName && playerOneName.errors | json  }}
+          Player2Name Errors: {{ playerTwoName && playerTwoName.errors | json }}
           Values: {{ form.value | json }}
         </pre>
 

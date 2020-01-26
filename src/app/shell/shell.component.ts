@@ -46,11 +46,11 @@ export class ShellComponent implements OnInit {
     }
   }
 
-  get playOneName() {
+  get playerOneName() {
     return this.form && (this.form.controls.playerOneName as AbstractControl);
   }
 
-  get playTwoName() {
+  get playerTwoName() {
     return this.form && (this.form.controls.playerTwoName as AbstractControl);
   }
 }

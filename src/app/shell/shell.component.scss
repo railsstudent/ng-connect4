@@ -59,3 +59,8 @@ connect-player {
 connect-board {
     flex: 1 0 $board-basis;
 }
+
+.connect-error {
+    color: red;
+    font-size: 1rem;
+}
