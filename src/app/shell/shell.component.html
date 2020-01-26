@@ -14,6 +14,7 @@
       Version: 1.0.0
     </footer>
 </div>
+
 <ng-template #twoPlayers>
     <connect-player [name]="'Player 1'" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
     <connect-board [mode]="_Mode.HUMAN_VS_HUMAN"></connect-board>
@@ -25,3 +26,15 @@
     <connect-board [mode]="_Mode.HUMAN_VS_COMPUTER"></connect-board>
     <connect-player [name]="'Computer'" [piece]="_Player.COMPUTER" [color]="_PieceColor.MAGENTA"></connect-player>
 </ng-template>
+
+<connect-modal id="two-player-mode-dialog">
+  <div>
+    Hello world
+  </div>
+</connect-modal>
+
+<connect-modal id="one-player-mode-dialog">
+  <div>
+    Hello world 2
+  </div>
+</connect-modal>
