@@ -2,8 +2,11 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from "@angular/forms";
 import { Mode, Player, PieceColor } from "../models";
 import { Store, select } from "@ngrx/store";
-import { AppState, selectMode } from "../reducers";
+import { AppState, selectMode, selectResetGame } from "../reducers";
 import { ModalService } from "../shared/modal";
+
+const PLAYER_ONE = "Player 1";
+const PLAYER_TWO = "Player 2";
 
 @Component({
   selector: "connect-shell",
@@ -19,20 +22,28 @@ export class ShellComponent implements OnInit {
   isUnknown = true;
 
   form: FormGroup;
+  strPlayerOneName = PLAYER_ONE;
+  strPlayerTwoName = PLAYER_TWO;
 
   mode$ = this.store.pipe(select(selectMode));
 
   constructor(private store: Store<AppState>, private modalService: ModalService, private fb: FormBuilder) {}
 
   ngOnInit() {
+    this.form = this.fb.group({
+      playerOneName: new FormControl(this.strPlayerOneName, { validators: [Validators.required], updateOn: "change" }),
+      playerTwoName: new FormControl(this.strPlayerTwoName, { validators: [Validators.required], updateOn: "change" }),
+    });
+
     this.mode$.subscribe(mode => {
       this.mode = mode;
       this.isUnknown = this.mode === Mode.UNKNOWN;
-    });
-
-    this.form = this.fb.group({
-      playerOneName: new FormControl("Player 1", { validators: [Validators.required], updateOn: "change" }),
-      playerTwoName: new FormControl("Player 2", { validators: [Validators.required], updateOn: "change" }),
+      this.strPlayerOneName = PLAYER_ONE;
+      this.strPlayerTwoName = PLAYER_TWO;
+      this.form.setValue({
+        playerOneName: this.strPlayerOneName,
+        playerTwoName: this.strPlayerTwoName,
+      });
     });
   }
 
@@ -52,5 +63,17 @@ export class ShellComponent implements OnInit {
 
   get playerTwoName() {
     return this.form && (this.form.controls.playerTwoName as AbstractControl);
+  }
+
+  storePlayerNames(formValues: FormGroup, modalId: string) {
+    if (formValues.valid) {
+      const { playerOneName: strPlayerOneName, playerTwoName: strPlayerTwoName = "" } = formValues.value;
+      this.strPlayerOneName = strPlayerOneName;
+      this.strPlayerTwoName = !!strPlayerTwoName ? strPlayerTwoName : "Player 2";
+    } else {
+      this.strPlayerOneName = PLAYER_ONE;
+      this.strPlayerTwoName = PLAYER_TWO;
+    }
+    this.modalService.close(modalId);
   }
 }

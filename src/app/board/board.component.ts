@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, QueryList, Renderer2, ViewChildren } from "@angular/core";
 import { select, Store } from "@ngrx/store";
-import { COLUMNS, Direction, Mode, Player, ROWS } from "../models";
+import { COLUMNS, Direction, Mode, Player, ROWS, Outcome } from "../models";
 import {
   AppState,
   selectColumnAvailable,
@@ -24,9 +24,16 @@ import { Board } from "../util/board";
 export class BoardComponent implements OnInit {
   _Mode = Mode;
   _Player = Player;
+  _Outcome = Outcome;
 
   @Input()
   mode: Mode;
+
+  @Input()
+  playerOneName = "";
+
+  @Input()
+  playerTwoName = "";
 
   // Observables
   grid$ = this.store.pipe(select(selectGrid));

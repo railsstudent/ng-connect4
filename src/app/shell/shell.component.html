@@ -11,24 +11,24 @@
   </ng-container>
   <div class="spacer-1"></div>
   <footer *ngIf="mode === _Mode.UNKNOWN">
-    Version: 1.0.0
+    Version: 1.0.1
   </footer>
 </div>
 
 <ng-template #twoPlayers>
-  <connect-player [name]="'Player 1'" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
-  <connect-board [mode]="_Mode.HUMAN_VS_HUMAN"></connect-board>
-  <connect-player [name]="'Player 2'" [piece]="_Player.PLAYER2" [color]="_PieceColor.YELLOW"></connect-player>
+  <connect-player [name]="strPlayerOneName" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
+  <connect-board [mode]="_Mode.HUMAN_VS_HUMAN" [playerOneName]="strPlayerOneName" [playerTwoName]="strPlayerTwoName"></connect-board>
+  <connect-player [name]="strPlayerTwoName" [piece]="_Player.PLAYER2" [color]="_PieceColor.YELLOW"></connect-player>
 </ng-template>
 
 <ng-template #onePlayer>
   <connect-player [name]="'Player 1'" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
-  <connect-board [mode]="_Mode.HUMAN_VS_COMPUTER"></connect-board>
+  <connect-board [mode]="_Mode.HUMAN_VS_COMPUTER" [playerOneName]="strPlayerOneName"></connect-board>
   <connect-player [name]="'Computer'" [piece]="_Player.COMPUTER" [color]="_PieceColor.MAGENTA"></connect-player>
 </ng-template>
 
 <connect-modal id="two-player-mode-dialog">
-  <form [formGroup]="form" novalidate>
+  <form [formGroup]="form" novalidate (ngSubmit)="storePlayerNames(form, 'two-player-mode-dialog')">
     <p>Choose your names</p>
     <div style="padding: 0.75rem;">
       <label>
@@ -49,12 +49,10 @@
         Player 2 is required
       </p>
     </div>
-    <pre>
-          Player1Name Errors: {{ playerOneName && playerOneName.errors | json  }}
-          Player2Name Errors: {{ playerTwoName && playerTwoName.errors | json }}
-          Values: {{ form.value | json }}
-        </pre>
 
+    <div>
+      <button type="submit" [disabled]="form.invalid">Confirm</button>
+    </div>
   </form>
 </connect-modal>
 

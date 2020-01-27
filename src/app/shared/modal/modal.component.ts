@@ -9,6 +9,8 @@ import {
   ElementRef,
   Renderer2,
   ViewEncapsulation,
+  EventEmitter,
+  Output,
 } from "@angular/core";
 import { ModalService } from "./modal.service";
 
