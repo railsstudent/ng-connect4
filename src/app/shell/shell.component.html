@@ -22,13 +22,13 @@
 </ng-template>
 
 <ng-template #onePlayer>
-  <connect-player [name]="'Player 1'" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
-  <connect-board [mode]="_Mode.HUMAN_VS_COMPUTER" [playerOneName]="strPlayerOneName"></connect-board>
-  <connect-player [name]="'Computer'" [piece]="_Player.COMPUTER" [color]="_PieceColor.MAGENTA"></connect-player>
+  <connect-player [name]="strPlayerOneName" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
+  <connect-board [mode]="_Mode.HUMAN_VS_COMPUTER" [playerOneName]="strPlayerOneName" [playerTwoName]="strComputerName"></connect-board>
+  <connect-player [name]="strComputerName" [piece]="_Player.COMPUTER" [color]="_PieceColor.MAGENTA"></connect-player>
 </ng-template>
 
 <connect-modal id="two-player-mode-dialog">
-  <form [formGroup]="form" novalidate (ngSubmit)="storePlayerNames(form, 'two-player-mode-dialog')">
+  <form [formGroup]="formHuman" novalidate (ngSubmit)="storePlayerNames(formHuman, 'two-player-mode-dialog')">
     <p>Choose your names</p>
     <div style="padding: 0.75rem;">
       <label>
@@ -51,13 +51,36 @@
     </div>
 
     <div>
-      <button type="submit" [disabled]="form.invalid">Confirm</button>
+      <button type="submit" [disabled]="formHuman.invalid">Confirm</button>
     </div>
   </form>
 </connect-modal>
 
 <connect-modal id="one-player-mode-dialog">
-  <div>
-    Hello world 2
-  </div>
+  <form [formGroup]="formHuman" novalidate (ngSubmit)="storePlayerNames(formHuman, 'one-player-mode-dialog')">
+    <p>Choose your names</p>
+    <div style="padding: 0.75rem;">
+      <label>
+        Player 1 name:
+      </label>
+      <input formControlName="playerOneName" required />
+      <p class="connect-error" *ngIf="playerOneName && playerOneName.errors && playerOneName.errors['required']">
+        Player 1 is required
+      </p>
+    </div>
+
+    <div style="padding: 0.75rem;">
+      <label>
+        Computer name:
+      </label>
+      <input formControlName="computerName" required />
+      <p class="connect-error" *ngIf="computerName && computerName.errors && computerName.errors['required']">
+        Computer is required
+      </p>
+    </div>
+
+    <div>
+      <button type="submit" [disabled]="formHuman.invalid">Confirm</button>
+    </div>
+  </form>
 </connect-modal>
