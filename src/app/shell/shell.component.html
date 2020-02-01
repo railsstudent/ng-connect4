@@ -17,20 +17,22 @@
 
 <ng-template #twoPlayers>
   <connect-player [name]="strPlayerOneName" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
-  <connect-board [mode]="_Mode.HUMAN_VS_HUMAN" [playerOneName]="strPlayerOneName" [playerTwoName]="strPlayerTwoName"></connect-board>
+  <connect-board [mode]="_Mode.HUMAN_VS_HUMAN" [playerOneName]="strPlayerOneName" [playerTwoName]="strPlayerTwoName">
+  </connect-board>
   <connect-player [name]="strPlayerTwoName" [piece]="_Player.PLAYER2" [color]="_PieceColor.YELLOW"></connect-player>
 </ng-template>
 
 <ng-template #onePlayer>
   <connect-player [name]="strPlayerOneName" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
-  <connect-board [mode]="_Mode.HUMAN_VS_COMPUTER" [playerOneName]="strPlayerOneName" [playerTwoName]="strComputerName"></connect-board>
+  <connect-board [mode]="_Mode.HUMAN_VS_COMPUTER" [playerOneName]="strPlayerOneName" [playerTwoName]="strComputerName">
+  </connect-board>
   <connect-player [name]="strComputerName" [piece]="_Player.COMPUTER" [color]="_PieceColor.MAGENTA"></connect-player>
 </ng-template>
 
 <connect-modal id="two-player-mode-dialog">
   <form [formGroup]="formHuman" novalidate (ngSubmit)="storePlayerNames(formHuman, 'two-player-mode-dialog')">
     <p>Choose your names</p>
-    <div style="padding: 0.75rem;">
+    <div class="field-group">
       <label>
         Player 1 name:
       </label>
@@ -40,7 +42,7 @@
       </p>
     </div>
 
-    <div style="padding: 0.75rem;">
+    <div class="field-group">
       <label>
         Player 2 name:
       </label>
@@ -59,7 +61,7 @@
 <connect-modal id="one-player-mode-dialog">
   <form [formGroup]="formHuman" novalidate (ngSubmit)="storePlayerNames(formHuman, 'one-player-mode-dialog')">
     <p>Choose your names</p>
-    <div style="padding: 0.75rem;">
+    <div class="field-group">
       <label>
         Player 1 name:
       </label>
@@ -69,7 +71,7 @@
       </p>
     </div>
 
-    <div style="padding: 0.75rem;">
+    <div class="field-group">
       <label>
         Computer name:
       </label>

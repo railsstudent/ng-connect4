@@ -100,15 +100,11 @@ export class BoardComponent implements OnInit {
         if (!el) {
           return;
         }
-        if (this.isSamePlayer(row, col, Player.PLAYER1)) {
+
+        const className = this.getPieceColorClass(row, col);
+        if (className !== "") {
           this.renderer.removeClass(el.nativeElement, "free-cell");
-          this.renderer.addClass(el.nativeElement, "player1");
-        } else if (this.isSamePlayer(row, col, Player.PLAYER2)) {
-          this.renderer.removeClass(el.nativeElement, "free-cell");
-          this.renderer.addClass(el.nativeElement, "player2");
-        } else if (this.isSamePlayer(row, col, Player.COMPUTER)) {
-          this.renderer.removeClass(el.nativeElement, "free-cell");
-          this.renderer.addClass(el.nativeElement, "computer");
+          this.renderer.addClass(el.nativeElement, className);
         }
       }
     });
@@ -183,6 +179,22 @@ export class BoardComponent implements OnInit {
 
   isSamePlayer(row: number, column: number, player: Player) {
     return this.board.isSamePlayer(row, column, player);
+  }
+
+  getPieceColorClass(row: number, column: number) {
+    if (this.board.isSamePlayer(row, column, Player.PLAYER1)) {
+      return "player1";
+    }
+
+    if (this.board.isSamePlayer(row, column, Player.PLAYER2)) {
+      return "player2";
+    }
+
+    if (this.board.isSamePlayer(row, column, Player.COMPUTER)) {
+      return "player2";
+    }
+
+    return "";
   }
 
   strikeThrough(
