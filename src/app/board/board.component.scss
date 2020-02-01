@@ -74,7 +74,7 @@ $hover-color: goldenrod;
             background: $select-column-color;
             padding: 0 $padding;
 
-            flex: 1 1 auto;
+            flex: 1 1 0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -85,13 +85,13 @@ $hover-color: goldenrod;
         }
     }
 
-    .show {
-        opacity: 1;
-    }
+    // .show {
+    //     opacity: 1;
+    // }
 
-    .hide {
-        opacity: 0;
-    }
+    // .hide {
+    //     opacity: 0;
+    // }
 
     .arrow-down {
         color: red;
@@ -104,6 +104,11 @@ $hover-color: goldenrod;
         &:hover {
             color: $hover-color;
         }
+    }
+
+    .full {
+        font-size: 1.5em;
+        font-weight: bold;
     }
 
     .grid {

@@ -14,9 +14,9 @@
     <button class="btn-choose-mode" *ngIf="(resetGame$ | async)" (click)="backToMode()">Back to start</button>
   </div>
   <div class="select-column-container" *ngIf="!(resetGame$ | async)">
-    <div class="select-column" *ngFor="let col of columnsAvailable; let i = index;"
-      [ngClass]="{ show: col === true, hide: col === false }" (click)="select(i)">
-      <fa-icon [icon]="['fas', 'arrow-down']" size="3x" class="arrow-down"></fa-icon>
+    <div class="select-column" *ngFor="let col of columnsAvailable; let i = index;" (click)="select(i)">
+      <fa-icon [icon]="['fas', 'arrow-down']" size="3x" class="arrow-down" *ngIf="col"></fa-icon>
+      <span class="full" *ngIf="!col">Full</span>
     </div>
   </div>
   <div class="grid-container">
