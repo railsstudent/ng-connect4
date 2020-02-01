@@ -30,10 +30,10 @@ export class BoardComponent implements OnInit {
   mode: Mode;
 
   @Input()
-  playerOneName = "";
-
-  @Input()
-  playerTwoName = "";
+  players: {
+    playerOne: string;
+    playerTwo: string;
+  };
 
   // Observables
   grid$ = this.store.pipe(select(selectGrid));

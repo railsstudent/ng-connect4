@@ -16,17 +16,17 @@
 </div>
 
 <ng-template #twoPlayers>
-  <connect-player [name]="strPlayerOneName" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
-  <connect-board [mode]="_Mode.HUMAN_VS_HUMAN" [playerOneName]="strPlayerOneName" [playerTwoName]="strPlayerTwoName">
+  <connect-player [name]="players.playerOne" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
+  <connect-board [mode]="_Mode.HUMAN_VS_HUMAN" [players]="players">
   </connect-board>
-  <connect-player [name]="strPlayerTwoName" [piece]="_Player.PLAYER2" [color]="_PieceColor.YELLOW"></connect-player>
+  <connect-player [name]="players.playerTwo" [piece]="_Player.PLAYER2" [color]="_PieceColor.YELLOW"></connect-player>
 </ng-template>
 
 <ng-template #onePlayer>
-  <connect-player [name]="strPlayerOneName" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
-  <connect-board [mode]="_Mode.HUMAN_VS_COMPUTER" [playerOneName]="strPlayerOneName" [playerTwoName]="strComputerName">
+  <connect-player [name]="players.playerOne" [piece]="_Player.PLAYER1" [color]="_PieceColor.RED"></connect-player>
+  <connect-board [mode]="_Mode.HUMAN_VS_COMPUTER" [players]="players">
   </connect-board>
-  <connect-player [name]="strComputerName" [piece]="_Player.COMPUTER" [color]="_PieceColor.MAGENTA"></connect-player>
+  <connect-player [name]="players.playerTwo" [piece]="_Player.COMPUTER" [color]="_PieceColor.MAGENTA"></connect-player>
 </ng-template>
 
 <connect-modal id="two-player-mode-dialog">

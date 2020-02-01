@@ -24,9 +24,10 @@ export class ShellComponent implements OnInit {
 
   formHuman: FormGroup;
 
-  strPlayerOneName = PLAYER_ONE;
-  strPlayerTwoName = PLAYER_TWO;
-  strComputerName = COMPUTER;
+  players = {
+    playerOne: PLAYER_ONE,
+    playerTwo: PLAYER_TWO,
+  };
 
   mode$ = this.store.pipe(select(selectMode));
 
@@ -34,21 +35,18 @@ export class ShellComponent implements OnInit {
 
   ngOnInit() {
     this.formHuman = this.fb.group({
-      playerOneName: new FormControl(this.strPlayerOneName, { validators: [Validators.required], updateOn: "change" }),
-      playerTwoName: new FormControl(this.strPlayerTwoName, { validators: [Validators.required], updateOn: "change" }),
-      computerName: new FormControl(this.strComputerName, { validators: [Validators.required], updateOn: "change" }),
+      playerOneName: new FormControl(PLAYER_ONE, { validators: [Validators.required], updateOn: "change" }),
+      playerTwoName: new FormControl(PLAYER_TWO, { validators: [Validators.required], updateOn: "change" }),
+      computerName: new FormControl(COMPUTER, { validators: [Validators.required], updateOn: "change" }),
     });
 
     this.mode$.subscribe(mode => {
       this.mode = mode;
       this.isUnknown = this.mode === Mode.UNKNOWN;
-      this.strPlayerOneName = PLAYER_ONE;
-      this.strPlayerTwoName = PLAYER_TWO;
-      this.strComputerName = COMPUTER;
       this.formHuman.setValue({
-        playerOneName: this.strPlayerOneName,
-        playerTwoName: this.strPlayerTwoName,
-        computerName: this.strComputerName,
+        playerOneName: PLAYER_ONE,
+        playerTwoName: PLAYER_TWO,
+        computerName: COMPUTER,
       });
     });
   }
@@ -82,13 +80,22 @@ export class ShellComponent implements OnInit {
         playerTwoName: strPlayerTwoName = "",
         computerName: strComputerName = "",
       } = formValues.value;
-      this.strPlayerOneName = !!strPlayerOneName ? strPlayerOneName : PLAYER_ONE;
-      this.strPlayerTwoName = !!strPlayerTwoName ? strPlayerTwoName : PLAYER_TWO;
-      this.strComputerName = !!strComputerName ? strComputerName : COMPUTER;
+      if (this.mode === Mode.HUMAN_VS_HUMAN) {
+        this.players = {
+          playerOne: !!strPlayerOneName ? strPlayerOneName : PLAYER_ONE,
+          playerTwo: !!strPlayerTwoName ? strPlayerTwoName : PLAYER_TWO,
+        };
+      } else if (this.mode === Mode.HUMAN_VS_COMPUTER) {
+        this.players = {
+          playerOne: !!strPlayerOneName ? strPlayerOneName : PLAYER_ONE,
+          playerTwo: !!strComputerName ? strComputerName : COMPUTER,
+        };
+      }
     } else {
-      this.strPlayerOneName = PLAYER_ONE;
-      this.strPlayerTwoName = PLAYER_TWO;
-      this.strComputerName = COMPUTER;
+      this.players = {
+        playerOne: PLAYER_ONE,
+        playerTwo: PLAYER_TWO,
+      };
     }
     this.modalService.close(modalId);
   }

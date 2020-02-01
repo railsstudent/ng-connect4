@@ -5,9 +5,9 @@
     <span class="moves-left-content">{{moveLefts$ | async }}</span>
   </div>
   <div class="outcome-container" *ngIf="(outcome$ | async); let outcome">
-    <p class="outcome" *ngIf="outcome && outcome === _Outcome.PLAYER1_WINS">{{ playerOneName }} wins!!!</p>
+    <p class="outcome" *ngIf="outcome && outcome === _Outcome.PLAYER1_WINS">{{ players.playerOne }} wins!!!</p>
     <p class="outcome" *ngIf="outcome && (outcome === _Outcome.PLAYER2_WINS || outcome === _Outcome.COMPUTER_WINS)">
-      {{ playerTwoName }} wins!!!
+      {{ players.playerTwo }} wins!!!
     </p>
     <p class="outcome" *ngIf="outcome && outcome === _Outcome.DRAW">{{ outcome }}</p>
     <button class="btn-reset" *ngIf="(resetGame$ | async)" (click)="clearState()">New Game</button>
