@@ -34,33 +34,38 @@ describe("ShellComponent", () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ShellComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it("should create", () => {
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
   it("should show title", () => {
+    fixture.detectChanges();
     expect(getTitle().nativeElement.textContent).toEqual("Enter game of Connect Four");
   });
 
   it("should show human vs human button", () => {
+    fixture.detectChanges();
     const btn = getHumanButton().nativeElement as HTMLButtonElement;
     expect(btn.textContent).toEqual("Human vs Human");
   });
 
   it("should show human vs computer button", () => {
+    fixture.detectChanges();
     const btn = getComputerButton().nativeElement as HTMLButtonElement;
     expect(btn.textContent).toEqual("Human vs Computer");
   });
 
   it("should show human vs computer button", () => {
+    fixture.detectChanges();
     const btn = getComputerButton().nativeElement as HTMLButtonElement;
     expect(btn.textContent).toEqual("Human vs Computer");
   });
 
   it("should show players and board when human vs human button is clicked", () => {
+    fixture.detectChanges();
     getHumanButton().triggerEventHandler("click", null);
     fixture.detectChanges();
 
@@ -88,6 +93,12 @@ describe("ShellComponent", () => {
   });
 
   it("should show player, computer and board when human vs computer button is clicked", () => {
+    component.players = {
+      playerOne: "Player 1",
+      playerTwo: "Computer",
+    };
+    fixture.detectChanges();
+
     getComputerButton().triggerEventHandler("click", null);
     fixture.detectChanges();
 

@@ -36,6 +36,10 @@ describe("BoardComponent", () => {
     fixture = TestBed.createComponent(BoardComponent);
     component = fixture.componentInstance;
     component.mode = Mode.HUMAN_VS_HUMAN;
+    component.players = {
+      playerOne: "Jack",
+      playerTwo: "Jill",
+    };
     spyOn(component, "initSolver").and.callThrough();
     fixture.detectChanges();
   });
