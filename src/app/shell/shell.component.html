@@ -32,28 +32,29 @@
 <connect-modal id="two-player-mode-dialog">
   <form [formGroup]="formHuman" novalidate (ngSubmit)="storePlayerNames(formHuman, 'two-player-mode-dialog')">
     <p>Choose your names</p>
-    <div class="field-group">
-      <label>
-        Player 1 name:
-      </label>
-      <input formControlName="playerOneName" required />
-      <p class="connect-error" *ngIf="playerOneName && playerOneName.errors && playerOneName.errors['required']">
-        Player 1 is required
-      </p>
-    </div>
+    <div class="form-group">
+      <div class="field-group">
+        <label>
+          Player 1 name:
+        </label>
+        <input formControlName="playerOneName" required />
+        <p class="connect-error" *ngIf="playerOneName && playerOneName.errors && playerOneName.errors['required']">
+          Player 1 is required
+        </p>
+      </div>
 
-    <div class="field-group">
-      <label>
-        Player 2 name:
-      </label>
-      <input formControlName="playerTwoName" required />
-      <p class="connect-error" *ngIf="playerTwoName && playerTwoName.errors && playerTwoName.errors['required']">
-        Player 2 is required
-      </p>
+      <div class="field-group">
+        <label>
+          Player 2 name:
+        </label>
+        <input formControlName="playerTwoName" required />
+        <p class="connect-error" *ngIf="playerTwoName && playerTwoName.errors && playerTwoName.errors['required']">
+          Player 2 is required
+        </p>
+      </div>
     </div>
-
     <div>
-      <button type="submit" [disabled]="formHuman.invalid">Confirm</button>
+      <button type="submit" [disabled]="formHuman.invalid" class="btn-confirm">Confirm</button>
     </div>
   </form>
 </connect-modal>
@@ -61,28 +62,31 @@
 <connect-modal id="one-player-mode-dialog">
   <form [formGroup]="formHuman" novalidate (ngSubmit)="storePlayerNames(formHuman, 'one-player-mode-dialog')">
     <p>Choose your names</p>
-    <div class="field-group">
-      <label>
-        Player 1 name:
-      </label>
-      <input formControlName="playerOneName" required />
-      <p class="connect-error" *ngIf="playerOneName && playerOneName.errors && playerOneName.errors['required']">
-        Player 1 is required
-      </p>
-    </div>
+    <div class="form-group">
 
-    <div class="field-group">
-      <label>
-        Computer name:
-      </label>
-      <input formControlName="computerName" required />
-      <p class="connect-error" *ngIf="computerName && computerName.errors && computerName.errors['required']">
-        Computer is required
-      </p>
+      <div class="field-group">
+        <label>
+          Player 1 name:
+        </label>
+        <input formControlName="playerOneName" required />
+        <p class="connect-error" *ngIf="playerOneName && playerOneName.errors && playerOneName.errors['required']">
+          Player 1 is required
+        </p>
+      </div>
+
+      <div class="field-group">
+        <label>
+          Computer name:
+        </label>
+        <input formControlName="computerName" required />
+        <p class="connect-error" *ngIf="computerName && computerName.errors && computerName.errors['required']">
+          Computer is required
+        </p>
+      </div>
     </div>
 
     <div>
-      <button type="submit" [disabled]="formHuman.invalid">Confirm</button>
+      <button type="submit" [disabled]="formHuman.invalid" class="btn-confirm">Confirm</button>
     </div>
   </form>
 </connect-modal>

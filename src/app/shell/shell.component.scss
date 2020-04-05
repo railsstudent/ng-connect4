@@ -65,6 +65,22 @@ connect-board {
     font-size: 1rem;
 }
 
-.field-group {
-    padding: 0.75rem;
+connect-modal {
+    .field-group {
+        padding: 0.75rem;
+    }
+
+    .btn-confirm {
+        padding: 0.5rem;
+        border-radius: 8px;
+        color: #fff;
+        background: #007bff;
+        font-size: 0.75rem;
+        font-weight: bold;
+    }
+
+    .form-group {
+        border: 1px solid #aaa;
+        margin: 1rem 0;
+    }
 }
