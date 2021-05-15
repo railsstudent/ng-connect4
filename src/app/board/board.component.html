@@ -13,7 +13,7 @@
     <button class="btn-reset" *ngIf="(resetGame$ | async)" (click)="clearState()">New Game</button>
     <button class="btn-choose-mode" *ngIf="(resetGame$ | async)" (click)="backToMode()">Back to start</button>
   </div>
-  <div class="select-column-container" *ngIf="!(resetGame$ | async)">
+  <div class="select-column-container" *ngIf="(resetGame$ | async) === false">
     <div class="select-column" *ngFor="let col of columnsAvailable; let i = index;" (click)="select(i)">
       <fa-icon [icon]="['fas', 'arrow-down']" size="3x" class="arrow-down" *ngIf="col"></fa-icon>
       <span class="full" *ngIf="!col">Full</span>

@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
   Input
 } from "@angular/core";
@@ -13,7 +12,7 @@ import { AppState, selectNextPlayer } from "../reducers";
   styleUrls: ["./player.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PlayerComponent implements OnInit {
+export class PlayerComponent {
   @Input()
   name: string;
 
@@ -26,6 +25,4 @@ export class PlayerComponent implements OnInit {
   nextPlayer$ = this.store.pipe(select(selectNextPlayer));
 
   constructor(private store: Store<AppState>) {}
-
-  ngOnInit() {}
 }
