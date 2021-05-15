@@ -31,7 +31,7 @@ describe("BoardComponent", () => {
   }));
 
   beforeEach(() => {
-    store = TestBed.get(Store);
+    store = TestBed.inject(Store);
     spyOn(store, "dispatch").and.callThrough();
     fixture = TestBed.createComponent(BoardComponent);
     component = fixture.componentInstance;
@@ -448,15 +448,13 @@ describe("BoardComponent", () => {
       component.setTestSolver(new MockSolver([0, 0, 0]));
       component.mode = Mode.HUMAN_VS_COMPUTER;
       fixture.detectChanges();
-      spyOn(window, "setTimeout").and.callFake(function(fn: Function) {
-        fn.apply(null, [].slice.call(arguments, 2));
-        return +new Date();
-      });
     });
 
     it("should dispatch computer action after player 1 makes move", () => {
+      jasmine.clock().install();
       const elFirstColumn = getColumnAvailable(0);
       elFirstColumn.triggerEventHandler("click", 0);
+      jasmine.clock().tick(1);
 
       const action = connectActions.ComputerMoveAction({
         player: Player.COMPUTER,
@@ -465,14 +463,21 @@ describe("BoardComponent", () => {
 
       expect(store.dispatch).toHaveBeenCalledWith(action);
       component.moveLefts$.subscribe(moveLefts => expect(moveLefts).toBe(ROWS * COLUMNS - 2));
+      jasmine.clock().uninstall()
     });
 
     it("should hide column when it is full in human vs computer mode", () => {
+      jasmine.clock().install();
       const elFirstColumn = getColumnAvailable(0);
 
       elFirstColumn.triggerEventHandler("click", 0);
+      jasmine.clock().tick(1);
+
       elFirstColumn.triggerEventHandler("click", 0);
+      jasmine.clock().tick(1);
+
       elFirstColumn.triggerEventHandler("click", 0);
+      jasmine.clock().tick(1);
 
       component.columnAvailable$.subscribe(columnAvailable => {
         const expectedResults: boolean[] = [];
@@ -510,18 +515,28 @@ describe("BoardComponent", () => {
         });
         expect(o.lastMoveIdx).toEqual(0);
       });
+
+      jasmine.clock().uninstall()
     });
 
     it("should show player 1 wins in human vs computer mode", () => {
+      jasmine.clock().install();
       component.setTestSolver(new MockSolver([1, 1, 1]));
       fixture.detectChanges();
 
       const elFirstColumn = getColumnAvailable(0);
 
       elFirstColumn.triggerEventHandler("click", 0);
+      jasmine.clock().tick(1);
+
       elFirstColumn.triggerEventHandler("click", 0);
+      jasmine.clock().tick(1);
+
       elFirstColumn.triggerEventHandler("click", 0);
+      jasmine.clock().tick(1);
+
       elFirstColumn.triggerEventHandler("click", 0);
+      jasmine.clock().tick(1);
 
       component.moveLefts$.subscribe(movesLeft => expect(movesLeft).toBe(ROWS * COLUMNS - 7));
       component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.PLAYER1_WINS));
@@ -559,18 +574,29 @@ describe("BoardComponent", () => {
         });
         expect(o.lastMoveIdx).toEqual(14);
       });
+
+      jasmine.clock().uninstall();
     });
 
     it("should show computer wins in human vs computer mode", () => {
+      jasmine.clock().install();
+
       component.setTestSolver(new MockSolver([1, 2, 3, 4]));
       const elFirstColumn = getColumnAvailable(0);
       const elSecondColumn = getColumnAvailable(1);
       const elThirdColumn = getColumnAvailable(2);
 
       elFirstColumn.triggerEventHandler("click", 0);
+      jasmine.clock().tick(1);
+
       elFirstColumn.triggerEventHandler("click", 0);
+      jasmine.clock().tick(1);
+
       elSecondColumn.triggerEventHandler("click", 1);
+      jasmine.clock().tick(1);
+
       elThirdColumn.triggerEventHandler("click", 2);
+      jasmine.clock().tick(1);
 
       component.moveLefts$.subscribe(movesLeft => expect(movesLeft).toBe(ROWS * COLUMNS - 8));
       component.outcome$.subscribe(outcome => expect(outcome).toEqual(Outcome.COMPUTER_WINS));
@@ -609,9 +635,13 @@ describe("BoardComponent", () => {
         });
         expect(o.lastMoveIdx).toEqual(39);
       });
+
+      jasmine.clock().uninstall();
     });
 
     it("should show Draw when the game is tied in human vs computer", () => {
+      jasmine.clock().install();
+
       // c o c o c o c
       // o c o c o c o
       // c o c o c o c
@@ -623,32 +653,51 @@ describe("BoardComponent", () => {
       const elColumns = getColumnsAvailable();
 
       elColumns[0].triggerEventHandler("click", 0);
+      jasmine.clock().tick(1);
       elColumns[2].triggerEventHandler("click", 2);
+      jasmine.clock().tick(1);
       elColumns[4].triggerEventHandler("click", 4);
-
+      jasmine.clock().tick(1);
       elColumns[0].triggerEventHandler("click", 0);
+      jasmine.clock().tick(1);
       elColumns[2].triggerEventHandler("click", 2);
+      jasmine.clock().tick(1);
+
       elColumns[4].triggerEventHandler("click", 4);
+      jasmine.clock().tick(1);
+      elColumns[5].triggerEventHandler("click", 5);
+      jasmine.clock().tick(1);
+      elColumns[3].triggerEventHandler("click", 3);
+      jasmine.clock().tick(1);
+      elColumns[1].triggerEventHandler("click", 1);
+      jasmine.clock().tick(1);
 
       elColumns[5].triggerEventHandler("click", 5);
+      jasmine.clock().tick(1);
       elColumns[3].triggerEventHandler("click", 3);
+      jasmine.clock().tick(1);
       elColumns[1].triggerEventHandler("click", 1);
-
-      elColumns[5].triggerEventHandler("click", 5);
-      elColumns[3].triggerEventHandler("click", 3);
-      elColumns[1].triggerEventHandler("click", 1);
-
+      jasmine.clock().tick(1);
       elColumns[0].triggerEventHandler("click", 0);
+      jasmine.clock().tick(1);
+
       elColumns[2].triggerEventHandler("click", 2);
+      jasmine.clock().tick(1);
       elColumns[4].triggerEventHandler("click", 4);
-
+      jasmine.clock().tick(1);
       elColumns[1].triggerEventHandler("click", 1);
+      jasmine.clock().tick(1);
       elColumns[3].triggerEventHandler("click", 3);
+      jasmine.clock().tick(1);
 
       elColumns[6].triggerEventHandler("click", 6);
+      jasmine.clock().tick(1);
       elColumns[6].triggerEventHandler("click", 6);
+      jasmine.clock().tick(1);
       elColumns[5].triggerEventHandler("click", 5);
+      jasmine.clock().tick(1);
       elColumns[6].triggerEventHandler("click", 6);
+      jasmine.clock().tick(1);
 
       const expectedGrid = [];
 
@@ -735,6 +784,8 @@ describe("BoardComponent", () => {
         });
         expect(o.lastMoveIdx).toEqual(6);
       });
+
+      jasmine.clock().uninstall();
     });
   });
 
@@ -949,10 +1000,6 @@ describe("BoardComponent", () => {
       const mockSolver = new MockSolver([3, 4, 5, 6, 6, 5]);
       component.setTestSolver(mockSolver);
       fixture.detectChanges();
-      spyOn(window, "setTimeout").and.callFake(function(fn: Function) {
-        fn.apply(null, [].slice.call(arguments, 2));
-        return +new Date();
-      });
     });
 
     it("reset store in human vs computer", () => {
